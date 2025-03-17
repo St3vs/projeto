@@ -1,0 +1,72 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+  
+/* Sidebar */
+.Sidebar {
+  width: 20%;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Faz com que ocupe toda a altura da tela */
+  position: fixed; /* Mantém a barra fixa no lugar */
+  left: 0;
+  top: 0;
+  background-color: #0C1A26;
+}
+
+.Sidebar h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+  
+.Sidebar ul {
+  list-style: none;
+}
+  
+.Sidebar ul li {
+  margin: 10px 0;
+}
+  
+.Sidebar ul li a {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 5px;
+  transition: 0.3s;
+  font-size: 20px;
+  margin-left: 10px;
+}
+  
+.Sidebar ul li a:hover {
+  color: #E86032;
+}
+  
+/* Ícones e espaçamento */
+.Sidebar ul li a span {
+  margin-left: 20px;
+}
+  
+/* Estilos para o logo */
+.Sidebar .logo {
+  margin-top: 20px;
+  width: 140px; 
+  height: auto;
+  margin-bottom: 20px; 
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+  
+/* Estilo para o item ativo */
+.Sidebar ul li a.active {
+  color: #E86032; /* Cor laranja para o texto */
+}

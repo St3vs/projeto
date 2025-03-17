@@ -1,0 +1,163 @@
+/* Login.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: white;
+    font-family: Arial, sans-serif;
+}
+
+.login-title {
+    font-size: 30px;
+    margin-bottom: 50px;
+    text-align: center;
+    width: 100%; 
+    font-weight: bold;
+}
+
+.login-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.login-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 50px;
+}
+
+.login-logo {
+    width: 250px;
+    margin-bottom: 20px;
+}
+
+.app-name {
+    font-size: 30px;
+    font-weight: bold;
+    color: #0C1A26;
+}
+
+.login-right {
+    background-color: white;
+    width: 450px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-input {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    font-size: 20px;
+}
+
+.lembrar-depois {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.lembrar {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.lembrar input[type="checkbox"] {
+    accent-color: #E86032; 
+    width: 20px; 
+    height: 20px; 
+    margin-right: 10px; 
+    cursor: pointer; 
+}
+
+.forgot-password {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+}
+
+.buttons button {
+    padding: 15px 24px; 
+    border: none;
+    border-radius: 20px; 
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 600; 
+    transition: all 0.3s ease; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    margin-bottom: 15px;
+}
+
+.buttons button svg {
+    font-size: 24px;
+}
+
+.buttons .save {
+    background-color: #0a0f18;
+    color: white;
+}
+
+.buttons .save:hover {
+    background-color: #1a2a3a;
+    transform: translateY(-2px); 
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
+}
+
+.buttons .cancel {
+    background-color: #d32f2f;
+    color: white;
+}
+
+.buttons .cancel:hover {
+    background-color: #b71c1c;
+    transform: translateY(-2px); 
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
+}
+
+.create-account {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.create-account a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.create-account a:hover {
+    text-decoration: underline;
+}

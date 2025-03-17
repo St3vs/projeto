@@ -1,0 +1,15 @@
+.home {
+    display: flex;
+    height: 100vh;
+}
+
+.home-content {
+    flex: 1;
+    padding: 50px;
+    margin-left: 20%; /* Garante que o conteúdo não sobreponha a Sidebar */
+}
+
+.dashboard-content {
+    margin-top: 20px;
+    /* Adicione mais estilos conforme necessário para o conteúdo do dashboard */
+}

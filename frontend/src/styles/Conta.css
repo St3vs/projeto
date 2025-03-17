@@ -1,0 +1,118 @@
+/* Conta.css */
+
+.conta-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+.clientes-content {
+    flex: 1;
+    padding: 50px;
+    margin-left: 20%; 
+}
+
+.header {
+    display: flex;
+    justify-content:first baseline;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    gap: 20px;
+}
+
+.dadosPessoais-button {
+    background-color: #0c1a26;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 25px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.dadosPessoais-button:hover {
+    background-color: #0c1a26;
+    color: white;
+}
+
+.dadosPessoais-button svg {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.edit-button {
+    background-color: white;
+    color: #0c1a26;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 25px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: #0c1a26;
+    color: white;
+}
+
+.conta-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.conta-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 50px;
+}
+
+.conta-logo {
+    width: 250px;
+    margin-bottom: 20px;
+}
+
+.conta-right {
+    background-color: white;
+    width: 70%;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.dados-pessoais {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.dados {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dados strong {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.dados p {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+}
