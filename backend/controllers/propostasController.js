@@ -70,7 +70,7 @@ exports.eliminarPropostas = async (req, res) => {
       const { ids } = req.body;
 
       if (!ids || ids.length === 0) {
-         return res.status(400).json({ error: "Nenhuma proposta selecionada para exclusão" });
+         return res.status(400).json({ error: "Nenhuma proposta selecionada para eliminar" });
       }
 
       await Proposta.destroy({ where: { id: ids } });
