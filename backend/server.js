@@ -7,6 +7,8 @@ const authRoutes = require('./routes/authRoutes');
 const clientesRoutes = require('./routes/clientesRoutes');
 const propostasRoutes = require('./routes/propostasRoutes');
 const fornecedoresRoutes = require('./routes/fornecedoresRoutes');
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger_output.json');
 
 /*
 require('dotenv').config();
@@ -31,6 +33,8 @@ app.use('/auth', authRoutes);
 app.use('/clientes', clientesRoutes);
 app.use('/propostas', propostasRoutes);
 app.use('/fornecedores', fornecedoresRoutes);
+app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 Servidor a rodar na porta ${PORT}`));
