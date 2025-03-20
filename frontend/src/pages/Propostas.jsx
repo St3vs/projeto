@@ -47,44 +47,45 @@ function Propostas() {
 		if (selecionarTodas) {
 			setSelecionarPropostas([]);
 		} else {
-			const allPropostasIds = propostas.map(proposta => proposta._id);
+			const allPropostasIds = propostas.map(proposta => proposta.id);
 			setSelecionarPropostas(allPropostasIds);
 		}
 		setSelecionarTodas(!selecionarTodas);
 	};
 
-   /*
-	const handleDeleteSelected = async () => {
-		if (selecionarClientes.length === 0) {
-			alert("Nenhum cliente selecionado!");
-			return;
-		}
-
-		console.log("IDs a eliminar:", selecionarClientes);
-
-		try {
-			const response = await axios.delete("http://localhost:4000/clientes/eliminarClientes", {
-					data: { ids: selecionarClientes }
-			});
-
-			console.log("Resposta do servidor:", response.data);
-			setPropostas(prevClientes => prevClientes.filter(client => !selecionarClientes.includes(client._id)));
-			setSelecionarClientes([]);
-			setSelecionarTodos(false);
-
-			alert("Cliente(s) eliminado(s) com sucesso!");
-		} catch (error) {
-			console.error("Erro ao eliminar cliente(s):", error.response ? error.response.data : error);
-			alert("Erro ao eliminar cliente(s)");
-		}
-	};
-   */ 
-
+   
+   const handleDeleteSelected = async () => {
+      if (selecionarPropostas.length === 0) {
+          alert("Nenhuma proposta selecionada!");
+          return;
+      }
+  
+      try {
+          const response = await axios.delete("http://localhost:4000/propostas/eliminarPropostas", {
+              data: { ids: selecionarPropostas }
+          });
+  
+          console.log("Resposta do servidor:", response.data);
+  
+          // Recarregar as propostas do backend para refletir os novos IDs
+          const updatedPropostas = await axios.get("http://localhost:4000/propostas/listarPropostas");
+          setPropostas(updatedPropostas.data);
+  
+          // Limpar as seleções
+          setSelecionarPropostas([]);
+          setSelecionarTodas(false);
+  
+         } catch (error) {
+          console.error("Erro ao eliminar proposta(s):", error.response ? error.response.data : error);
+          alert("Erro ao eliminar proposta(s)");
+      }
+   };
+  
 
 	const pesquisarCliente = propostas.filter(proposta =>
-		proposta.username.toLowerCase().includes(pesquisarProposta.toLowerCase()) ||
-		proposta.contacto.includes(pesquisarProposta)
-	);
+      (proposta.cliente && proposta.cliente.toLowerCase().includes(pesquisarProposta.toLowerCase())) ||
+      (proposta.contacto && proposta.contacto.includes(pesquisarProposta))
+   );
 
 	const inserirNovaProposta = () => {
 		navigate('/Propostas/InserirNovaProposta');
@@ -115,7 +116,7 @@ function Propostas() {
 						value={pesquisarProposta}
 						onChange={handlePesquisar}
 					/>
-					<button className="delete-button" /*onClick={handleDeleteSelected}*/>
+					<button className="delete-button" onClick={handleDeleteSelected}>
 						<RiDeleteBin5Line />
 					</button>
 				</div>
@@ -132,25 +133,26 @@ function Propostas() {
 							<th>ID</th>
 							<th>Cliente</th>
 							<th>Assunto</th>
+                     <th>Data</th>
 							<th>Valor</th>
                      <th>Estado</th>
 						</tr>
 					</thead>
 					<tbody>
 						{pesquisarCliente.map(proposta => (
-							<tr key={proposta._id}>
+							<tr key={proposta.id}>
                         <td>
 									<input
                               type="checkbox"
-                              checked={selecionarPropostas.includes(proposta._id)}
-                              onChange={() => handleSelectProposta(proposta._id)}
+                              checked={selecionarPropostas.includes(proposta.id)}
+                              onChange={() => handleSelectProposta(proposta.id)}
 									/>
 								</td>
-								<td>{proposta._id}</td>
+								<td>{proposta.id}</td>
 								<td>{proposta.cliente}</td>
 								<td>{proposta.assunto}</td>
-								<td>{proposta.data}</td>
-                        <td>{proposta.valor}</td>
+                        <td>{proposta.data ? new Date(proposta.data).toLocaleDateString("pt-PT") : "Sem data"}</td>
+                        <td>{proposta.valor} €</td>
                         <td>{proposta.estado}</td>
 							</tr>
 						))}

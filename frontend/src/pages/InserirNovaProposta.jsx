@@ -5,10 +5,12 @@ import { FaCircleXmark, FaHouse } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
 import "../styles/Sidebar.css";
 import Sidebar from "../components/Sidebar";
-import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import { MdAccessTimeFilled } from "react-icons/md";
 
-const CriarFichaProposta = () => {
+
+const inserirNovaProposta = () => {
    const [cliente, setCliente] = useState('');
    const [contacto, setContacto] = useState('');
    const [assunto, setAssunto] = useState('');
@@ -36,21 +38,21 @@ const CriarFichaProposta = () => {
    }, []);
 
    const handleSearch = (event) => {
-   const query = event.target.value.toLowerCase();
-   setPesquisarCliente(query);
+      const query = event.target.value.toLowerCase();
+      setPesquisarCliente(query);
 
-   if (query) {
-         const filtered = clientes.filter(
-            (c) =>
-               c.username.toLowerCase().includes(query) ||
-               c.contacto.includes(query)
-         );
-         setFilteredClientes(filtered);
-         setHighlightIndex(-1);
-   } else {
-         setFilteredClientes([]);
-   }
-};
+      if (query) {
+            const filtered = clientes.filter(
+               (c) =>
+                  c.username.toLowerCase().includes(query) ||
+                  c.contacto.includes(query)
+            );
+            setFilteredClientes(filtered);
+            setHighlightIndex(-1);
+      } else {
+            setFilteredClientes([]);
+      }
+   };
 
    const selecionarCliente = (cliente) => {
       setCliente(cliente.username);
@@ -88,16 +90,27 @@ const CriarFichaProposta = () => {
    };
 
    const handleKeyDown = (e) => {
-   if (filteredClientes.length === 0) return;
+      if (filteredClientes.length === 0) return;
 
-   if (e.key === "ArrowDown") {
-      setHighlightIndex((prev) => Math.min(prev + 1, filteredClientes.length - 1));
-   } else if (e.key === "ArrowUp") {
-      setHighlightIndex((prev) => Math.max(prev - 1, 0));
-   } else if (e.key === "Enter" && highlightIndex >= 0) {
-      selecionarCliente(filteredClientes[highlightIndex]);
-   }
-};
+      if (e.key === "ArrowDown") {
+         setHighlightIndex((prev) => Math.min(prev + 1, filteredClientes.length - 1));
+      } else if (e.key === "ArrowUp") {
+         setHighlightIndex((prev) => Math.max(prev - 1, 0));
+      } else if (e.key === "Enter" && highlightIndex >= 0) {
+         selecionarCliente(filteredClientes[highlightIndex]);
+      }
+   };
+
+   const estados = [
+      { label: "Aceite ", value: "Aceite", icon: <FaCheckCircle style={{ color: "green" }} /> },
+      { label: "Pendente", value: "Pendente", icon: <MdAccessTimeFilled style={{ color: "yellow" }} /> },
+      { label: "Recusada", value: "Recusada", icon: <FaCircleXmark style={{ color: "red" }} /> },
+   ];
+
+   const handleChangeData = (e) => {
+      const dataSelecionada = e.target.value; 
+      setData(dataSelecionada);
+   };
 
    return (
       <div className="criar">
@@ -186,18 +199,63 @@ const CriarFichaProposta = () => {
                      <div className="form-row">
                         <div className="form-group">
                            <label htmlFor="data">Data:</label>
-                           <input type="text" id="data" name="data" placeholder="Insira a data"
-                              value={data} onChange={(e) => setData(e.target.value)} />
+                           <input 
+                              type="date" 
+                              id="data" 
+                              name="data"
+                              value={data ? data.split("T")[0] : ""}  
+                              onChange={handleChangeData} 
+                           />
                         </div>
                         <div className="form-group">
                            <label htmlFor="valor">Valor:</label>
-                           <input type="text" id="valor" name="valor" placeholder="Insira o valor"
-                              value={valor} onChange={(e) => setValor(e.target.value)} />
+                           <input
+                              type="text"
+                              id="valor"
+                              name="valor"
+                              placeholder="Insira o valor"
+                              value={valor ? `€ ${valor}` : ""} // Exibe o valor formatado com o símbolo de euro
+                              onChange={(e) => {
+                                 let value = e.target.value;
+
+                                 // Remove o símbolo de euro e espaços
+                                 value = value.replace(/[^0-9.]/g, "");
+
+                                 // Permite apenas um ponto decimal
+                                 const parts = value.split(".");
+                                 if (parts.length > 2) {
+                                    value = parts[0] + "." + parts.slice(1).join("");
+                                 }
+
+                                 // Limita a duas casas decimais
+                                 if (parts.length === 2 && parts[1].length > 2) {
+                                    value = parts[0] + "." + parts[1].slice(0, 2);
+                                 }
+
+                                 setValor(value); // Atualiza o estado com o valor numérico
+                              }}
+                           />
                         </div>
                         <div className="form-group">
                            <label htmlFor="estado">Estado:</label>
-                           <input type="text" id="estado" name="estado" placeholder="Insira o estado"
-                              value={estado} onChange={(e) => setEstado(e.target.value)} />
+                           <div className="select-container">
+                              <select
+                                 id="estado"
+                                 name="estado"
+                                 value={estado}
+                                 onChange={(e) => setEstado(e.target.value)}
+                              >
+                                 <option value="" disabled hidden>Selecione o estado</option>
+                                 {estados.map((estado) => (
+                                    <option key={estado.value} value={estado.value}>
+                                       {estado.label}
+                                    </option>
+                                 ))}
+                              </select>
+                              <span className="select-icon">
+                                 {estados.find((item) => item.value === estado)?.icon || <MdOutlineKeyboardArrowDown />}
+                              </span>
+                           </div>
                         </div>
                      </div>
                      <div className="buttons">
@@ -211,4 +269,4 @@ const CriarFichaProposta = () => {
    );
 };
 
-export default CriarFichaProposta;
+export default inserirNovaProposta;

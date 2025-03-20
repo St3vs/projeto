@@ -44,36 +44,38 @@ function FornecedoresPage() {
 		if (selecionarTodos) {
 			setSelecionarFornecedores([]);
 		} else {
-			const allFornecedorIds = fornecedores.map(fornecedor => fornecedor._id);
+			const allFornecedorIds = fornecedores.map(fornecedor => fornecedor.id);
 			setSelecionarFornecedores(allFornecedorIds);
 		}
 		setSelecionarTodos(!selecionarTodos);
 	};
 
-	const handleDeleteSelected = async () => {
-		if (selecionarFornecedores.length === 0) {
-			alert("Nenhum fornecedor selecionado!");
-			return;
-		}
-
-		console.log("IDs a eliminar:", selecionarFornecedores);
-
-		try {
-			const response = await axios.delete("http://localhost:4000/fornecedores/eliminarFornecedores", {
-					data: { ids: selecionarFornecedores }
-			});
-
-			console.log("Resposta do servidor:", response.data);
-			setFornecedore(prevFornecedores => prevFornecedores.filter(fornecedor => !selecionarFornecedores.includes(fornecedor._id)));
-			setSelecionarFornecedores([]);
-			setSelecionarTodos(false);
-
-			alert("Fornecedor(es) eliminado(es) com sucesso!");
-		} catch (error) {
-			console.error("Erro ao eliminar fornecedor(s):", error.response ? error.response.data : error);
-			alert("Erro ao eliminar fornecedor(s)");
-		}
-	};
+   const handleDeleteSelected = async () => {
+      if (selecionarFornecedores.length === 0) {
+          alert("Nenhum fornecedor selecionado!");
+          return;
+      }
+  
+      try {
+          const response = await axios.delete("http://localhost:4000/fornecedores/eliminarFornecedores", {
+              data: { ids: selecionarFornecedores }
+          });
+  
+          console.log("Resposta do servidor:", response.data);
+  
+          // Recarregar os fornecedores do backend para refletir os novos IDs
+          const updatedFornecedores = await axios.get("http://localhost:4000/fornecedores/listarFornecedores");
+          setFornecedores(updatedFornecedores.data);
+  
+          // Limpar as seleções
+          setSelecionarFornecedores([]);
+          setSelecionarTodos(false);
+  
+      } catch (error) {
+          console.error("Erro ao eliminar fornecedor(es):", error.response ? error.response.data : error);
+          alert("Erro ao eliminar fornecedor(es)");
+      }
+   };
 
 	const filteredFornecedores = fornecedores.filter(fornecedor =>
 		fornecedor.username.toLowerCase().includes(pesquisarFornecedor.toLowerCase()) ||
@@ -131,15 +133,15 @@ function FornecedoresPage() {
 					</thead>
 					<tbody>
 						{filteredFornecedores.map(fornecedor => (
-							<tr key={fornecedor._id}>
+							<tr key={fornecedor.id}>
 								<td>
 									<input
                               type="checkbox"
-                              checked={selecionarFornecedores.includes(fornecedor._id)}
-                              onChange={() => handleSelectFornecedor(fornecedor._id)}
+                              checked={selecionarFornecedores.includes(fornecedor.id)}
+                              onChange={() => handleSelectFornecedor(fornecedor.id)}
 									/>
 								</td>
-								<td>{fornecedor._id}</td>
+								<td>{fornecedor.id}</td>
 								<td>{fornecedor.username}</td>
 								<td>{fornecedor.email}</td>
 								<td>{fornecedor.contacto}</td>

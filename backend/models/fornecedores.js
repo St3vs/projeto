@@ -16,12 +16,15 @@ module.exports = Fornecedores;
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/config');
 
-const Fornecedor = sequelize.define('Fornecedor', {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  username: { type: DataTypes.STRING, allowNull: false, unique: true },
-  email: { type: DataTypes.STRING, allowNull: false, unique: true },
-  contacto: { type: DataTypes.STRING, allowNull: false, unique: true },
-  nif: { type: DataTypes.STRING, allowNull: false, unique: true }
-}, { timestamps: false });
+const Fornecedor = sequelize.define("Fornecedor", {
+   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+   username: { type: DataTypes.STRING, allowNull: false, unique: true },
+   email: { type: DataTypes.STRING, allowNull: false, unique: true },
+   contacto: { type: DataTypes.STRING, allowNull: false, unique: true },
+   nif: { type: DataTypes.STRING, allowNull: false, unique: true },
+ }, { 
+   timestamps: false, 
+   tableName: "Fornecedores"
+ });
 
 module.exports = Fornecedor;

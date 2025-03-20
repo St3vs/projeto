@@ -50,30 +50,32 @@ function ClientPage() {
 		setSelecionarTodos(!selecionarTodos);
 	};
 
-	const handleDeleteSelected = async () => {
-		if (selecionarClientes.length === 0) {
-			alert("Nenhum cliente selecionado!");
-			return;
-		}
-
-		console.log("IDs a eliminar:", selecionarClientes);
-
-		try {
-			const response = await axios.delete("http://localhost:4000/clientes/eliminarClientes", {
-					data: { ids: selecionarClientes }
-			});
-
-			console.log("Resposta do servidor:", response.data);
-			setClientes(prevClientes => prevClientes.filter(client => !selecionarClientes.includes(client.id)));
-			setSelecionarClientes([]);
-			setSelecionarTodos(false);
-
-			alert("Cliente(s) eliminado(s) com sucesso!");
-		} catch (error) {
-			console.error("Erro ao eliminar cliente(s):", error.response ? error.response.data : error);
-			alert("Erro ao eliminar cliente(s)");
-		}
-	};
+   const handleDeleteSelected = async () => {
+      if (selecionarClientes.length === 0) {
+          alert("Nenhum cliente selecionado!");
+          return;
+      }
+  
+      try {
+          const response = await axios.delete("http://localhost:4000/clientes/eliminarClientes", {
+              data: { ids: selecionarClientes }
+          });
+  
+          console.log("Resposta do servidor:", response.data);
+  
+          // Recarregar os clientes do backend para ver os novos IDs
+          const updatedClientes = await axios.get("http://localhost:4000/clientes/listarClientes");
+          setClientes(updatedClientes.data);
+  
+          // Limpar as seleções
+          setSelecionarClientes([]);
+          setSelecionarTodos(false);
+  
+      } catch (error) {
+          console.error("Erro ao eliminar cliente(s):", error.response ? error.response.data : error);
+          alert("Erro ao eliminar cliente(s)");
+      }
+  };
 
 	const filteredClientes = clientes.filter(client =>
 		client.username.toLowerCase().includes(pesquisarCliente.toLowerCase()) ||

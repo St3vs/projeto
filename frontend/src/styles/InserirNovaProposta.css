@@ -46,16 +46,16 @@
    padding: 25px;
    border-radius: 20px;
    width: 100%;
-   max-width: 70%;
+   max-width: 80%;
    margin: 0 auto;
    border: 2px solid black;
-   font-size: 20px;
+   font-size: 16px;
 }
 
 .criar-ficha-cliente-content {
    flex-grow: 1;
    padding: 50px;
-   margin-left: 20%; /* Garante que o conteúdo não sobreponha a Sidebar */
+   margin-left: 20%; 
  }
 
 .criar-ficha-cliente h1 {
@@ -95,22 +95,20 @@
    vertical-align: top; 
 }
 
-/* Estilo para a nova div form-row */
 .form-row {
-   display: flex; /* Organiza os campos lado a lado */
-   gap: 15px; /* Espaço entre os campos */
+   display: flex; 
+   gap: 15px; 
 }
 
-/* Ajusta o tamanho dos inputs dentro do form-row */
 .form-row .form-group {
-   flex: 1; /* Faz com que os campos ocupem o espaço disponível */
+   flex: 1; 
 }
 
 .form-row .form-group input {
-   width: 100%; /* Faz o input ocupar 100% do espaço do form-group */
+   width: 100%; 
 }
 
-/* pages/CriarFichaCliente.css */
+
 .buttons {
    display: flex;
    justify-content: space-evenly;
@@ -198,4 +196,34 @@
 .dropdown-clientes li:hover, .dropdown-clientes .highlight {
    background: #E86032;
    color: white;
+}
+
+.select-container {
+   position: relative;
+   display: flex;
+   align-items: center;
+   width: 100%;
+}
+
+.select-container select {
+   width: 100%;
+   padding: 10px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   font-size: 16px;
+   appearance: none;
+   cursor: pointer;
+   background-color: white;
+}
+
+.select-container select:focus {
+   border-color: #0a0f18;
+}
+
+.select-container .select-icon {
+   position: absolute;
+   right: 15px;
+   pointer-events: none;
+   font-size: 22px;
+   color: #555;
 }
