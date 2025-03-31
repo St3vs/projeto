@@ -72,7 +72,7 @@ const CriarFichaFornecedor = () => {
                      <h2>Criar Ficha de Fornecedor</h2>
                   </div>
                </div>
-               <div className='criar-ficha-fornecedor-wrapper'>
+               <div>
                   <form className='criar-ficha-fornecedor' onSubmit={handleCriarFicha}>
                      <h1>Criar Ficha de Fornecedor</h1>
                      <div className="form-group">
@@ -97,35 +97,34 @@ const CriarFichaFornecedor = () => {
                            onChange={(e) => setEmail(e.target.value)}
                         />
                      </div>
-                     <div className="form-row">
-                        <div className="form-group">
-                           <label htmlFor="contacto">Contacto:</label>
-                           <input 
-                              type="text" 
-                              id="contacto" 
-                              name="contacto" 
-                              placeholder="Insira o contacto"
-                              value={contacto}
-                              onChange={(e) => {
-                                    const value = e.target.value.replace(/\D/g, '').slice(0, 9);
-                                    setContacto(value);
-                              }} 
-                           />
-                        </div>
-                        <div className="form-group">
-                           <label htmlFor="nif">NIF:</label>
-                           <input 
-                              type="text" 
-                              id="nif" 
-                              name="nif" 
-                              placeholder="Insira o NIF" 
-                              value={nif}
-                              onChange={(e) => {
-                                    const value = e.target.value.replace(/\D/g, '').slice(0, 9);
-                                    setNIF(value);
-                              }}
-                           />
-                        </div>
+
+                     <div className="form-group">
+                        <label htmlFor="contacto">Contacto:</label>
+                        <input 
+                           type="text" 
+                           id="contacto" 
+                           name="contacto" 
+                           placeholder="Insira o contacto"
+                           value={contacto}
+                           onChange={(e) => {
+                                 const value = e.target.value.replace(/\D/g, '').slice(0, 9);
+                                 setContacto(value);
+                           }} 
+                        />
+                     </div>
+                     <div className="form-group">
+                        <label htmlFor="nif">NIF:</label>
+                        <input 
+                           type="text" 
+                           id="nif" 
+                           name="nif" 
+                           placeholder="Insira o NIF" 
+                           value={nif}
+                           onChange={(e) => {
+                                 const value = e.target.value.replace(/\D/g, '').slice(0, 9);
+                                 setNIF(value);
+                           }}
+                        />
                      </div>
                      <div className="buttons">
                         <button type="submit" className="save"><FaCheckCircle /> GUARDAR</button>

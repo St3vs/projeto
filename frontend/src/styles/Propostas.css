@@ -11,11 +11,14 @@ body {
 
 .clientes-content {
   flex: 1;
-  padding: 50px;
+  padding-left: 100px;
+  padding-top: 40px;
+  padding-right: 100px;
+  padding-bottom: 40px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  margin-left: 250px; /* Ajuste conforme a largura da Sidebar */
+  margin-left: 20%;
 }
 
 .header-section {
@@ -139,4 +142,14 @@ table tr:last-child td {
 
 table input[type="checkbox"] {
   cursor: pointer;
+}
+
+
+.clickable-row {
+   cursor: pointer;
+   transition: background-color 0.2s ease-in-out;
+}
+
+.clickable-row:hover {
+   background-color: #f1f1f1;
 }

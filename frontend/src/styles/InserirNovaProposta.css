@@ -6,7 +6,7 @@
    font-family: Arial, sans-serif;
 }
 
-.criar {
+.inserir {
    display: flex;
    min-height: 100vh;
    background-color: white;
@@ -41,27 +41,38 @@
    font-size: 12px;
 }
 
-.criar-ficha-cliente {
+.inserir-nova-proposta-content {
+   flex-grow: 1;
+   margin-left: 20%; 
+   padding-left: 100px;
+   padding-top: 40px;
+   padding-right: 100px;
+   padding-bottom: 40px;
+}
+
+.inserir-nova-proposta {
    background: white;
-   padding: 25px;
    border-radius: 20px;
    width: 100%;
-   max-width: 80%;
-   margin: 0 auto;
-   border: 2px solid black;
+   max-width: 100%;
    font-size: 16px;
 }
 
-.criar-ficha-cliente-content {
-   flex-grow: 1;
-   padding: 50px;
-   margin-left: 20%; 
- }
-
-.criar-ficha-cliente h1 {
-   margin-bottom: 20px;
+.inserir-nova-proposta h1 {
+   margin-bottom: 30px;
+   margin-top: 30px;
    color: #0C1A26;
    font-size: 30px;
+   font-weight: bold;
+   border-left: 5px solid #E86032; 
+   padding-left: 10px; 
+}
+
+.inserir-nova-proposta h4 {
+   font-weight:normal;
+   margin-bottom: 20px;
+   margin-top: 20px;
+   color: black;
 }
 
 .form-group {
@@ -106,53 +117,6 @@
 
 .form-row .form-group input {
    width: 100%; 
-}
-
-
-.buttons {
-   display: flex;
-   justify-content: space-evenly;
-   margin-top: 15px;
-}
-
-.buttons button {
-   padding: 15px 24px; 
-   border: none;
-   border-radius: 25px; 
-   cursor: pointer;
-   font-size: 20px;
-   font-weight: 600; 
-   transition: all 0.3s ease; 
-   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
-   display: flex; 
-   align-items: center; 
-   gap: 8px; 
-}
-
-.buttons button svg {
-   font-size: 24px;
-}
-
-.buttons .save {
-   background-color: #0a0f18;
-   color: white;
-}
-
-.buttons .save:hover {
-   background-color: #1a2a3a;
-   transform: translateY(-2px); 
-   box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
-}
-
-.buttons .cancel {
-   background-color: #d32f2f;
-   color: white;
-}
-
-.buttons .cancel:hover {
-   background-color: #b71c1c;
-   transform: translateY(-2px); 
-   box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
 }
 
 .search-container {

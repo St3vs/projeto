@@ -85,7 +85,7 @@ function Login() {
                   Esqueceu-se da palavra-passe?
                </a>
                </div>
-               <div className="buttons">
+               <div className="buttons-login">
                <button type="submit" className="save">
                   <FiLogIn />
                   ENTRAR

@@ -113,9 +113,9 @@ const inserirNovaProposta = () => {
    };
 
    return (
-      <div className="criar">
+      <div className="inserir">
          <Sidebar />
-         <div className='criar-ficha-cliente-content'>
+         <div className='inserir-nova-proposta-content'>
                <div className='header-section'>
                   <div className='historicoCriarFicha'>
                      <button className='voltarHome' onClick={() => navigate('/homepage')}><FaHouse /></button>
@@ -125,9 +125,10 @@ const inserirNovaProposta = () => {
                      <h2>Inserir Nova Proposta</h2>
                   </div>
                </div>
-               <div className='criar-ficha-cliente-wrapper'>
-                  <form className='criar-ficha-cliente' onSubmit={handleInserirNovaProposta}>
+               <div>
+                  <form className='inserir-nova-proposta' onSubmit={handleInserirNovaProposta}>
                      <h1>Inserir Nova Proposta</h1>
+                     <h4>Dados do cliente:</h4>
                      <div className="form-group">
                         <div className="search-container">
                            <input
@@ -156,7 +157,7 @@ const inserirNovaProposta = () => {
                      </div>
                      <div className="form-row">
                            <div className="form-group">
-                              <label htmlFor="cliente">Cliente:</label>
+                              <label htmlFor="cliente">Nome do Cliente:</label>
                               <input
                                  type="text"
                                  id="cliente"
@@ -178,7 +179,7 @@ const inserirNovaProposta = () => {
                               />
                            </div>
                      </div>
-                     <h3>Detalhes da proposta:</h3>
+                     <h4>Detalhes da proposta:</h4>
                      <div className="form-group">
                         <div className="assunto">
                            <label htmlFor="assunto">Assunto:</label>

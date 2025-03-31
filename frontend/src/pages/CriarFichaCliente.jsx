@@ -79,7 +79,7 @@ const CriarFichaCliente = () => {
 							<h2>Criar Ficha de Cliente</h2>
 						</div>
 					</div>
-					<div className='criar-ficha-cliente-wrapper'>
+					<div>
 						<form className='criar-ficha-cliente' onSubmit={handleCriarFicha}>
 							<h1>Criar Ficha de Cliente</h1>
 							<div className="form-group">

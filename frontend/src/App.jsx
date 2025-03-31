@@ -13,35 +13,41 @@ import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import Fornecedores from "./pages/Fornecedores";
 import CriarFichaFornecedor from "./pages/CriarFichaFornecedor";
+import EditarPerfil from "./pages/EditarPerfil";
+import Projetos from "./pages/Projetos";
+import EditarProposta from "./pages/EditarProposta";
 
 function App() {
 
-  useEffect(() => {
-    fetch("http://localhost:4000")
-      .then((res) => res.text())
-  }, []);
+   useEffect(() => {
+      fetch("http://localhost:4000")
+         .then((res) => res.text())
+   }, []);
 
-  return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Rotas públicas */}
-          <Route path="/" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
+   return (
+      <AuthProvider>
+         <Router>
+         <Routes>
+            {/* Rotas públicas */}
+            <Route path="/" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
 
-          {/* Rotas protegidas */}
-          <Route path="/Homepage" element={<PrivateRoute><Homepage /></PrivateRoute>} />
-          <Route path="/Clientes/CriarFichaCliente" element={<PrivateRoute><CriarFichaCliente /></PrivateRoute>} />
-          <Route path="/Clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
-          <Route path="/Conta" element={<PrivateRoute><Conta /></PrivateRoute>} />
-          <Route path="/Propostas" element={<PrivateRoute><Propostas /></PrivateRoute>} />
-          <Route path="/Propostas/InserirNovaProposta" element={<PrivateRoute><InserirNovaProposta /></PrivateRoute>} />
-          <Route path="/Fornecedores" element={<PrivateRoute><Fornecedores /></PrivateRoute>} />
-          <Route path="/Fornecedores/CriarFichaFornecedor" element={<PrivateRoute><CriarFichaFornecedor/></PrivateRoute>} />
-        </Routes>
-      </Router>
-    </AuthProvider>
-  );
+            {/* Rotas protegidas */}
+            <Route path="/Homepage" element={<PrivateRoute><Homepage /></PrivateRoute>} />
+            <Route path="/Clientes/CriarFichaCliente" element={<PrivateRoute><CriarFichaCliente /></PrivateRoute>} />
+            <Route path="/Clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
+            <Route path="/Conta" element={<PrivateRoute><Conta /></PrivateRoute>} />
+            <Route path="/Conta/EditarPerfil" element={<PrivateRoute><EditarPerfil /></PrivateRoute>} />
+            <Route path="/Propostas" element={<PrivateRoute><Propostas /></PrivateRoute>} />
+            <Route path="/Propostas/InserirNovaProposta" element={<PrivateRoute><InserirNovaProposta /></PrivateRoute>} />
+            <Route path="/Propostas/EditarProposta/:id" element={<PrivateRoute><EditarProposta /></PrivateRoute>} />
+            <Route path="/Projetos" element={<PrivateRoute><Projetos /></PrivateRoute>} />
+            <Route path="/Fornecedores" element={<PrivateRoute><Fornecedores /></PrivateRoute>} />
+            <Route path="/Fornecedores/CriarFichaFornecedor" element={<PrivateRoute><CriarFichaFornecedor/></PrivateRoute>} />
+         </Routes>
+         </Router>
+      </AuthProvider>
+   );
 }
 
 export default App;

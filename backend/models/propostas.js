@@ -20,15 +20,16 @@ module.exports = Propostas;
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/config');
 
-const Proposta = sequelize.define('Proposta', {
+const Propostas = sequelize.define('Propostas', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   cliente: { type: DataTypes.STRING, allowNull: false },
-  contacto: { type: DataTypes.STRING, allowNull: false, unique: true },
+  contacto: { type: DataTypes.STRING, allowNull: false },
   assunto: { type: DataTypes.STRING, allowNull: false },
   descricao: { type: DataTypes.STRING, allowNull: false },
   data: { type: DataTypes.DATE, allowNull: false },
   valor: { type: DataTypes.STRING, allowNull: false },
-  estado: { type: DataTypes.STRING, allowNull: false }
+  estado: { type: DataTypes.STRING, allowNull: false },
+  idProjeto: { type: DataTypes.INTEGER, allowNull: true }
 }, { timestamps: false });
 
-module.exports = Proposta;
+module.exports = Propostas;

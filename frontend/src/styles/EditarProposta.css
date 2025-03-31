@@ -1,0 +1,158 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.editar-proposta {
+   display: flex;
+   background-color: white;
+   min-height: 100vh;
+}
+
+.proposta-content {
+   flex: 1;
+   padding-left: 100px;
+   padding-top: 40px;
+   padding-right: 100px;
+   padding-bottom: 40px;
+   background-color: white;
+   margin-left: 20%;
+}
+
+.atualizar-proposta h1 {
+   margin-bottom: 30px;
+   margin-top: 30px;
+   color: #0C1A26;
+   font-size: 30px;
+   font-weight: bold;
+   border-left: 5px solid #E86032; 
+   padding-left: 10px; 
+}
+
+.atualizar-proposta h4 {
+   font-weight:normal;
+   margin-bottom: 20px;
+   margin-top: 20px;
+   color: black;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.historicoEditarProposta {
+   display: flex;
+   align-items: center;
+   gap: 2px;
+}
+
+.historicoEditarProposta h2 {
+   font-size: 12px;
+   margin: 0;
+   color: #7C7C7C;
+   font-weight: 200;
+}
+
+.voltarHome{
+   border: none;
+   background-color: white;
+}
+
+.historico svg {
+  font-size: 12px;
+}
+
+.atualizar-proposta {
+   background: white;
+   border-radius: 20px;
+   width: 100%;
+   max-width: 100%;
+   font-size: 16px;
+}
+
+.form-group {
+   display: flex;
+   flex-direction:column;
+   margin-bottom: 15px;
+   width: 100%;
+}
+
+.form-group label {
+   width: auto; 
+   text-align: left; 
+   font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+   flex: 1; 
+   padding: 8px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   font-size: 16px;
+}
+
+
+.input-container {
+   position: relative;
+   width: 100%;
+}
+
+.input-container input,
+.input-container textarea {
+   width: 100%;
+   padding: 10px;
+   padding-right: 35px; /* Garante espaço para o ícone */
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   font-size: 16px;
+}
+
+.edit-icon {
+   position: absolute;
+   right: 10px;
+   top: 50%;
+   transform: translateY(-50%);
+   cursor: pointer;
+   color: black;
+   transition: color 0.3s;
+}
+
+.edit-icon:hover {
+   color: #E86032;
+}
+
+.select-container-editarProposta {
+   position: relative;
+   display: flex;
+   align-items: center;
+   width: 100%;
+}
+
+.select-container-editarProposta select {
+   width: 100%;
+   padding: 10px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   font-size: 16px;
+   appearance: none;
+   cursor: pointer;
+   background-color: #f5f5f5;
+}
+
+.select-container-editarProposta select:focus {
+   border-color: #0a0f18;
+}
+
+.select-container-editarProposta .select-icon {
+   position: absolute;
+   right: 15px;
+   pointer-events: none;
+   font-size: 22px;
+   color: #555;
+}

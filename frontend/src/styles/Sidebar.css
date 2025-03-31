@@ -21,7 +21,7 @@
 }
 
 .Sidebar h1 {
-  font-size: 28px;
+  font-size: 30px;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -39,11 +39,11 @@
   color: white;
   display: flex;
   align-items: center;
-  padding: 15px;
+  padding-left:0px;
+  padding-bottom:30px;
   border-radius: 5px;
   transition: 0.3s;
-  font-size: 20px;
-  margin-left: 10px;
+  font-size: 25px;
 }
   
 .Sidebar ul li a:hover {
@@ -57,8 +57,8 @@
   
 /* Estilos para o logo */
 .Sidebar .logo {
-  margin-top: 20px;
-  width: 140px; 
+  margin-top: 40px;
+  width: 150px; 
   height: auto;
   margin-bottom: 20px; 
   display: block;

@@ -1,41 +1,47 @@
-.conta-header-section {
+.editarperfil-header-section {
    display: flex;
    justify-content: space-between;
    align-items: center;
    margin-bottom: 20px;
-   height: 18px;
 }
 
-.conta-historico {
+.editarperfil-historico {
    display: flex;
    align-items: center;
    gap: 2px;
 }
- 
-.conta-historico h2 {
+
+.editarperfil-historico h2 {
    font-size: 12px;
    margin: 0;
-   color: black;
+   color: #7C7C7C;
    font-weight: 200;
 }
 
-.conta-voltarHome {
+.voltarHome {
    border: none;
    background-color: white;
 }
 
-.conta-historico svg {
+.voltarConta {
+   border: none;
+   background-color: white;
    font-size: 12px;
 }
 
-.conta-container {
+
+.editarperfil-historico svg {
+   font-size: 12px;
+}
+
+.editarperfil-container {
    display: flex;
    min-height: 100vh;
    background-color: white;
    font-family: Arial, sans-serif;
 }
 
-.conta-content {
+.editarperfil-content {
    flex: 1;
    padding-left: 100px;
    padding-top: 40px;
@@ -44,7 +50,7 @@
    margin-left: 20%;
 }
 
-.conta-header {
+.editarperfil-header {
    display: flex;
    justify-content: first baseline;
    align-items: center;
@@ -53,8 +59,8 @@
    gap: 20px;
 }
 
-.conta-dadosPessoais-button {
-   background-color: #E0E0E0;
+.editarperfil-conta-button {
+   background-color: WHITE;
    color: #0c1a26;
    border: none;
    border-radius: 5px;
@@ -67,18 +73,18 @@
    font-weight: bold;
 }
 
-.conta-dadosPessoais-button:hover {
+.editarperfil-conta-button:hover {
    background-color: #0c1a26;
    color: white;
 }
 
-.conta-dadosPessoais-button svg {
+.editarperfil-conta-button svg {
    font-size: 24px;
    margin-right: 10px;
 }
 
-.conta-edit-button {
-   background-color: white;
+.editarperfil-editperfil-button {
+   background-color: #e4e4e4;
    color: #0c1a26;
    border: none;
    border-radius: 5px;
@@ -89,19 +95,19 @@
    transition: background-color 0.3s ease;
 }
 
-.conta-edit-button:hover {
+.editarperfil-editperfil-button:hover {
    background-color: #0c1a26;
    color: white;
 }
 
-.conta-conta-content {
+.editarperfil-conta-content {
    display: flex;
    justify-content: center;
    align-items: center;
    width: 100%;
 }
 
-.conta-conta-left {
+.editarperfil-conta-left {
    display: flex;
    flex-direction: column;
    align-items: center;
@@ -109,25 +115,25 @@
    margin-right: 50px;
 }
 
-.conta-conta-logo {
+.editarperfil-conta-logo {
    width: 250px;
    margin-bottom: 20px;
 }
 
-.conta-conta-right {
+.editarperfil-conta-right {
    background-color: white;
    width: 70%;
    padding: 20px;
    border-radius: 15px;
 }
 
-.conta-dados-pessoais {
+.editarperfil-dados-pessoais {
    display: flex;
    flex-direction: column;
    gap: 15px;
 }
 
-.conta-dados {
+.editarperfil-dados {
    background-color: #fff;
    border: 1px solid #ddd;
    border-radius: 8px;
@@ -135,14 +141,14 @@
    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.conta-dados strong {
+.editarperfil-dados strong {
    display: block;
    font-size: 14px;
    color: #666;
    margin-bottom: 5px;
 }
 
-.conta-dados p {
+.editarperfil-dados p {
    font-size: 16px;
    color: #333;
    margin: 0;

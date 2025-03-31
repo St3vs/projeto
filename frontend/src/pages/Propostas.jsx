@@ -80,7 +80,22 @@ function Propostas() {
           alert("Erro ao eliminar proposta(s)");
       }
    };
-  
+
+   const handleAtualizarProposta = async (id, novosDados) => {
+      try {
+         const response = await axios.put(`http://localhost:4000/propostas/atualizarProposta/${id}`, novosDados);
+         
+         alert(response.data.message);
+   
+         // Atualizar a lista de propostas após a edição
+         const updatedPropostas = await axios.get("http://localhost:4000/propostas/listarPropostas");
+         setPropostas(updatedPropostas.data);
+   
+      } catch (error) {
+         console.error("Erro ao atualizar proposta:", error);
+         alert("Erro ao atualizar proposta");
+      }
+   };
 
 	const pesquisarCliente = propostas.filter(proposta =>
       (proposta.cliente && proposta.cliente.toLowerCase().includes(pesquisarProposta.toLowerCase())) ||
@@ -139,24 +154,28 @@ function Propostas() {
 						</tr>
 					</thead>
 					<tbody>
-						{pesquisarCliente.map(proposta => (
-							<tr key={proposta.id}>
-                        <td>
-									<input
+                  {pesquisarCliente.map(proposta => (
+                     <tr 
+                        key={proposta.id} 
+                        onClick={() => navigate(`/Propostas/EditarProposta/${proposta.id}`)}
+                        className="clickable-row"
+                     >
+                        <td onClick={(e) => e.stopPropagation()}>
+                           <input
                               type="checkbox"
                               checked={selecionarPropostas.includes(proposta.id)}
                               onChange={() => handleSelectProposta(proposta.id)}
-									/>
-								</td>
-								<td>{proposta.id}</td>
-								<td>{proposta.cliente}</td>
-								<td>{proposta.assunto}</td>
+                           />
+                        </td>
+                        <td>{proposta.id}</td>
+                        <td>{proposta.cliente}</td>
+                        <td>{proposta.assunto}</td>
                         <td>{proposta.data ? new Date(proposta.data).toLocaleDateString("pt-PT") : "Sem data"}</td>
                         <td>{proposta.valor} €</td>
                         <td>{proposta.estado}</td>
-							</tr>
-						))}
-					</tbody>
+                     </tr>
+                  ))}
+               </tbody>
 				</table>
 			</div>
 		</div>

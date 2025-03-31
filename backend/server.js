@@ -7,7 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const clientesRoutes = require('./routes/clientesRoutes');
 const propostasRoutes = require('./routes/propostasRoutes');
 const fornecedoresRoutes = require('./routes/fornecedoresRoutes');
-
+const projetosRoutes = require('./routes/projetosRoutes');
 /*
 require('dotenv').config();
 connectDB();
@@ -30,6 +30,7 @@ app.use(helmet());
 app.use('/auth', authRoutes);
 app.use('/clientes', clientesRoutes);
 app.use('/propostas', propostasRoutes);
+app.use('/projetos', projetosRoutes);
 app.use('/fornecedores', fornecedoresRoutes);
 
 const PORT = process.env.PORT || 4000;
