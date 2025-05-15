@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from "../components/Sidebar";
-import '../styles/Propostas.css';
+import '../styles/PaginasSidebar.css';
 import "../styles/Sidebar.css";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
@@ -81,6 +81,7 @@ function Propostas() {
       }
    };
 
+   /*
    const handleAtualizarProposta = async (id, novosDados) => {
       try {
          const response = await axios.put(`http://localhost:4000/propostas/atualizarProposta/${id}`, novosDados);
@@ -96,6 +97,7 @@ function Propostas() {
          alert("Erro ao atualizar proposta");
       }
    };
+   */
 
 	const pesquisarCliente = propostas.filter(proposta =>
       (proposta.cliente && proposta.cliente.toLowerCase().includes(pesquisarProposta.toLowerCase())) ||
@@ -111,9 +113,9 @@ function Propostas() {
 	};
 
 	return (
-		<div className="clientes">
+		<div className="paginas-sidebar">
 			{<Sidebar />}
-			<div className='clientes-content'>
+			<div className='paginas-sidebar-content'>
 				<div className='header-section'>
 					<div className='historico'>
 						<button className='voltarHome' onClick={voltarHome}><FaHouse /></button>

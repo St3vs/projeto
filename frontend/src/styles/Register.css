@@ -1,107 +1,101 @@
 /* Register.css */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
 
 .register-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: white;
-    font-family: Arial, sans-serif;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   height: 100vh;
+   background-color: white;
+   font-family: Arial, sans-serif;
 }
 
 .register-title {
-    font-size: 30px;
-    margin-bottom: 50px;
-    text-align: center;
-    width: 100%; 
-    font-weight: bold;
+   font-size: 30px;
+   margin-bottom: 50px;
+   text-align: center;
+   width: 100%; 
+   font-weight: bold;
 }
 
 .register-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 100%;
 }
 
 .register-left {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-right: 50px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   margin-right: 50px;
 }
 
 .register-logo {
-    width: 250px;
-    margin-bottom: 20px;
+   width: 250px;
+   margin-bottom: 20px;
 }
 
 .app-name {
-    font-size: 30px;
-    font-weight: bold;
-    color: #0C1A26;
+   font-size: 30px;
+   font-weight: bold;
+   color: #0C1A26;
 }
 
 .register-right {
-    background-color: white;
-    width: 450px;
+   background-color: white;
+   width: 450px;
 }
 
 .register-form {
-    display: flex;
-    flex-direction: column;
+   display: flex;
+   flex-direction: column;
 }
 
 .register-input {
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: 15px;
-    border: 1px solid #ccc;
-    font-size: 20px;
+   margin-bottom: 15px;
+   padding: 15px;
+   border-radius: 15px;
+   border: 1px solid #ccc;
+   font-size: 20px;
 }
 
 .create-account {
-    margin-top: 20px;
-    font-size: 20px;
-    text-align: center;
+   margin-top: 20px;
+   font-size: 20px;
+   text-align: center;
 }
 
 .create-account a {
-    color: #007bff;
-    text-decoration: none;
+   color: #007bff;
+   text-decoration: none;
 }
 
 .create-account a:hover {
-    text-decoration: underline;
+   text-decoration: underline;
 }
 
 .password-container {
-    position: relative;
-    width: 100%;
+   position: relative;
+   width: 100%;
 }
 
 .password-input {
-    width: 100%;
-    padding-right: 40px;
+   width: 100%;
+   padding-right: 40px;
 }
 
 .toggle-password {
-    position: absolute;
-    right: 15px;
-    top: 45%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    vertical-align: middle;
-    color: #c1c1c1;
+   position: absolute;
+   right: 15px;
+   top: 45%;
+   transform: translateY(-50%);
+   background: none;
+   border: none;
+   cursor: pointer;
+   font-size: 18px;
+   vertical-align: middle;
+   color: #c1c1c1;
 }

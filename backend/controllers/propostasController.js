@@ -151,7 +151,7 @@ exports.eliminarPropostas = async (req, res) => {
             CREATE TABLE Proposta_temp (
                id INTEGER PRIMARY KEY, 
                cliente VARCHAR(255) NOT NULL,
-               contacto VARCHAR(255) NOT NULL UNIQUE,
+               contacto VARCHAR(255) NOT NULL,
                assunto VARCHAR(255) NOT NULL,
                descricao VARCHAR(255) NOT NULL,
                data DATETIME NOT NULL,

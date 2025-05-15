@@ -21,7 +21,7 @@ function Register() {
   };
 
   const handleRegister = async (e) => {
-    e.preventDefault();1
+    e.preventDefault();
 
     if (contacto.replace(/\D/g, '').length !== 9) {
       alert("O contacto deve conter exatamente 9 dígitos.");
@@ -43,7 +43,8 @@ function Register() {
       });
 
       if (response.status === 201) {
-        alert('Registo realizado com sucesso!');
+      alert('Registo realizado com sucesso! Verifique seu email.');
+      navigate('/');
       }
     } catch (error) {
       if (error.response) {

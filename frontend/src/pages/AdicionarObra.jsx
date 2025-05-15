@@ -5,21 +5,19 @@ import { FaCircleXmark, FaHouse } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
 import "../styles/Sidebar.css";
 import Sidebar from "../components/Sidebar";
-import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import { MdAccessTimeFilled } from "react-icons/md";
 
-
-const inserirNovaProposta = () => {
+const inserirNovaObra = () => {
    const [cliente, setCliente] = useState('');
    const [contacto, setContacto] = useState('');
-   const [assunto, setAssunto] = useState('');
+   const [clientes, setClientes] = useState([]);
    const [descricao, setDescricao] = useState('');
    const [data, setData] = useState('');
-   const [valor, setValor] = useState('');
-   const [estado, setEstado] = useState('');
+   const [dataUltimaFatura, setDataUltimaFatura] = useState('');
+   const [valorProposta, setValorProposta] = useState('');
+   const [valorFaturado, setValorFaturado] = useState('');
    const [pesquisarCliente, setPesquisarCliente] = useState('');
-   const [clientes, setClientes] = useState([]);
    const [filteredClientes, setFilteredClientes] = useState([]);
    const navigate = useNavigate();
    const [highlightIndex, setHighlightIndex] = useState(-1);
@@ -61,7 +59,7 @@ const inserirNovaProposta = () => {
       setFilteredClientes([]);
    };
 
-   const handleInserirNovaProposta = async (e) => {
+   const handleInserirNovaObra = async (e) => {
       e.preventDefault();
 
       if (contacto.replace(/\D/g, '').length !== 9) {
@@ -70,22 +68,22 @@ const inserirNovaProposta = () => {
       }
 
       try {
-         const response = await axios.post('http://localhost:4000/propostas/inserirNovaProposta', {
+         const response = await axios.post('http://localhost:4000/obras/inserirNovaObra', {
             cliente,
             contacto,
-            assunto,
             descricao,
             data,
-            valor,
-            estado
+            valorProposta,
+            valorFaturado,
+            dataUltimaFatura,
          });
 
          if (response.status === 201) {
-               alert('Proposta inserida com sucesso!');
+               alert('Obra inserida com sucesso!');
          }
       } catch (error) {
          console.error('Erro:', error);
-         alert('Erro ao tentar inserir a proposta.');
+         alert('Erro ao tentar inserir obra.');
       }
    };
 
@@ -101,15 +99,34 @@ const inserirNovaProposta = () => {
       }
    };
 
-   const estados = [
-      { label: "Aceite ", value: "Aceite", icon: <FaCheckCircle style={{ color: "green" }} /> },
-      { label: "Pendente", value: "Pendente", icon: <MdAccessTimeFilled style={{ color: "yellow" }} /> },
-      { label: "Recusada", value: "Recusada", icon: <FaCircleXmark style={{ color: "red" }} /> },
-   ];
-
    const handleChangeData = (e) => {
       const dataSelecionada = e.target.value; 
       setData(dataSelecionada);
+   };
+
+   const handleChangeDataUltimaFatura = (e) => {
+      const dataUltimaFaturaSelecionada = e.target.value; 
+      setDataUltimaFatura(dataUltimaFaturaSelecionada);
+   };
+
+      const handleValorChange = (e, setValue) => {
+      let value = e.target.value;
+
+      // Remove todos os caracteres não numéricos, exceto ponto
+      value = value.replace(/[^0-9.]/g, "");
+
+      // Permite apenas um ponto decimal
+      const parts = value.split(".");
+      if (parts.length > 2) {
+         value = parts[0] + "." + parts.slice(1).join("");
+      }
+
+      // Limita a duas casas decimais
+      if (parts.length === 2 && parts[1].length > 2) {
+         value = parts[0] + "." + parts[1].slice(0, 2);
+      }
+
+      setValue(value); // Atualiza o valor numérico
    };
 
    return (
@@ -120,14 +137,14 @@ const inserirNovaProposta = () => {
                   <div className='historico'>
                      <button className='voltarHome' onClick={() => navigate('/homepage')}><FaHouse /></button>
                      <MdOutlineKeyboardArrowRight />
-                     <button className='voltarHome' onClick={() => navigate('/Propostas')}>PROPOSTAS</button>
+                     <button className='voltarHome' onClick={() => navigate('/Obras')}>Obras</button>
                      <MdOutlineKeyboardArrowRight />
-                     <h2>Inserir Nova Proposta</h2>
+                     <h2>Adicionar Nova Obra</h2>
                   </div>
                </div>
                <div>
-                  <form className='inserir-novo' onSubmit={handleInserirNovaProposta}>
-                     <h1>Inserir Nova Proposta</h1>
+                  <form className='inserir-novo' onSubmit={handleInserirNovaObra}>
+                     <h1>Adicionar Nova Obra</h1>
                      <h4>Dados do cliente:</h4>
                      <div className="form-group">
                         <div className="search-container">
@@ -137,18 +154,18 @@ const inserirNovaProposta = () => {
                               value={pesquisarCliente}
                               onChange={handleSearch}
                               onKeyDown={handleKeyDown}
-                              onBlur={() => setTimeout(() => setFilteredClientes([]), 100)} // Fecha dropdown ao perder foco
+                              onBlur={() => setTimeout(() => setFilteredClientes([]), 100)} 
                            />
                            {filteredClientes.length > 0 && (
                               <ul className="dropdown">
-                                 {filteredClientes.map((c, index) => (
+                                 {filteredClientes.map((f, index) => (
                                     <li
-                                       key={c.id}
+                                       key={f.id}
                                        className={index === highlightIndex ? "highlight" : ""}
-                                       onClick={() => selecionarCliente(c)}
+                                       onClick={() => selecionarCliente(f)}
                                        onMouseEnter={() => setHighlightIndex(index)}
                                     >
-                                       {c.username} - {c.contacto}
+                                       {f.username} - {f.contacto}
                                     </li>
                                  ))}
                               </ul>
@@ -179,27 +196,20 @@ const inserirNovaProposta = () => {
                               />
                            </div>
                      </div>
-                     <h4>Detalhes da proposta:</h4>
-                     <div className="form-group">
-                        <div className="assunto">
-                           <label htmlFor="assunto">Assunto:</label>
-                           <input type="text" id="assunto" name="assunto" placeholder="Insira o assunto"
-                              value={assunto} onChange={(e) => setAssunto(e.target.value)} />
-                        </div>
-                     </div>
+                     <h4>Detalhes da obra:</h4>
                      <div className="form-group">
                         <label htmlFor="descricao">Descrição:</label>
                         <textarea 
                            id="descricao" 
                            name="descricao" 
-                           placeholder="Insira a descrição"
+                           placeholder="Insira a descrição da obra"
                            value={descricao} 
                            onChange={(e) => setDescricao(e.target.value)} 
                         />
                      </div>
                      <div className="form-row">
                         <div className="form-group">
-                           <label htmlFor="data">Data:</label>
+                           <label htmlFor="data">Data da Obra:</label>
                            <input 
                               type="date" 
                               id="data" 
@@ -209,59 +219,41 @@ const inserirNovaProposta = () => {
                            />
                         </div>
                         <div className="form-group">
-                           <label htmlFor="valor">Valor:</label>
+                           <label htmlFor="valorProposta">Valor da Proposta:</label>
                            <input
                               type="text"
-                              id="valor"
-                              name="valor"
-                              placeholder="Insira o valor"
-                              value={valor ? `€ ${valor}` : ""} // Exibe o valor formatado com o símbolo de euro
-                              onChange={(e) => {
-                                 let value = e.target.value;
-
-                                 // Remove o símbolo de euro e espaços
-                                 value = value.replace(/[^0-9.]/g, "");
-
-                                 // Permite apenas um ponto decimal
-                                 const parts = value.split(".");
-                                 if (parts.length > 2) {
-                                    value = parts[0] + "." + parts.slice(1).join("");
-                                 }
-
-                                 // Limita a duas casas decimais
-                                 if (parts.length === 2 && parts[1].length > 2) {
-                                    value = parts[0] + "." + parts[1].slice(0, 2);
-                                 }
-
-                                 setValor(value); // Atualiza o estado com o valor numérico
-                              }}
+                              id="valorProposta"
+                              name="valorProposta"
+                              placeholder="Insira o valor da proposta"
+                              value={valorProposta ? `€ ${valorProposta}` : ""} 
+                              onChange={(e) => handleValorChange(e, setValorProposta)}
                            />
                         </div>
                         <div className="form-group">
-                           <label htmlFor="estado">Estado:</label>
-                           <div className="select-container">
-                              <select
-                                 id="estado"
-                                 name="estado"
-                                 value={estado}
-                                 onChange={(e) => setEstado(e.target.value)}
-                              >
-                                 <option value="" disabled hidden>Selecione o estado</option>
-                                 {estados.map((estado) => (
-                                    <option key={estado.value} value={estado.value}>
-                                       {estado.label}
-                                    </option>
-                                 ))}
-                              </select>
-                              <span className="select-icon">
-                                 {estados.find((item) => item.value === estado)?.icon || <MdOutlineKeyboardArrowDown />}
-                              </span>
-                           </div>
+                           <label htmlFor="valorFaturado">Valor da Proposta:</label>
+                           <input
+                              type="text"
+                              id="valorFaturado"
+                              name="valorFaturado"
+                              placeholder="Insira o valor faturado"
+                              value={valorFaturado ? `€ ${valorFaturado}` : ""} 
+                              onChange={(e) => handleValorChange(e, setValorFaturado)}
+                           />                        
+                        </div>
+                        <div className="form-group">
+                           <label htmlFor="dataUltimaFatura">Data da última faturação:</label>
+                           <input 
+                              type="date" 
+                              id="dataUltimaFatura" 
+                              name="dataUltimaFatura"
+                              value={dataUltimaFatura ? dataUltimaFatura.split("T")[0] : ""}  
+                              onChange={handleChangeDataUltimaFatura} 
+                           />
                         </div>
                      </div>
                      <div className="buttons">
-                        <button type="submit" className="save" onClick={() => navigate('/Propostas')}><FaCheckCircle /> GUARDAR</button>
-                        <button type="button" className="cancel" onClick={() => navigate('/Propostas')}><FaCircleXmark /> CANCELAR</button>
+                        <button type="submit" className="save" onClick={() => navigate('/Obras')}><FaCheckCircle /> GUARDAR</button>
+                        <button type="button" className="cancel" onClick={() => navigate('/Obras')}><FaCircleXmark /> CANCELAR</button>
                      </div>
                   </form>
                </div>
@@ -270,4 +262,4 @@ const inserirNovaProposta = () => {
    );
 };
 
-export default inserirNovaProposta;
+export default inserirNovaObra;

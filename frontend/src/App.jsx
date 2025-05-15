@@ -16,11 +16,16 @@ import CriarFichaFornecedor from "./pages/CriarFichaFornecedor";
 import EditarPerfil from "./pages/EditarPerfil";
 import Projetos from "./pages/Projetos";
 import EditarProposta from "./pages/EditarProposta";
+import Encomendas from "./pages/Encomendas";
+import AdicionarEncomenda from "./pages/AdicionarEncomenda";
+import Obras from "./pages/Obras";
+import AdicionarObra from "./pages/AdicionarObra";
+import "./styles/Index.css";
 
 function App() {
 
    useEffect(() => {
-      fetch("http://localhost:4000")
+      fetch("http://localhost:4000/")
          .then((res) => res.text())
    }, []);
 
@@ -44,6 +49,10 @@ function App() {
             <Route path="/Projetos" element={<PrivateRoute><Projetos /></PrivateRoute>} />
             <Route path="/Fornecedores" element={<PrivateRoute><Fornecedores /></PrivateRoute>} />
             <Route path="/Fornecedores/CriarFichaFornecedor" element={<PrivateRoute><CriarFichaFornecedor/></PrivateRoute>} />
+            <Route path="/Encomendas" element={<PrivateRoute><Encomendas /></PrivateRoute>} />
+            <Route path="/Encomendas/InserirNovaEncomenda" element={<PrivateRoute><AdicionarEncomenda/></PrivateRoute>} />
+            <Route path="/Obras" element={<PrivateRoute><Obras/></PrivateRoute>} />
+            <Route path="/Obras/InserirNovaObra" element={<PrivateRoute><AdicionarObra/></PrivateRoute>} />
          </Routes>
          </Router>
       </AuthProvider>

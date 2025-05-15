@@ -5,7 +5,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { FaCircleXmark, FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import '../styles/CriarFichaFornecedor.css';
+import '../styles/Formularios.css';
 import "../styles/Sidebar.css";
 
 const CriarFichaFornecedor = () => {
@@ -60,11 +60,11 @@ const CriarFichaFornecedor = () => {
    };
 
    return (
-      <div className="criar">
+      <div className="inserir">
          <Sidebar />
-         <div className='criar-ficha-fornecedor-content'>
+         <div className='content-formulario'>
                <div className='header-section'>
-                  <div className='historicoCriarFicha'>
+                  <div className='historico'>
                      <button className='voltarHome' onClick={voltarHome}><FaHouse /></button>
                      <MdOutlineKeyboardArrowRight />
                      <button className='voltarHome' onClick={voltarFornecedores}>FORNECEDORES</button>
@@ -73,7 +73,7 @@ const CriarFichaFornecedor = () => {
                   </div>
                </div>
                <div>
-                  <form className='criar-ficha-fornecedor' onSubmit={handleCriarFicha}>
+                  <form className='inserir-novo-fornecedores' onSubmit={handleCriarFicha}>
                      <h1>Criar Ficha de Fornecedor</h1>
                      <div className="form-group">
                         <label htmlFor="nome">Nome do Fornecedor:</label>

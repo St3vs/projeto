@@ -6,12 +6,17 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
+   useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser && storedUser !== "undefined") {
+         try {
+               setUser(JSON.parse(storedUser));
+         } catch (err) {
+               console.error("Erro ao fazer parse do utilizador:", err);
+               localStorage.removeItem("user"); // limpa dados inválidos
+         }
+      }
+   }, []);
 
     const login = (userData, token) => {
         localStorage.setItem("user", JSON.stringify(userData));

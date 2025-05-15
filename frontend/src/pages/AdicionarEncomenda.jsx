@@ -5,63 +5,61 @@ import { FaCircleXmark, FaHouse } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
 import "../styles/Sidebar.css";
 import Sidebar from "../components/Sidebar";
-import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import { MdAccessTimeFilled } from "react-icons/md";
 
-
-const inserirNovaProposta = () => {
-   const [cliente, setCliente] = useState('');
+const inserirNovaEncomenda = () => {
+   const [fornecedor, setFornecedor] = useState('');
    const [contacto, setContacto] = useState('');
-   const [assunto, setAssunto] = useState('');
-   const [descricao, setDescricao] = useState('');
+   const [fornecedores, setFornecedores] = useState([]);
+   const [descricaoMaterial, setDescricaoMaterial] = useState('');
+   const [observacoes, setObservacoes] = useState('');
    const [data, setData] = useState('');
+   const [previsaoEntrega, setPrevisaoEntrega] = useState('');
    const [valor, setValor] = useState('');
-   const [estado, setEstado] = useState('');
-   const [pesquisarCliente, setPesquisarCliente] = useState('');
-   const [clientes, setClientes] = useState([]);
-   const [filteredClientes, setFilteredClientes] = useState([]);
+   const [pesquisarFornecedor, setPesquisarFornecedor] = useState('');
+   const [filteredFornecedores, setFilteredFornecedores] = useState([]);
    const navigate = useNavigate();
    const [highlightIndex, setHighlightIndex] = useState(-1);
 
    useEffect(() => {
-      const fetchClientes = async () => {
+      const fetchFornecedores = async () => {
          try {
-               const response = await axios.get("http://localhost:4000/clientes/listarClientes");
-               setClientes(response.data);
+               const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores");
+               setFornecedores(response.data);
          } catch (error) {
-               console.error("Erro ao buscar clientes:", error);
+               console.error("Erro ao pesquisar fornecedores:", error);
          }
       };
 
-      fetchClientes();
+      fetchFornecedores();
    }, []);
 
    const handleSearch = (event) => {
       const query = event.target.value.toLowerCase();
-      setPesquisarCliente(query);
+      setPesquisarFornecedor(query);
 
       if (query) {
-            const filtered = clientes.filter(
-               (c) =>
-                  c.username.toLowerCase().includes(query) ||
-                  c.contacto.includes(query)
+            const filtered = fornecedores.filter(
+               (f) =>
+                  f.username.toLowerCase().includes(query) ||
+                  f.contacto.includes(query)
             );
-            setFilteredClientes(filtered);
+            setFilteredFornecedores(filtered);
             setHighlightIndex(-1);
       } else {
-            setFilteredClientes([]);
+            setFilteredFornecedores([]);
       }
    };
 
-   const selecionarCliente = (cliente) => {
-      setCliente(cliente.username);
-      setContacto(cliente.contacto);
-      setPesquisarCliente("");
-      setFilteredClientes([]);
+   const selecionarFornecedor = (fornecedor) => {
+      setFornecedor(fornecedor.username);
+      setContacto(fornecedor.contacto);
+      setPesquisarFornecedor("");
+      setFilteredFornecedores([]);
    };
 
-   const handleInserirNovaProposta = async (e) => {
+   const handleInserirNovaEncomenda = async (e) => {
       e.preventDefault();
 
       if (contacto.replace(/\D/g, '').length !== 9) {
@@ -70,46 +68,45 @@ const inserirNovaProposta = () => {
       }
 
       try {
-         const response = await axios.post('http://localhost:4000/propostas/inserirNovaProposta', {
-            cliente,
+         const response = await axios.post('http://localhost:4000/encomendas/inserirNovaEncomenda', {
+            fornecedor,
             contacto,
-            assunto,
-            descricao,
+            descricaoMaterial,
             data,
+            previsaoEntrega,
             valor,
-            estado
+            observacoes
          });
 
          if (response.status === 201) {
-               alert('Proposta inserida com sucesso!');
+               alert('Encomenda adicionada com sucesso!');
          }
       } catch (error) {
          console.error('Erro:', error);
-         alert('Erro ao tentar inserir a proposta.');
+         alert('Erro ao tentar adicionar a proposta.');
       }
    };
 
    const handleKeyDown = (e) => {
-      if (filteredClientes.length === 0) return;
+      if (setFilteredFornecedores.length === 0) return;
 
       if (e.key === "ArrowDown") {
-         setHighlightIndex((prev) => Math.min(prev + 1, filteredClientes.length - 1));
+         setHighlightIndex((prev) => Math.min(prev + 1, filteredFornecedores.length - 1));
       } else if (e.key === "ArrowUp") {
          setHighlightIndex((prev) => Math.max(prev - 1, 0));
       } else if (e.key === "Enter" && highlightIndex >= 0) {
-         selecionarCliente(filteredClientes[highlightIndex]);
+         selecionarFornecedor(filteredFornecedores[highlightIndex]);
       }
    };
-
-   const estados = [
-      { label: "Aceite ", value: "Aceite", icon: <FaCheckCircle style={{ color: "green" }} /> },
-      { label: "Pendente", value: "Pendente", icon: <MdAccessTimeFilled style={{ color: "yellow" }} /> },
-      { label: "Recusada", value: "Recusada", icon: <FaCircleXmark style={{ color: "red" }} /> },
-   ];
 
    const handleChangeData = (e) => {
       const dataSelecionada = e.target.value; 
       setData(dataSelecionada);
+   };
+
+   const handleChangePrevisaoEntrega = (e) => {
+      const dataEntregaSelecionada = e.target.value; 
+      setPrevisaoEntrega(dataEntregaSelecionada);
    };
 
    return (
@@ -120,35 +117,35 @@ const inserirNovaProposta = () => {
                   <div className='historico'>
                      <button className='voltarHome' onClick={() => navigate('/homepage')}><FaHouse /></button>
                      <MdOutlineKeyboardArrowRight />
-                     <button className='voltarHome' onClick={() => navigate('/Propostas')}>PROPOSTAS</button>
+                     <button className='voltarHome' onClick={() => navigate('/Encomendas')}>Encomendas</button>
                      <MdOutlineKeyboardArrowRight />
-                     <h2>Inserir Nova Proposta</h2>
+                     <h2>Adicionar Nova Encomenda</h2>
                   </div>
                </div>
                <div>
-                  <form className='inserir-novo' onSubmit={handleInserirNovaProposta}>
-                     <h1>Inserir Nova Proposta</h1>
-                     <h4>Dados do cliente:</h4>
+                  <form className='inserir-novo' onSubmit={handleInserirNovaEncomenda}>
+                     <h1>Adicionar Nova Encomenda</h1>
+                     <h4>Dados do fornecedor:</h4>
                      <div className="form-group">
                         <div className="search-container">
                            <input
                               type="text"
                               placeholder="Pesquisar por Nome ou Contacto"
-                              value={pesquisarCliente}
+                              value={pesquisarFornecedor}
                               onChange={handleSearch}
                               onKeyDown={handleKeyDown}
-                              onBlur={() => setTimeout(() => setFilteredClientes([]), 100)} // Fecha dropdown ao perder foco
+                              onBlur={() => setTimeout(() => setFilteredFornecedores([]), 100)} 
                            />
-                           {filteredClientes.length > 0 && (
+                           {filteredFornecedores.length > 0 && (
                               <ul className="dropdown">
-                                 {filteredClientes.map((c, index) => (
+                                 {filteredFornecedores.map((f, index) => (
                                     <li
-                                       key={c.id}
+                                       key={f.id}
                                        className={index === highlightIndex ? "highlight" : ""}
-                                       onClick={() => selecionarCliente(c)}
+                                       onClick={() => selecionarFornecedor(f)}
                                        onMouseEnter={() => setHighlightIndex(index)}
                                     >
-                                       {c.username} - {c.contacto}
+                                       {f.username} - {f.contacto}
                                     </li>
                                  ))}
                               </ul>
@@ -157,13 +154,13 @@ const inserirNovaProposta = () => {
                      </div>
                      <div className="form-row">
                            <div className="form-group">
-                              <label htmlFor="cliente">Nome do Cliente:</label>
+                              <label htmlFor="fornecedor">Nome do Fornecedor:</label>
                               <input
                                  type="text"
-                                 id="cliente"
-                                 name="cliente"
-                                 value={cliente}
-                                 onChange={(e) => setCliente(e.target.value)}
+                                 id="fornecedor"
+                                 name="fornecedor"
+                                 value={fornecedor}
+                                 onChange={(e) => setFornecedor(e.target.value)}
                                  disabled
                               />
                            </div>
@@ -179,22 +176,15 @@ const inserirNovaProposta = () => {
                               />
                            </div>
                      </div>
-                     <h4>Detalhes da proposta:</h4>
+                     <h4>Detalhes da encomenda:</h4>
                      <div className="form-group">
-                        <div className="assunto">
-                           <label htmlFor="assunto">Assunto:</label>
-                           <input type="text" id="assunto" name="assunto" placeholder="Insira o assunto"
-                              value={assunto} onChange={(e) => setAssunto(e.target.value)} />
-                        </div>
-                     </div>
-                     <div className="form-group">
-                        <label htmlFor="descricao">Descrição:</label>
+                        <label htmlFor="descricaoMaterial">Descrição do Material:</label>
                         <textarea 
-                           id="descricao" 
-                           name="descricao" 
-                           placeholder="Insira a descrição"
-                           value={descricao} 
-                           onChange={(e) => setDescricao(e.target.value)} 
+                           id="descricaoMaterial" 
+                           name="descricaoMaterial" 
+                           placeholder="Insira a descrição do material"
+                           value={descricaoMaterial} 
+                           onChange={(e) => setDescricaoMaterial(e.target.value)} 
                         />
                      </div>
                      <div className="form-row">
@@ -206,6 +196,16 @@ const inserirNovaProposta = () => {
                               name="data"
                               value={data ? data.split("T")[0] : ""}  
                               onChange={handleChangeData} 
+                           />
+                        </div>
+                           <div className="form-group">
+                           <label htmlFor="previsaoEntrega">Previsão de Entrega:</label>
+                           <input 
+                              type="date" 
+                              id="previsaoEntrega" 
+                              name="previsaoEntrega"
+                              value={previsaoEntrega ? previsaoEntrega.split("T")[0] : ""}  
+                              onChange={handleChangePrevisaoEntrega} 
                            />
                         </div>
                         <div className="form-group">
@@ -238,30 +238,19 @@ const inserirNovaProposta = () => {
                            />
                         </div>
                         <div className="form-group">
-                           <label htmlFor="estado">Estado:</label>
-                           <div className="select-container">
-                              <select
-                                 id="estado"
-                                 name="estado"
-                                 value={estado}
-                                 onChange={(e) => setEstado(e.target.value)}
-                              >
-                                 <option value="" disabled hidden>Selecione o estado</option>
-                                 {estados.map((estado) => (
-                                    <option key={estado.value} value={estado.value}>
-                                       {estado.label}
-                                    </option>
-                                 ))}
-                              </select>
-                              <span className="select-icon">
-                                 {estados.find((item) => item.value === estado)?.icon || <MdOutlineKeyboardArrowDown />}
-                              </span>
-                           </div>
+                           <label htmlFor="observacoes">Observações:</label>
+                           <textarea 
+                              id="observacoes" 
+                              name="observacoes" 
+                              placeholder="Observações adicionais"
+                              value={observacoes} 
+                              onChange={(e) => setObservacoes(e.target.value)} 
+                           />
                         </div>
                      </div>
                      <div className="buttons">
-                        <button type="submit" className="save" onClick={() => navigate('/Propostas')}><FaCheckCircle /> GUARDAR</button>
-                        <button type="button" className="cancel" onClick={() => navigate('/Propostas')}><FaCircleXmark /> CANCELAR</button>
+                        <button type="submit" className="save" onClick={() => navigate('/Encomendas')}><FaCheckCircle /> GUARDAR</button>
+                        <button type="button" className="cancel" onClick={() => navigate('/Encomendas')}><FaCircleXmark /> CANCELAR</button>
                      </div>
                   </form>
                </div>
@@ -270,4 +259,4 @@ const inserirNovaProposta = () => {
    );
 };
 
-export default inserirNovaProposta;
+export default inserirNovaEncomenda;

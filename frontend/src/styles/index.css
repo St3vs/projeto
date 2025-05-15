@@ -12,7 +12,13 @@
    background-color: #f4f4f4;
 }
  
-/* Conteúdo principal */
+.header-section {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 20px;
+}
+
 .content {
    flex: 1;
    padding: 50px;
@@ -64,4 +70,26 @@
    background-color: #b71c1c;
    transform: translateY(-2px); 
    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
+}
+
+.historico {
+   display: flex;
+   align-items: center;
+   gap: 2px;
+}
+
+.historico h2 {
+   font-size: 12px;
+   margin: 0;
+   color: black;
+   font-weight: 200;
+}
+
+.historico svg {
+   font-size: 12px;
+}
+
+.voltarHome{
+   border: none;
+   background-color: white;
 }

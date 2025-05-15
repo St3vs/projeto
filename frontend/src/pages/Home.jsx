@@ -1,46 +1,138 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from "../components/Sidebar";
 import axios from "axios";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import "../styles/Sidebar.css";
-import "../styles/Home.css"; 
+import "../styles/Home.css";
+import ErrorBoundary from './ErrorBoundary';
+
+const COLORS = ["#4caf50", "#ff9800", "#f44336"];
+
+const ChartComponent = ({ data }) => (
+   <ResponsiveContainer width="100%" height={300} >
+   <PieChart>
+      <Pie
+         data={data}
+         cx="45%"
+         cy="50%"
+         innerRadius={60}
+         outerRadius={90}
+         paddingAngle={3}
+         dataKey="value"
+         label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+      >
+         {data.map((entry, index) => (
+         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+         ))}
+      </Pie>
+      <Tooltip
+         contentStyle={{ backgroundColor: '#fff', borderColor: '#ddd' }}
+         formatter={(value, name) => [`${value}`, `${name}`]}
+      />
+      <Legend />
+   </PieChart>
+   </ResponsiveContainer>
+);
+
 
 const Home = () => {
-   const [dashboardData, setDashboardData] = useState(null);
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-   useEffect(() => {
-      const fetchData = async () => {
-         try {
-            const response = await axios.get('http://localhost:4000/dashboard/data');
-            setDashboardData(response.data);
-         } catch (error) {
-             console.error('Erro ao pesquisar dados do dashboard:', error);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+         const response = await axios.get('http://localhost:4000/dashboard', {
+         headers: { 'Content-Type': 'application/json' }
+         });
+         if (response.data && response.data.propostas) {
+            setDashboard(response.data);
+         } else {
+            throw new Error('Estrutura de dados inválida');
          }
-      };
+      }  catch (error) {
+         console.error('Erro ao pesquisar dados do dashboard:', error);
+         setError(error.message);
 
-      fetchData();
-   }, []);
+         setDashboard({
+            propostas: { aceite: 0, pendente: 0, recusada: 0 },
+            projetos: { quantidade: 0, total: 0 },
+            encomendas: { quantidade: 0, total: 0 },
+            obras: { quantidade: 0, total: 0 }
+         });
+      }  finally {
+         setLoading(false);
+      }
+    };
 
-   return (  
-      <div className="home">
-         {<Sidebar />}
+    fetchData();
+  }, []);
+
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat("pt-PT", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value || 0);
+
+   const pieData = dashboard
+      ? [
+         { name: "Aceites", value: dashboard.propostas.aceite },
+         { name: "Pendentes", value: dashboard.propostas.pendente },
+         { name: "Recusadas", value: dashboard.propostas.recusada },
+         ]
+      : [];
+
+   console.log("Pie Data:", pieData); // Debug
+
+   if (loading) {
+      return (
+         <div className="home">
+         <Sidebar />
          <div className="home-content">
-            <h1>Dashboard</h1>
-            <div className="dashboard-content">
-               {dashboardData ? (
-                  <div>
-                     <p>Total Receita: {dashboardData.totalReceita}</p>
-                     <p>Total Despesas: {dashboardData.totalDespesas}</p>
-                     <p>Margem de Lucro: {dashboardData.margemLucro}%</p>
-                     <p>Contas a Receber: {dashboardData.contasReceber}</p>
-                     <p>Contas a Pagar: {dashboardData.contasPagar}</p>
+            <p>Carregando dados...</p>
+         </div>
+         </div>
+      );
+   }
+
+   return (
+      <div className="home">
+         <Sidebar />
+         <div className="home-content">
+         <h1>Dashboard</h1>
+         {error && <div className="error-message">Erro: {error}</div>}
+
+         <div className="dashboard-content">
+            <div className="stats-container">
+               <div className="dashboard-section">
+               <h2>Projetos</h2>
+               <p>Quantidade: {dashboard?.projetos?.quantidade || 0}</p>
+               <p>Valor Total: {formatCurrency(dashboard?.projetos?.total)}</p>
                </div>
-               ) : (
-                  <p>Carregando dados...</p>
-               )}
+
+               <div className="dashboard-section">
+               <h2>Encomendas</h2>
+               <p>Quantidade: {dashboard?.encomendas?.quantidade || 0}</p>
+               <p>Total Gasto: {formatCurrency(dashboard?.encomendas?.total)}</p>
+               </div>
+
+               <div className="dashboard-section">
+               <h2>Obras</h2>
+               <p>Quantidade: {dashboard?.obras?.quantidade || 0}</p>
+               <p>Total Faturado: {formatCurrency(dashboard?.obras?.total)}</p>
+               </div>
+            </div>
+            <div className="dashboard-section">
+               <h2>Propostas</h2>
+               <ErrorBoundary>
+               <ChartComponent data={pieData} />
+               </ErrorBoundary>
             </div>
          </div>
+         </div>
       </div>
-   );
-}
- 
+  );
+};
+
 export default Home;

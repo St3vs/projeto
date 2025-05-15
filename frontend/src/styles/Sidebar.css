@@ -1,23 +1,26 @@
-/* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+:root {
+  --sidebar-width: 20%; /* Largura da sidebar */
 }
   
 /* Sidebar */
 .Sidebar {
-  width: 20%;
-  color: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* Faz com que ocupe toda a altura da tela */
-  position: fixed; /* Mantém a barra fixa no lugar */
-  left: 0;
-  top: 0;
-  background-color: #0C1A26;
+   position: fixed;
+   top: 0;
+   left: 0;
+   height: 100vh;
+   width: var(--sidebar-width);
+   background-color: #0C1A26;
+   color: white;
+   padding: 20px;
+   display: flex;
+   flex-direction: column;
+   z-index: 1000;
+   overflow-y: auto;
+   scrollbar-width: none; 
+}
+
+.Sidebar::-webkit-scrollbar {
+  display: none; 
 }
 
 .Sidebar h1 {
@@ -40,8 +43,7 @@
   display: flex;
   align-items: center;
   padding-left:0px;
-  padding-bottom:30px;
-  border-radius: 5px;
+  padding-bottom:20px;
   transition: 0.3s;
   font-size: 25px;
 }
@@ -57,7 +59,7 @@
   
 /* Estilos para o logo */
 .Sidebar .logo {
-  margin-top: 40px;
+  margin-top: 20px;
   width: 150px; 
   height: auto;
   margin-bottom: 20px; 
@@ -70,3 +72,4 @@
 .Sidebar ul li a.active {
   color: #E86032; /* Cor laranja para o texto */
 }
+

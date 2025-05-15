@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../styles/CriarFichaCliente.css';
+import '../styles/Formularios.css';
 import { FaCheckCircle } from "react-icons/fa";
 import { FaCircleXmark } from "react-icons/fa6";
 import "../styles/Sidebar.css";
@@ -67,11 +67,11 @@ const CriarFichaCliente = () => {
 	};
 
    return (
-		<div className="criar">
+		<div className="inserir">
 			<Sidebar />
-			<div className='criar-ficha-cliente-content'>
+			<div className='content-formulario'>
 					<div className='header-section'>
-						<div className='historicoCriarFicha'>
+						<div className='historico'>
 							<button className='voltarHome' onClick={voltarHome}><FaHouse /></button>
 							<MdOutlineKeyboardArrowRight />
 							<button className='voltarHome' onClick={voltarClientes}>CLIENTES</button>
@@ -80,7 +80,7 @@ const CriarFichaCliente = () => {
 						</div>
 					</div>
 					<div>
-						<form className='criar-ficha-cliente' onSubmit={handleCriarFicha}>
+						<form className='inserir-novo' onSubmit={handleCriarFicha}>
 							<h1>Criar Ficha de Cliente</h1>
 							<div className="form-group">
 								<label htmlFor="nome">Nome de Utilizador/Empresa:</label>

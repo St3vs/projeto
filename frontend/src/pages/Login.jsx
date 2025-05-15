@@ -10,10 +10,9 @@ import { useNavigate } from "react-router-dom";
 function Login() {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
-   //const [lembrarMe, setLembrarMe] = useState(false);
+   const [lembrarMe, setLembrarMe] = useState(false);
    const navigate = useNavigate();
 
-   /*
    useEffect(() => {
       const rememberedData = localStorage.getItem("rememberMe");
       if (rememberedData) {
@@ -23,26 +22,34 @@ function Login() {
          setLembrarMe(true);
       }
    }, []);
-   */
 
    const handleLogin = async (e) => {
       e.preventDefault();
       try {
          const response = await axios.post('http://localhost:4000/auth/login', {
-               email,
-               password,
+            email,
+            password,
          });
 
          if (response.status === 200) {
             const { token, user } = response.data;     
-            localStorage.setItem('token', token); // Salva o token
-            localStorage.setItem('user', JSON.stringify(user)); // Guarda os dados do utilizador
-            navigate('/homepage'); // Redireciona para a página principal
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // <-- ADICIONAR ESTE BLOCO -->
+            if (lembrarMe) {
+               localStorage.setItem("rememberMe", JSON.stringify({ email, password }));
+            } else {
+               localStorage.removeItem("rememberMe");
+            }
+
+            navigate('/homepage');
          }
       } catch (error) {
          alert(error.response?.data?.error || 'Erro ao fazer login');
       }
    };
+
 
    return (
       <div className="login-container">
@@ -75,9 +82,8 @@ function Login() {
                   <input
                      type="checkbox"
                      id="lembrar"
-                     /*checked={lembrarMe}
+                     checked={lembrarMe}
                      onChange={(e) => setLembrarMe(e.target.checked)}
-                     */
                   />
                   <label htmlFor="lembrar">Lembrar-me</label>
                </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from "../components/Sidebar";
-import '../styles/Projetos.css';
+import '../styles/PaginasSidebar.css';
 import "../styles/Sidebar.css";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
@@ -90,9 +90,9 @@ function Projetos() {
 	};
 
 	return (
-		<div className="projetos">
+		<div className="paginas-sidebar">
 			{<Sidebar />}
-			<div className='projetos-content'>
+			<div className='paginas-sidebar-content'>
 				<div className='header-section'>
 					<div className='historico'>
 						<button className='voltarHome' onClick={voltarHome}><FaHouse /></button>
