@@ -1,4 +1,71 @@
 /* Layout principal */
+/* Tema claro por padrão */
+:root {
+   --header-background-color: #0C1A26;
+   --header-text-color: white;
+   --background-color: white;
+   --text-color: #0C1A26;
+
+   --button-background-color: #0C1A26;
+   --button-text-color: white;
+
+   --hover-background-color: white;
+   --hover-text-color: #0C1A26;
+
+   --input-border: #ccc;
+   --input-border-focus: #E86032;
+
+   --table-header-background: #0C1A26;
+   --table-header-color: white;
+   --table-row-background: white;
+   --table-row-hover: #f9f9f9;
+   --table-border-color: #f0f0f0;
+   --input-background: white;
+
+   --button-background-cancel:#d32f2f;
+   --button-background-guardar:#0C1A26;
+
+   --quadros-background-color: white;
+}
+
+[data-theme='dark'] {
+   --header-background-color: #0f0f0f;
+   --header-text-color: white;
+   --background-color: #0f0f0f;
+   --text-color: white;
+
+   --button-background-color: #1f1f1f;
+   --button-text-color: white;
+
+   --hover-background-color: #0f0f0f;
+   --hover-text-color: white;
+
+   --input-border: #444;
+   --input-border-focus: #E86032;
+
+   --table-header-background: #272727;
+   --table-header-color: white;
+   --table-row-background: #1a1a1a;
+   --table-row-hover: #2a2a2a;
+   --table-border-color: #333;
+   --input-background: #1f1f1f;
+
+   --button-background-cancel:#d32f2f;
+   --button-background-guardar:#1f1f1f;
+
+   --quadros-background-color: #1f1f1f;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
 * {
    margin: 0;
    padding: 0;
@@ -9,7 +76,7 @@
 .App {
    display: flex;
    min-height: 100vh;
-   background-color: #f4f4f4;
+   background-color: var(--background-color);
 }
  
 .header-section {
@@ -22,7 +89,7 @@
 .content {
    flex: 1;
    padding: 50px;
-   background: white;
+   background: var(--background-color);
 }
 
 .buttons {
@@ -51,23 +118,23 @@
 }
 
 .buttons .save {
-   background-color: #0a0f18;
+   background-color: var(--button-background-guardar);
    color: white;
 }
 
 .buttons .save:hover {
-   background-color: #1a2a3a;
+   background-color: var(--button-background-color);
    transform: translateY(-2px); 
    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
 }
 
 .buttons .cancel {
-   background-color: #d32f2f;
+   background-color: var(--button-background-cancel);
    color: white;
 }
 
 .buttons .cancel:hover {
-   background-color: #b71c1c;
+   background-color: var(--button-background-cancel);
    transform: translateY(-2px); 
    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
 }
@@ -76,20 +143,34 @@
    display: flex;
    align-items: center;
    gap: 2px;
+   background-color: var(--background-color);
 }
 
 .historico h2 {
    font-size: 12px;
    margin: 0;
-   color: black;
+   color: var(--text-color);
    font-weight: 200;
+   background-color: var(--background-color);
 }
 
 .historico svg {
-   font-size: 12px;
+   font-size: 14px;
+   background-color: var(--background-color);
+   color: var(--text-color);
+   align-items: center;   
+   vertical-align: middle;
 }
 
-.voltarHome{
+.voltarHome {
    border: none;
-   background-color: white;
+   background-color: transparent;
+   padding: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   line-height: 0; /* remove espaço extra vertical */
+   font-size: 14px; /* tamanho similar ao texto ao lado */
+   color: var(--text-color);
 }
+

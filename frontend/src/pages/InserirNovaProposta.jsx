@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Formularios.css';
+import Header from "../components/Header";
+import '../styles/Header.css';
 import { FaCircleXmark, FaHouse } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
 import "../styles/Sidebar.css";
@@ -23,6 +25,7 @@ const inserirNovaProposta = () => {
    const [filteredClientes, setFilteredClientes] = useState([]);
    const navigate = useNavigate();
    const [highlightIndex, setHighlightIndex] = useState(-1);
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
    useEffect(() => {
       const fetchClientes = async () => {
@@ -112,9 +115,17 @@ const inserirNovaProposta = () => {
       setData(dataSelecionada);
    };
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
+
    return (
       <div className="inserir">
-         <Sidebar />
+         
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
          <div className='content-formulario'>
                <div className='header-section'>
                   <div className='historico'>

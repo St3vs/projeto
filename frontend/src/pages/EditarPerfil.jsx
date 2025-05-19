@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/EditarPerfil.css';
+import '../styles/index.css';
 import Sidebar from '../components/Sidebar';
 import { IoPerson } from 'react-icons/io5';
 import iconUser from '../images/iconUser.png';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import Header from "../components/Header";
+import '../styles/Header.css';
 
 const EditarPerfil = () => {
    const [user, setUser] = useState(null);
    const navigate = useNavigate();
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
    useEffect(() => {
       const token = localStorage.getItem('token');
@@ -34,12 +38,20 @@ const EditarPerfil = () => {
 		navigate('/Conta');
 	};
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
+
    return (
       <div className="editarperfil-container">
-         <Sidebar />
+
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
          <div className='editarperfil-content'>
-            <div className='editarperfil-header-section'>
-               <div className='editarperfil-historico'>
+            <div className='header-section'>
+               <div className='historico'>
                   <button className='voltarHome' onClick={voltarHome}><FaHouse /></button>
                   <MdOutlineKeyboardArrowRight />
                   <button className='voltarConta' onClick={voltarConta}>CONTA</button>

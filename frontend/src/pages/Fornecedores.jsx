@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import '../styles/Header.css';
 import '../styles/PaginasSidebar.css';
 import "../styles/Sidebar.css";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -13,6 +15,7 @@ function FornecedoresPage() {
    const [pesquisarFornecedor, setPesquisarFornecedor] = useState('');
    const [selecionarFornecedores, setSelecionarFornecedores] = useState([]);
    const [selecionarTodos, setSelecionarTodos] = useState(false);
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const navigate = useNavigate();
 
 	useEffect(() => {
@@ -90,9 +93,17 @@ function FornecedoresPage() {
 		navigate('/homepage');
 	};
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
+
 	return (
 		<div className="paginas-sidebar">
-			{<Sidebar />}
+			
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
 			<div className='paginas-sidebar-content'>
 				<div className='header-section'>
 					<div className='historico'>

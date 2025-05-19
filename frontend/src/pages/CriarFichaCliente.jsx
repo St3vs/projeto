@@ -8,6 +8,7 @@ import Sidebar from "../components/Sidebar";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { FaHouse } from "react-icons/fa6";
+import Header from "../components/Header";
 
 const CriarFichaCliente = () => {
 	const [username, setUser] = useState('');
@@ -17,6 +18,7 @@ const CriarFichaCliente = () => {
 	const [morada, setMorada] = useState('');
 	const [cp, setCP] = useState('');
 	const [localidade, setLocalidade] = useState('');
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -66,9 +68,17 @@ const CriarFichaCliente = () => {
 		}
 	};
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
+
    return (
 		<div className="inserir">
-			<Sidebar />
+			
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
 			<div className='content-formulario'>
 					<div className='header-section'>
 						<div className='historico'>

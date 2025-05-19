@@ -6,10 +6,14 @@ import { IoPerson } from 'react-icons/io5';
 import iconUser from '../images/iconUser.png';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import Header from "../components/Header";
+import '../styles/Header.css';
+
 
 const Conta = () => {
    const [user, setUser] = useState(null);
    const navigate = useNavigate();
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
    useEffect(() => {
       const token = localStorage.getItem('token');
@@ -29,14 +33,22 @@ const Conta = () => {
    const voltarHome = () => {
 		navigate('/homepage');
 	};
+   
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
 
    return (
       <div className="conta-container">
-         <Sidebar />
+
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
          <div className='conta-content'>
-            <div className='conta-header-section'>
-               <div className='conta-historico'>
-                  <button className='conta-voltarHome' onClick={voltarHome}><FaHouse /></button>
+            <div className='header-section'>
+               <div className='historico'>
+                  <button className='voltarHome' onClick={voltarHome}><FaHouse /></button>
                   <MdOutlineKeyboardArrowRight />
                   <h2>CONTA</h2>
                </div>

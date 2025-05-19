@@ -7,13 +7,14 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import '../styles/Formularios.css';
 import "../styles/Sidebar.css";
+import Header from "../components/Header";
 
 const CriarFichaFornecedor = () => {
    const [username, setUser] = useState('');
    const [email, setEmail] = useState('');
    const [contacto, setContacto] = useState('');
    const [nif, setNIF] = useState('');
-
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const navigate = useNavigate();
 
    const voltarHome = () => {
@@ -59,9 +60,17 @@ const CriarFichaFornecedor = () => {
       }
    };
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
+
    return (
       <div className="inserir">
-         <Sidebar />
+
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
          <div className='content-formulario'>
                <div className='header-section'>
                   <div className='historico'>

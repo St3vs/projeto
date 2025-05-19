@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
 import axios from "axios";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import "../styles/Sidebar.css";
@@ -36,12 +37,14 @@ const ChartComponent = ({ data }) => (
 
 
 const Home = () => {
-  const [dashboard, setDashboard] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+   const [dashboard, setDashboard] = useState(null);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState(null);
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const [theme, setTheme] = useState('light');
 
-  useEffect(() => {
-    const fetchData = async () => {
+   useEffect(() => {
+      const fetchData = async () => {
       try {
          const response = await axios.get('http://localhost:4000/dashboard', {
          headers: { 'Content-Type': 'application/json' }
@@ -64,16 +67,16 @@ const Home = () => {
       }  finally {
          setLoading(false);
       }
-    };
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+   }, []);
 
-  const formatCurrency = (value) =>
-    new Intl.NumberFormat("pt-PT", {
+   const formatCurrency = (value) =>
+      new Intl.NumberFormat("pt-PT", {
       style: "currency",
       currency: "EUR",
-    }).format(value || 0);
+      }).format(value || 0);
 
    const pieData = dashboard
       ? [
@@ -96,11 +99,21 @@ const Home = () => {
       );
    }
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
+
+   const handleThemeChange = (newTheme) => {
+      setTheme(newTheme);
+   };
+      
    return (
       <div className="home">
-         <Sidebar />
+         <Header toggleSidebar={toggleSidebar} onThemeChange={handleThemeChange} />
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+         
          <div className="home-content">
-         <h1>Dashboard</h1>
          {error && <div className="error-message">Erro: {error}</div>}
 
          <div className="dashboard-content">
@@ -132,7 +145,7 @@ const Home = () => {
          </div>
          </div>
       </div>
-  );
+   );
 };
 
 export default Home;

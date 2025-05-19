@@ -1,75 +1,77 @@
 :root {
-  --sidebar-width: 20%; /* Largura da sidebar */
+   --sidebar-width: 20%; /* Largura da sidebar */
 }
   
-/* Sidebar */
 .Sidebar {
    position: fixed;
    top: 0;
-   left: 0;
-   height: 100vh;
+   left: -100%; /* começa escondida */
    width: var(--sidebar-width);
-   background-color: #0C1A26;
+   height: 100vh;
+   background-color: var(--sidebar-background, #0C1A26); /* Fallback se a var não existir */
+   color: var(--text-color);
    color: white;
    padding: 20px;
    display: flex;
    flex-direction: column;
+   transition: left 0.3s ease;
    z-index: 1000;
    overflow-y: auto;
-   scrollbar-width: none; 
+}
+
+.Sidebar.open {
+   left: 0;
 }
 
 .Sidebar::-webkit-scrollbar {
-  display: none; 
+   display: none; 
 }
 
 .Sidebar h1 {
-  font-size: 30px;
-  margin-bottom: 20px;
-  text-align: center;
+   font-size: 30px;
+   margin-bottom: 20px;
+   text-align: center;
 }
-  
+
 .Sidebar ul {
-  list-style: none;
+   list-style: none;
 }
   
 .Sidebar ul li {
-  margin: 10px 0;
+   margin: 10% 0;
 }
   
 .Sidebar ul li a {
-  text-decoration: none;
-  color: white;
-  display: flex;
-  align-items: center;
-  padding-left:0px;
-  padding-bottom:20px;
-  transition: 0.3s;
-  font-size: 25px;
+   text-decoration: none;
+   color: white;
+   display: flex;
+   align-items: center;
+   padding-left:0px;
+   padding-bottom:20px;
+   transition: 0.3s;
+   font-size: 25px;
 }
   
 .Sidebar ul li a:hover {
-  color: #E86032;
+   color: #E86032;
 }
   
 /* Ícones e espaçamento */
 .Sidebar ul li a span {
-  margin-left: 20px;
-}
-  
-/* Estilos para o logo */
-.Sidebar .logo {
-  margin-top: 20px;
-  width: 150px; 
-  height: auto;
-  margin-bottom: 20px; 
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+   margin-left: 20px;
 }
   
 /* Estilo para o item ativo */
 .Sidebar ul li a.active {
-  color: #E86032; /* Cor laranja para o texto */
+   color: #E86032; /* Cor laranja para o texto */
 }
 
+.overlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100vw;
+   height: 100vh;
+   background-color: rgba(0,0,0,0.4);
+   z-index: 999; /* menor que a sidebar (1000), mas acima do conteúdo */
+}

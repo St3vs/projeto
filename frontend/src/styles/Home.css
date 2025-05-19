@@ -1,28 +1,29 @@
 .home {
    display: flex;
    height: 100vh;
+   flex-direction: column;
 }
 
 .home-content {
-   flex: 1;
-   overflow-y: auto;
+  flex: 1;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .dashboard-content {
    display: grid;
    grid-template-columns: 1fr;
    gap: 2rem;
-   margin-left: 20%;
-   padding-right: 100px;
-   padding-left: 100px;
-   padding-top: 40px;
-   padding-bottom: 40px;
+   padding: 20px 10%;
 }
 
 .dashboard-section {
-   padding: 1.5rem;
-   border-radius: 12px;
-   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--quadros-background-color);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .stats-container {
@@ -34,3 +35,4 @@
 .stats-container .dashboard-section {
    flex: 1 1 300px;
 }
+

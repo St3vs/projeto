@@ -7,6 +7,8 @@ import "../styles/Sidebar.css";
 import Sidebar from "../components/Sidebar";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import Header from "../components/Header";
+import '../styles/Header.css';
 
 const inserirNovaObra = () => {
    const [cliente, setCliente] = useState('');
@@ -21,6 +23,7 @@ const inserirNovaObra = () => {
    const [filteredClientes, setFilteredClientes] = useState([]);
    const navigate = useNavigate();
    const [highlightIndex, setHighlightIndex] = useState(-1);
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
    useEffect(() => {
       const fetchClientes = async () => {
@@ -128,10 +131,18 @@ const inserirNovaObra = () => {
 
       setValue(value); // Atualiza o valor numérico
    };
+   
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
 
    return (
       <div className="inserir">
-         <Sidebar />
+
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            
          <div className='content-formulario'>
                <div className='header-section'>
                   <div className='historico'>

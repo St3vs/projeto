@@ -1,18 +1,18 @@
 .paginas-sidebar {
   display: flex;
   height: 100vh;
+  flex-direction: column;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .paginas-sidebar-content {
   flex: 1;
-  padding-left: 100px;
-  padding-top: 40px;
-  padding-right: 100px;
-  padding-bottom: 40px;
-  background-color: white;
+  padding: 20px 10%;
+  background-color: var(--background-color);
+  color: var(--text-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  margin-left: 20%;
 }
 
 .criarFicha {
@@ -20,18 +20,18 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   transition: all 0.3s ease;
-  color: white;
-  background-color: #0C1A26;
+  color: var(--button-text-color);
+  background-color: var(--button-background-color);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
 .criarFicha:hover {
-  background-color: white;
-  color: #0C1A26;
+  background-color: var(--hover-background-color);
+  color: var(--hover-text-color);
   transform: translateY(-1px);
 }
 
@@ -45,40 +45,43 @@
 
 .search-bar input {
   flex: 1;
-  padding: 10px 40px 10px 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+  padding: 10px 10px 10px 10px;
+  font-size: 14px;
+  border: 1px solid var(--input-border);
   border-radius: 10px;
   outline: none;
+  background-color: var(--background-color);
+  color: var(--text-color);
   transition: border-color 0.3s ease;
 }
 
 .search-bar input:focus {
-  border-color: #E86032;
+  border-color: var(--input-border-focus);
 }
 
 .delete-button {
-  padding: 10px 15px;
-  color: #0C1A26;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 25px;
-  background-color: transparent;
-  transition: background-color 0.3s ease;
+   padding: 10px 15px;
+   color: var(--text-color);
+   border: 1px solid var(--input-border);
+   border-radius: 10px;
+   cursor: pointer;
+   font-size: 25px;
+   background-color: transparent;
+   transition: background-color 0.3s ease;
 }
 
 .delete-button:hover {
-  background-color: white;
+   background-color: var(--hover-background-color);
 }
 
 table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-top: 20px;
-  border-radius: 8px;
-  overflow: hidden;
+   width: 100%;
+   border-collapse: separate;
+   border-spacing: 0;
+   margin-top: 20px;
+   border-radius: 8px;
+   overflow: hidden;
+   font-size: 15px;
 }
 
 table th, table td {
@@ -87,18 +90,19 @@ table th, table td {
 }
 
 table th {
-  background: #0C1A26;
-  color: white;
+  background: var(--table-header-background);
+  color: var(--table-header-color);
   font-weight: bold;
 }
 
 table td {
-  background-color: white;
-  border-bottom: 2px solid #f0f0f0;
+  background-color: var(--table-row-background);
+  border-bottom: 2px solid var(--table-border-color);
+  color: var(--text-color);
 }
 
 table tr:hover td {
-  background-color: #f9f9f9;
+  background-color: var(--table-row-hover);
 }
 
 table tr:last-child td {
@@ -110,10 +114,10 @@ table input[type="checkbox"] {
 }
 
 .clickable-row {
-   cursor: pointer;
-   transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .clickable-row:hover {
-   background-color: #f1f1f1;
+  background-color: var(--table-row-hover);
 }

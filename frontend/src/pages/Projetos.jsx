@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import '../styles/Header.css';
 import '../styles/PaginasSidebar.css';
 import "../styles/Sidebar.css";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -9,7 +11,7 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import axios from 'axios';
 
 function Projetos() {
-   
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const [projetos, setProjetos] = useState([]);
    const [pesquisarProjeto, setPesquisarProjeto] = useState('');
    const [selecionarProjetos, setSelecionarProjetos] = useState([]);
@@ -81,17 +83,21 @@ function Projetos() {
       (projeto.assunto && projeto.assunto.toLowerCase().includes(pesquisarProjeto.toLowerCase()))
    );
 
-	const inserirNovoProjeto = () => {
-		navigate('/Projetos/InserirNovoProjeto');
-	};
-
 	const voltarHome = () => {
 		navigate('/homepage');
 	};
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
+
 	return (
 		<div className="paginas-sidebar">
-			{<Sidebar />}
+			
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
 			<div className='paginas-sidebar-content'>
 				<div className='header-section'>
 					<div className='historico'>

@@ -8,7 +8,8 @@ import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-i
 import { FaCircleXmark, FaHouse } from "react-icons/fa6";
 import { FaCheckCircle, FaPencilAlt } from "react-icons/fa";
 import { MdAccessTimeFilled } from "react-icons/md";
-
+import Header from "../components/Header";
+import '../styles/Header.css';
 
 function EditarProposta() {
    const { id } = useParams(); 
@@ -30,6 +31,8 @@ function EditarProposta() {
       valor: false,
       data: false
    });
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   
 
    useEffect(() => {
       const fetchProposta = async () => {
@@ -77,9 +80,17 @@ function EditarProposta() {
       { label: "Recusada", value: "Recusada", icon: <FaCircleXmark style={{ color: "red" }} /> },
    ];
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(prev => !prev);
+   };
+
    return (
       <div className="editar-proposta">
-         <Sidebar />
+
+         <Header toggleSidebar={toggleSidebar}/>
+         {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
          <div className="proposta-content">
             <div className='header-section'>
                <div className='historicoEditarProposta'>

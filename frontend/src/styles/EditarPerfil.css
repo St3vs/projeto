@@ -3,6 +3,7 @@
    justify-content: space-between;
    align-items: center;
    margin-bottom: 20px;
+   height: 18px;
 }
 
 .editarperfil-historico {
@@ -34,15 +35,12 @@
    min-height: 100vh;
    background-color: white;
    font-family: Arial, sans-serif;
+   flex-direction: column;
 }
 
 .editarperfil-content {
    flex: 1;
-   padding-left: 100px;
-   padding-top: 40px;
-   padding-right: 100px;
-   padding-bottom: 40px;
-   margin-left: 20%;
+   padding: 20px 10%;
 }
 
 .editarperfil-header {
