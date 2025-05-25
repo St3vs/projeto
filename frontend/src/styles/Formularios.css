@@ -35,7 +35,7 @@
   margin: 20px 0;
   color: var(--subtext-color);
 }
-g 
+
 .inserir-novo-fornecedores {
   background: var(--background-color);
   border-radius: 20px;
@@ -142,7 +142,7 @@ g
 
 .dropdown li:hover,
 .dropdown .highlight {
-  background: var(--dropdown-hover);
+  background: var(--hover-dropdown-background);
   color: white;
 }
 

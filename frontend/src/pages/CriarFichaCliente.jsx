@@ -31,7 +31,7 @@ const CriarFichaCliente = () => {
 	};
 
 	const handleCriarFicha = async (e) => {
-		e.preventDefault();1
+		e.preventDefault();
 	
 		if (contacto.replace(/\D/g, '').length !== 9) {
 			alert("O contacto deve conter exatamente 9 dígitos.");
@@ -44,26 +44,36 @@ const CriarFichaCliente = () => {
 		}
 	
 		try {
-			const response = await axios.post('http://localhost:4000/clientes/criarFichaCliente', {
-			username,
-			email,
-			contacto,
-			nif,
-			morada,
-			cp,
-			localidade
-			});
+			const token = localStorage.getItem('token'); // Pega o token JWT
+
+			const response = await axios.post(
+				'http://localhost:4000/clientes/criarFichaCliente',
+				{
+					username,
+					email,
+					contacto,
+					nif,
+					morada,
+					cp,
+					localidade
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				}
+			);
 	
 			if (response.status === 201) {
-			alert('Ficha de cliente criada com sucesso!');
+				alert('Ficha de cliente criada com sucesso!');
 			}
 		} catch (error) {
 			if (error.response) {
-			console.error('Erro do backend:', error.response.data);
-			alert(error.response.data.error);
+				console.error('Erro do backend:', error.response.data);
+				alert(error.response.data.error);
 			} else {
-			console.error('Erro de rede ou outro erro:', error);
-			alert('Ocorreu um erro ao tentar registar. Tente novamente.');
+				console.error('Erro de rede ou outro erro:', error);
+				alert('Ocorreu um erro ao tentar registar. Tente novamente.');
 			}
 		}
 	};

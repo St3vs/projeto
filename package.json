@@ -2,15 +2,20 @@
    "name": "meu-projeto",
    "private": true,
    "scripts": {
-      "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+      "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+      "build": "npm run build --prefix frontend",
+      "start": "electron .",
+      "pack": "npm run build && electron-builder"
    },
    "devDependencies": {
-      "concurrently": "^7.0.0",
+      "concurrently": "^8.0.1",
+      "electron": "^28.2.4",
+      "electron-builder": "^24.13.2",
       "swagger-autogen": "^2.23.7"
    },
    "version": "1.0.0",
    "description": "",
-   "main": "index.js",
+   "main": "main.js",
    "dependencies": {
       "@sendgrid/mail": "^8.1.5",
       "ansi-regex": "^5.0.1",
@@ -30,6 +35,7 @@
       "lodash": "^4.17.21",
       "nodemailer": "^7.0.3",
       "react": "^18.2.0",
+      "react-datepicker": "^8.3.0",
       "react-dom": "^18.2.0",
       "recharts": "^2.15.3",
       "redis": "^5.0.1",
@@ -48,6 +54,27 @@
       "y18n": "^5.0.8",
       "yargs": "^17.7.2",
       "yargs-parser": "^21.1.1"
+   },
+   "build": {
+      "appId": "com.seuprojeto.app",
+      "productName": "FlowBiz",
+      "directories": {
+         "output": "dist-electron"
+      },
+      "files": [
+         "main.js",
+         "preload.js",
+         {
+            "from": "frontend/dist",
+            "to": "frontend/dist",
+            "filter": [
+               "**/*"
+            ]
+         }
+      ],
+      "win": {
+         "target": "nsis"
+      }
    },
    "keywords": [],
    "author": "",

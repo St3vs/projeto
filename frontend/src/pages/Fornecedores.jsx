@@ -18,18 +18,23 @@ function FornecedoresPage() {
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const navigate = useNavigate();
 
-	useEffect(() => {
-		const fetchFornecedores = async () => {
-			try {
-				const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores");
-				setFornecedores(response.data);
-			} catch (error) {
-				console.error("Erro ao encontrar fichas de fornecedor:", error);
-			}
-		};
+   useEffect(() => {
+      const fetchFornecedores = async () => {
+         try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+               headers: {
+                  Authorization: `Bearer ${token}`
+               }
+            });
+            setFornecedores(response.data);
+         } catch (error) {
+            console.error("Erro ao encontrar fichas de fornecedor:", error);
+         }
+      };
 
-		fetchFornecedores();
-	}, []);
+      fetchFornecedores();
+   }, []);
 
 	const handleSearch = (event) => {
 		setPesquisarFornecedor(event.target.value);
@@ -55,28 +60,37 @@ function FornecedoresPage() {
 
    const handleDeleteSelected = async () => {
       if (selecionarFornecedores.length === 0) {
-          alert("Nenhum fornecedor selecionado!");
-          return;
+         alert("Nenhum fornecedor selecionado!");
+         return;
       }
-  
+
       try {
-          const response = await axios.delete("http://localhost:4000/fornecedores/eliminarFornecedores", {
-              data: { ids: selecionarFornecedores }
-          });
-  
-          console.log("Resposta do servidor:", response.data);
-  
-          // Recarregar os fornecedores do backend para refletir os novos IDs
-          const updatedFornecedores = await axios.get("http://localhost:4000/fornecedores/listarFornecedores");
-          setFornecedores(updatedFornecedores.data);
-  
-          // Limpar as seleções
-          setSelecionarFornecedores([]);
-          setSelecionarTodos(false);
-  
+         const token = localStorage.getItem('token');
+
+         const response = await axios.delete("http://localhost:4000/fornecedores/eliminarFornecedores", {
+            headers: {
+               Authorization: `Bearer ${token}`
+            },
+            data: { ids: selecionarFornecedores }
+         });
+
+         console.log("Resposta do servidor:", response.data);
+
+         // Recarregar os fornecedores atualizados com token
+         const updatedFornecedores = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+            headers: {
+               Authorization: `Bearer ${token}`
+            }
+         });
+         setFornecedores(updatedFornecedores.data);
+
+         // Limpar as seleções
+         setSelecionarFornecedores([]);
+         setSelecionarTodos(false);
+
       } catch (error) {
-          console.error("Erro ao eliminar fornecedor(es):", error.response ? error.response.data : error);
-          alert("Erro ao eliminar fornecedor(es)");
+         console.error("Erro ao eliminar fornecedor(es):", error.response ? error.response.data : error);
+         alert("Erro ao eliminar fornecedor(es)");
       }
    };
 

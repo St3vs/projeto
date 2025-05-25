@@ -17,20 +17,30 @@ function Obras() {
    const [selecionarObras, setSelecionarObras] = useState([]);
    const [selecionarTodas, setSelecionarTodas] = useState(false);
    const navigate = useNavigate();
-   
-   
+
+   // Obter token do localStorage
+   const token = localStorage.getItem("token");
+
    useEffect(() => {
       const fetchObras = async () => {
          try {
-            const response = await axios.get("http://localhost:4000/obras/listarObras");
+            const response = await axios.get("http://localhost:4000/obras/listarObras", {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               }
+            });
             setObras(response.data);
          } catch (error) {
             console.error("Erro ao encontrar obras:", error);
          }
       };
 
-      fetchObras();
-   }, []);
+      if (!token) {
+         navigate("/login");
+      } else {
+         fetchObras();
+      }
+   }, [token, navigate]);
    
 
    const handlePesquisar = (event) => {
@@ -41,7 +51,7 @@ function Obras() {
       if (selecionarObras.includes(obraId)) {
          setSelecionarObras(selecionarObra.filter(id => id !== obraId));
       } else {
-         setSelecionarObras([selecionarObras, obraId]);
+         setSelecionarObras([...selecionarObras, obraId]);
       }
    };
 
@@ -58,28 +68,33 @@ function Obras() {
    
    const handleDeleteSelected = async () => {
       if (selecionarObras.length === 0) {
-          alert("Nenhuma obra selecionada!");
-          return;
+         alert("Nenhuma obra selecionada!");
+         return;
       }
-  
+
       try {
-          const response = await axios.delete("http://localhost:4000/obras/eliminarObras", {
-              data: { ids: selecionarObras }
-          });
-  
-          console.log("Resposta do servidor:", response.data);
-  
-          // Recarregar as propostas do backend para refletir os novos IDs
-          const updatedObras = await axios.get("http://localhost:4000/obras/listarObras");
-          setObras(updatedObras.data);
-  
-          // Limpar as seleções
-          setSelecionarObras([]);
-          setSelecionarTodas(false);
-  
-         } catch (error) {
-          console.error("Erro ao eliminar obra(s):", error.response ? error.response.data : error);
-          alert("Erro ao eliminar obra(s)");
+         const response = await axios.delete("http://localhost:4000/obras/eliminarObras", {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            data: { ids: selecionarObras }
+         });
+
+         console.log("Resposta do servidor:", response.data);
+
+         const updatedObras = await axios.get("http://localhost:4000/obras/listarObras", {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            }
+         });
+         setObras(updatedObras.data);
+
+         setSelecionarObras([]);
+         setSelecionarTodas(false);
+
+      } catch (error) {
+         console.error("Erro ao eliminar obra(s):", error.response ? error.response.data : error);
+         alert("Erro ao eliminar obra(s)");
       }
    };
 

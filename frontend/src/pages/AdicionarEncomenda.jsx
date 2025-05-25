@@ -25,18 +25,25 @@ const inserirNovaEncomenda = () => {
    const [highlightIndex, setHighlightIndex] = useState(-1);
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+   // Pega o token do localStorage (ou de onde você armazenar)
+   const token = localStorage.getItem('token');
+
    useEffect(() => {
       const fetchFornecedores = async () => {
          try {
-               const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores");
-               setFornecedores(response.data);
+            const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+               headers: {
+                  Authorization: `Bearer ${token}`
+               }
+            });
+            setFornecedores(response.data);
          } catch (error) {
-               console.error("Erro ao pesquisar fornecedores:", error);
+            console.error("Erro ao pesquisar fornecedores:", error);
          }
       };
 
       fetchFornecedores();
-   }, []);
+   }, [token]);
 
    const handleSearch = (event) => {
       const query = event.target.value.toLowerCase();
@@ -79,10 +86,14 @@ const inserirNovaEncomenda = () => {
             previsaoEntrega,
             valor,
             observacoes
+         }, {
+            headers: {
+               Authorization: `Bearer ${token}`
+            }
          });
 
          if (response.status === 201) {
-               alert('Encomenda adicionada com sucesso!');
+            alert('Encomenda adicionada com sucesso!');
          }
       } catch (error) {
          console.error('Erro:', error);

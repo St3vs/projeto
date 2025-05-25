@@ -5,7 +5,7 @@
 .conta-container {
    display: flex;
    min-height: 100vh;
-   background-color: white;
+   background-color: var(--background-color);
    font-family: Arial, sans-serif;
    flex-direction: column;
 }
@@ -25,8 +25,8 @@
 }
 
 .conta-dadosPessoais-button {
-   background-color: #E0E0E0;
-   color: #0c1a26;
+   background-color: var(--button-background-dados-pessoais);
+   color: var(--text-color);
    border: none;
    border-radius: 5px;
    padding: 15px 25px;
@@ -39,8 +39,8 @@
 }
 
 .conta-dadosPessoais-button:hover {
-   background-color: #0c1a26;
-   color: white;
+   background-color: var(--hover-background-color);
+   color: var(--hover-text-color);
 }
 
 .conta-dadosPessoais-button svg {
@@ -49,8 +49,8 @@
 }
 
 .conta-edit-button {
-   background-color: white;
-   color: #0c1a26;
+   background-color: var(--background-color);
+   color: var(--text-color);
    border: none;
    border-radius: 5px;
    padding: 15px 25px;
@@ -61,7 +61,7 @@
 }
 
 .conta-edit-button:hover {
-   background-color: #0c1a26;
+   background-color: var(--button-background-color);
    color: white;
 }
 
@@ -86,7 +86,7 @@
 }
 
 .conta-conta-right {
-   background-color: white;
+   background-color: var(--background-color);
    width: 70%;
    padding: 20px;
    border-radius: 15px;
@@ -99,7 +99,7 @@
 }
 
 .conta-dados {
-   background-color: #fff;
+   background-color: var(--table-row-hover);
    border: 1px solid #ddd;
    border-radius: 8px;
    padding: 15px;
@@ -109,12 +109,12 @@
 .conta-dados strong {
    display: block;
    font-size: 14px;
-   color: #666;
+   color: var(--hover-text-color);
    margin-bottom: 5px;
 }
 
 .conta-dados p {
    font-size: 16px;
-   color: #333;
+   color: var(--hover-text-color);
    margin: 0;
 }

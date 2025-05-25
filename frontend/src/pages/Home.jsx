@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import axios from "axios";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import "../styles/Sidebar.css";
 import "../styles/Home.css";
 import ErrorBoundary from './ErrorBoundary';
+import axios from "../api/axiosConfig";
 
 const COLORS = ["#4caf50", "#ff9800", "#f44336"];
 
@@ -44,32 +44,38 @@ const Home = () => {
    const [theme, setTheme] = useState('light');
 
    useEffect(() => {
-      const fetchData = async () => {
+   const fetchData = async () => {
       try {
+         // Pega o token do localStorage (ou de onde você guarda)
+         const token = localStorage.getItem('token');
+
+         // Faz a requisição incluindo o token no header Authorization
          const response = await axios.get('http://localhost:4000/dashboard', {
-         headers: { 'Content-Type': 'application/json' }
+            headers: {
+               Authorization: `Bearer ${token}`
+            }
          });
+
          if (response.data && response.data.propostas) {
-            setDashboard(response.data);
+         setDashboard(response.data);
          } else {
-            throw new Error('Estrutura de dados inválida');
+         throw new Error('Estrutura de dados inválida');
          }
-      }  catch (error) {
+      } catch (error) {
          console.error('Erro ao pesquisar dados do dashboard:', error);
          setError(error.message);
-
          setDashboard({
-            propostas: { aceite: 0, pendente: 0, recusada: 0 },
-            projetos: { quantidade: 0, total: 0 },
-            encomendas: { quantidade: 0, total: 0 },
-            obras: { quantidade: 0, total: 0 }
+         propostas: { aceite: 0, pendente: 0, recusada: 0 },
+         projetos: { quantidade: 0, total: 0 },
+         encomendas: { quantidade: 0, total: 0 },
+         obras: { quantidade: 0, total: 0 }
          });
-      }  finally {
+      } finally {
          setLoading(false);
       }
-      };
+   };
 
-      fetchData();
+   fetchData();
    }, []);
 
    const formatCurrency = (value) =>

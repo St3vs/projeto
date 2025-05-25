@@ -18,18 +18,32 @@ function ClientPage() {
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const navigate = useNavigate();
 
-	useEffect(() => {
-		const fetchClientes = async () => {
-			try {
-				const response = await axios.get("http://localhost:4000/clientes/listarClientes");
-				setClientes(response.data);
-			} catch (error) {
-				console.error("Erro ao encontrar fichas de clientes:", error);
-			}
-		};
+   useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+         navigate('/');
+         return;
+      }
 
-		fetchClientes();
-	}, []);
+      const fetchClientes = async () => {
+         try {
+            const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
+               headers: {
+                  Authorization: `Bearer ${token}`
+               }
+            });
+            setClientes(response.data);
+         } catch (error) {
+            console.error("Erro ao encontrar fichas de clientes:", error);
+            // Se token inválido ou outro erro crítico, redireciona para login
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+               navigate('/');
+            }
+         }
+      };
+
+      fetchClientes();
+   }, [navigate]);
 
 	const handleSearch = (event) => {
 		setPesquisarCliente(event.target.value);
@@ -55,30 +69,45 @@ function ClientPage() {
 
    const handleDeleteSelected = async () => {
       if (selecionarClientes.length === 0) {
-          alert("Nenhum cliente selecionado!");
-          return;
+         alert("Nenhum cliente selecionado!");
+         return;
       }
-  
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+         navigate('/');
+         return;
+      }
+
       try {
-          const response = await axios.delete("http://localhost:4000/clientes/eliminarClientes", {
-              data: { ids: selecionarClientes }
-          });
-  
-          console.log("Resposta do servidor:", response.data);
-  
-          // Recarregar os clientes do backend para ver os novos IDs
-          const updatedClientes = await axios.get("http://localhost:4000/clientes/listarClientes");
-          setClientes(updatedClientes.data);
-  
-          // Limpar as seleções
-          setSelecionarClientes([]);
-          setSelecionarTodos(false);
-  
+         await axios.delete("http://localhost:4000/clientes/eliminarClientes", {
+            headers: {
+               Authorization: `Bearer ${token}`
+            },
+            data: { ids: selecionarClientes }
+         });
+
+         // Recarregar os clientes do backend
+         const updatedClientes = await axios.get("http://localhost:4000/clientes/listarClientes", {
+            headers: {
+               Authorization: `Bearer ${token}`
+            }
+         });
+         setClientes(updatedClientes.data);
+
+         // Limpar as seleções
+         setSelecionarClientes([]);
+         setSelecionarTodos(false);
+
       } catch (error) {
-          console.error("Erro ao eliminar cliente(s):", error.response ? error.response.data : error);
-          alert("Erro ao eliminar cliente(s)");
+         console.error("Erro ao eliminar cliente(s):", error.response ? error.response.data : error);
+         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+            navigate('/');
+         } else {
+            alert("Erro ao eliminar cliente(s)");
+         }
       }
-  };
+   };
 
 	const filteredClientes = clientes.filter(client =>
 		client.username.toLowerCase().includes(pesquisarCliente.toLowerCase()) ||

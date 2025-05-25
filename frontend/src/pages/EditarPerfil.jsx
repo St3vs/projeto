@@ -54,7 +54,7 @@ const EditarPerfil = () => {
                <div className='historico'>
                   <button className='voltarHome' onClick={voltarHome}><FaHouse /></button>
                   <MdOutlineKeyboardArrowRight />
-                  <button className='voltarConta' onClick={voltarConta}>CONTA</button>
+                  <button className='voltarHome' onClick={voltarConta}>CONTA</button>
                   <MdOutlineKeyboardArrowRight />
                   <h2>Editar perfil</h2>
                </div>

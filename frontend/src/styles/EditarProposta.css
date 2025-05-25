@@ -6,19 +6,17 @@ body {
 }
 
 .editar-proposta {
-   display: flex;
-   background-color: white;
-   min-height: 100vh;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .proposta-content {
    flex: 1;
-   padding-left: 100px;
-   padding-top: 40px;
-   padding-right: 100px;
-   padding-bottom: 40px;
-   background-color: white;
-   margin-left: 20%;
+   padding: 20px 10%;
+   background-color: var(--background-color);
 }
 
 .atualizar-proposta h1 {

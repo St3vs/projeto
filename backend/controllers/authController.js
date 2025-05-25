@@ -1,66 +1,3 @@
-/* controllers/authController.js
-const User = require('../models/user');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
-exports.register = async (req, res) => {
-    try {
-        const { username, email, password, contacto, nif } = req.body;
-
-        // Verifica se o utilizador já existe
-        const userExists = await User.findOne({ email });
-        if (userExists) {
-            return res.status(400).json({ error: 'Email já registado!' });
-        }
-
-        // Hash da senha antes de guardar
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Criar novo utilizador
-        const user = new User({ username, email, password: hashedPassword, contacto, nif });
-        await user.save();
-
-        res.status(201).json({ message: 'Utilizador registado com sucesso!' });
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao registar o utilizador' });
-    }
-};
-
-exports.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        // Verifica se o utilizador existe
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ error: "Utilizador não encontrado" });
-        }
-
-        // Comparar a senha fornecida com a senha armazenada
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ error: 'Senha incorreta!' });
-        }
-
-        // Criar o token após verificar a senha
-        const token = jwt.sign({ id: user._id }, "SECRETO", { expiresIn: "1h" });
-        
-        // Retornar o token e os dados do usuário
-        res.status(200).json({
-            token,
-            user: {
-                username: user.username,
-                email: user.email,
-                contacto: user.contacto,
-                nif: user.nif,            
-            },
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao fazer login' });
-    }
-};
-*/
-
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -104,7 +41,8 @@ exports.login = async (req, res) => {
       }
 
       // Criar o token
-      const token = jwt.sign({ id: user.id }, "SECRETO", { expiresIn: "1h" });
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
 
       res.status(200).json({
          token,

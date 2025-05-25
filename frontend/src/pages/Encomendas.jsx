@@ -19,10 +19,15 @@ function Encomendas() {
    const navigate = useNavigate();
    
    
-	useEffect(() => {
+   useEffect(() => {
 		const fetchEncomendas = async () => {
 			try {
-				const response = await axios.get("http://localhost:4000/encomendas/listarEncomendas");
+            const token = localStorage.getItem('token'); 
+				const response = await axios.get("http://localhost:4000/encomendas/listarEncomendas", {
+               headers: {
+                  Authorization: `Bearer ${token}`
+               }
+            });
 				setEncomendas(response.data);
 			} catch (error) {
 				console.error("Erro ao encontrar encomendas:", error);
@@ -41,7 +46,7 @@ function Encomendas() {
 		if (selecionarEncomendas.includes(encomendaId)) {
 			setSelecionarEncomendas(selecionarEncomenda.filter(id => id !== encomendaId));
 		} else {
-			setSelecionarEncomendas([selecionarEncomendas, encomendaId]);
+			setSelecionarEncomendas([...selecionarEncomendas, encomendaId]);
 		}
 	};
 
@@ -63,14 +68,22 @@ function Encomendas() {
       }
   
       try {
+         const token = localStorage.getItem('token'); // pegar token
           const response = await axios.delete("http://localhost:4000/encomendas/eliminarEncomendas", {
+              headers: {
+                 Authorization: `Bearer ${token}`
+              },
               data: { ids: selecionarEncomendas }
           });
   
           console.log("Resposta do servidor:", response.data);
   
-          // Recarregar as propostas do backend para refletir os novos IDs
-          const updatedEncomendas = await axios.get("http://localhost:4000/encomendas/listarEncomendas");
+          // Recarregar as propostas do backend para refletir os novos IDs, com token no header
+          const updatedEncomendas = await axios.get("http://localhost:4000/encomendas/listarEncomendas", {
+             headers: {
+                Authorization: `Bearer ${token}`
+             }
+          });
           setEncomendas(updatedEncomendas.data);
   
           // Limpar as seleções

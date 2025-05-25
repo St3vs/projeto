@@ -109,13 +109,13 @@ function EditarProposta() {
                   <form className="atualizar-proposta" onSubmit={handleSubmit}>
                      <h1>Detalhes da Proposta</h1>
                      <h4>Dados do cliente:</h4>
-                     <div className="form-row">
-                        <div className="form-group">
+                     <div className="form-row-editarproposta">
+                        <div className="form-group-editarproposta">
                            <label>Cliente:</label>
                            <input type="text" name="cliente" value={proposta.cliente} disabled />
                         </div>
 
-                        <div className="form-group">
+                        <div className="form-group-editarproposta">
                            <label>Contacto:</label>
                            <input type="text" name="contacto" value={proposta.contacto} disabled />
                         </div>
@@ -123,7 +123,7 @@ function EditarProposta() {
 
                      <h4>Dados da proposta:</h4>
 
-                     <div className="form-group">
+                     <div className="form-group-editarproposta">
                         <label>Assunto:</label>
                         <div className="input-container">
                            <input type="text" name="assunto" value={proposta.assunto} onChange={handleChange} disabled={!editavel.assunto} required />
@@ -131,7 +131,7 @@ function EditarProposta() {
                         </div>
                      </div>
 
-                     <div className="form-group">
+                     <div className="form-group-editarproposta">
                         <label>Descrição:</label>
                         <div className="input-container">
                            <textarea name="descricao" value={proposta.descricao} onChange={handleChange} disabled={!editavel.descricao} required />
@@ -139,8 +139,8 @@ function EditarProposta() {
                         </div>
                      </div>
 
-                     <div className="form-row">
-                        <div className="form-group">
+                     <div className="form-row-editarproposta">
+                        <div className="form-group-editarproposta">
                            <label>Data:</label>
                            <div className="input-container">
                               <input type="date" name="data" value={proposta.data || ''} onChange={handleChange} disabled={!editavel.data} required />
@@ -148,14 +148,14 @@ function EditarProposta() {
                            </div>
                         </div>
 
-                        <div className="form-group">
+                        <div className="form-group-editarproposta">
                            <label>Valor(€):</label>
                            <div className="input-container">
                               <input type="number" name="valor" value={proposta.valor} onChange={handleChange} disabled={!editavel.valor} required className="input2"/>
                               <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("valor")} />
                            </div>
                         </div>
-                        <div className="form-group">
+                        <div className="form-group-editarproposta">
                            
                            <label>Estado:</label>
 

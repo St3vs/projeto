@@ -26,14 +26,20 @@ const inserirNovaProposta = () => {
    const navigate = useNavigate();
    const [highlightIndex, setHighlightIndex] = useState(-1);
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const token = localStorage.getItem('token');
 
    useEffect(() => {
       const fetchClientes = async () => {
          try {
-               const response = await axios.get("http://localhost:4000/clientes/listarClientes");
-               setClientes(response.data);
+            const token = localStorage.getItem('token');
+            const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
+               headers: {
+                  Authorization: `Bearer ${token}`
+               }
+            });
+            setClientes(response.data);
          } catch (error) {
-               console.error("Erro ao buscar clientes:", error);
+            console.error("Erro ao buscar clientes:", error);
          }
       };
 
@@ -73,18 +79,27 @@ const inserirNovaProposta = () => {
       }
 
       try {
-         const response = await axios.post('http://localhost:4000/propostas/inserirNovaProposta', {
-            cliente,
-            contacto,
-            assunto,
-            descricao,
-            data,
-            valor,
-            estado
-         });
+         const token = localStorage.getItem('token');
+         const response = await axios.post(
+            'http://localhost:4000/propostas/inserirNovaProposta',
+            {
+               cliente,
+               contacto,
+               assunto,
+               descricao,
+               data,
+               valor,
+               estado
+            },
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`
+               }
+            }
+         );
 
          if (response.status === 201) {
-               alert('Proposta inserida com sucesso!');
+            alert('Proposta inserida com sucesso!');
          }
       } catch (error) {
          console.error('Erro:', error);

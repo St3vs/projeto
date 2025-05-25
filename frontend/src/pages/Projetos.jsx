@@ -17,19 +17,30 @@ function Projetos() {
    const [selecionarProjetos, setSelecionarProjetos] = useState([]);
    const [selecionarTodos, setSelecionarTodos] = useState(false);
    const navigate = useNavigate();
-   
-	useEffect(() => {
-		const fetchProjetos = async () => {
-			try {
-				const response = await axios.get("http://localhost:4000/projetos/listarProjetos");
-				setProjetos(response.data);
-			} catch (error) {
-				console.error("Erro ao buscar projetos:", error);
-			}
-		};
 
-		fetchProjetos();
-	}, []);
+   // Obter token do localStorage
+   const token = localStorage.getItem("token");
+   
+   useEffect(() => {
+      const fetchProjetos = async () => {
+         try {
+            const response = await axios.get("http://localhost:4000/projetos/listarProjetos", {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            });
+            setProjetos(response.data);
+         } catch (error) {
+            console.error("Erro ao buscar projetos:", error);
+         }
+      };
+
+      if (!token) {
+         navigate("/login");
+      } else {
+         fetchProjetos();
+      }
+   }, [token, navigate]);
 
 	const handlePesquisar = (event) => {
 		setPesquisarProjeto(event.target.value);
@@ -53,30 +64,38 @@ function Projetos() {
 		setSelecionarTodos(!selecionarTodos);
 	};
 
-   const handleDeleteSelected = async () => {
+const handleDeleteSelected = async () => {
       if (selecionarProjetos.length === 0) {
-          alert("Nenhum projeto selecionado!");
-          return;
+         alert("Nenhum projeto selecionado!");
+         return;
       }
-  
+
       try {
-          const response = await axios.delete("http://localhost:4000/projetos/eliminarProjetos", {
-              data: { ids: selecionarProjetos }
-          });
-  
-          console.log("Resposta do servidor:", response.data);
-  
-          const updatedProjetos = await axios.get("http://localhost:4000/projetos/listarProjetos");
-          setProjetos(updatedProjetos.data);
-  
-          setSelecionarProjetos([]);
-          setSelecionarTodos(false);
-  
+         const response = await axios.delete("http://localhost:4000/projetos/eliminarProjetos", {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            data: { ids: selecionarProjetos }
+         });
+
+         console.log("Resposta do servidor:", response.data);
+
+         const updatedProjetos = await axios.get("http://localhost:4000/projetos/listarProjetos", {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         });
+         setProjetos(updatedProjetos.data);
+
+         setSelecionarProjetos([]);
+         setSelecionarTodos(false);
+
       } catch (error) {
-          console.error("Erro ao eliminar projeto(s):", error.response ? error.response.data : error);
-          alert("Erro ao eliminar projeto(s)");
+         console.error("Erro ao eliminar projeto(s):", error.response ? error.response.data : error);
+         alert("Erro ao eliminar projeto(s)");
       }
    };
+
   
 	const pesquisarClientes = projetos.filter(projeto =>
       (projeto.cliente && projeto.cliente.toLowerCase().includes(pesquisarProjeto.toLowerCase())) ||

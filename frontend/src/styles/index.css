@@ -8,6 +8,7 @@
 
    --button-background-color: #0C1A26;
    --button-text-color: white;
+   --button-background-dados-pessoais: #E0E0E0;
 
    --hover-background-color: white;
    --hover-text-color: #0C1A26;
@@ -26,6 +27,10 @@
    --button-background-guardar:#0C1A26;
 
    --quadros-background-color: white;
+
+   --dropdown-background: #0C1A26;
+   --hover-dropdown-background: #E86032;
+   --dropdown-text-color:white;
 }
 
 [data-theme='dark'] {
@@ -36,6 +41,7 @@
 
    --button-background-color: #1f1f1f;
    --button-text-color: white;
+   --button-background-dados-pessoais: #1f1f1f;
 
    --hover-background-color: #0f0f0f;
    --hover-text-color: white;
@@ -54,6 +60,10 @@
    --button-background-guardar:#1f1f1f;
 
    --quadros-background-color: #1f1f1f;
+
+   --dropdown-background: #444;
+   --hover-dropdown-background: #E86032;
+   --dropdown-text-color:white;
 }
 
 html, body {
@@ -172,5 +182,10 @@ html, body {
    line-height: 0; /* remove espaço extra vertical */
    font-size: 14px; /* tamanho similar ao texto ao lado */
    color: var(--text-color);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
 }
 

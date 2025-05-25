@@ -4,8 +4,8 @@ import logo from '../images/logoEscuro.png';
 import { FaCircleXmark } from "react-icons/fa6";
 import { FiLogIn } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "../api/axiosConfig";
 
 function Register() {
   const [username, setUser] = useState('');
@@ -34,7 +34,7 @@ function Register() {
     }
 
     try {
-      const response = await axios.post('http://localhost:4000/auth/register', {
+      const response = await axios.post('/auth/register', {
         username,
         email,
         password,

@@ -18,19 +18,29 @@ function Propostas() {
    const [selecionarTodas, setSelecionarTodas] = useState(false);
    const navigate = useNavigate();
    
-   
-	useEffect(() => {
-		const fetchPropostas = async () => {
-			try {
-				const response = await axios.get("http://localhost:4000/propostas/listarPropostas");
-				setPropostas(response.data);
-			} catch (error) {
-				console.error("Erro ao encontrar propostas:", error);
-			}
-		};
+   // Obter token do localStorage
+   const token = localStorage.getItem("token");
 
-		fetchPropostas();
-	}, []);
+   const fetchPropostas = async () => {
+      try {
+         const response = await axios.get("http://localhost:4000/propostas/listarPropostas", {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         });
+         setPropostas(response.data);
+      } catch (error) {
+         console.error("Erro ao buscar propostas:", error);
+      }
+   };
+
+   useEffect(() => {
+      if (!token) {
+         navigate("/login");
+      } else {
+         fetchPropostas();
+      }
+   }, []);
    
 
 	const handlePesquisar = (event) => {
@@ -39,9 +49,9 @@ function Propostas() {
 
 	const handleSelectProposta = (propostaId) => {
 		if (selecionarPropostas.includes(propostaId)) {
-			setSelecionarPropostas(selecionarProposta.filter(id => id !== propostaId));
+			setSelecionarPropostas(selecionarPropostas.filter(id => id !== propostaId));
 		} else {
-			setSelecionarPropostas([selecionarPropostas, propostaId]);
+			setSelecionarPropostas([...selecionarPropostas, propostaId]);
 		}
 	};
 
@@ -63,43 +73,32 @@ function Propostas() {
       }
   
       try {
-          const response = await axios.delete("http://localhost:4000/propostas/eliminarPropostas", {
-              data: { ids: selecionarPropostas }
-          });
-  
-          console.log("Resposta do servidor:", response.data);
-  
-          // Recarregar as propostas do backend para refletir os novos IDs
-          const updatedPropostas = await axios.get("http://localhost:4000/propostas/listarPropostas");
-          setPropostas(updatedPropostas.data);
-  
-          // Limpar as seleções
-          setSelecionarPropostas([]);
-          setSelecionarTodas(false);
-  
-         } catch (error) {
-          console.error("Erro ao eliminar proposta(s):", error.response ? error.response.data : error);
-          alert("Erro ao eliminar proposta(s)");
-      }
-   };
+         const response = await axios.delete("http://localhost:4000/propostas/eliminarPropostas", {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },  
+            data: { ids: selecionarPropostas }
+         });
 
-   /*
-   const handleAtualizarProposta = async (id, novosDados) => {
-      try {
-         const response = await axios.put(`http://localhost:4000/propostas/atualizarProposta/${id}`, novosDados);
-         
-         alert(response.data.message);
-   
-         // Atualizar a lista de propostas após a edição
-         const updatedPropostas = await axios.get("http://localhost:4000/propostas/listarPropostas");
+         console.log("Resposta do servidor:", response.data);
+
+         // Recarregar as propostas do backend para refletir os novos IDs
+         const updatedPropostas = await axios.get("http://localhost:4000/propostas/listarPropostas", {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         });
          setPropostas(updatedPropostas.data);
-   
+
+         // Limpar as seleções
+         setSelecionarPropostas([]);
+         setSelecionarTodas(false);
+
       } catch (error) {
-         console.error("Erro ao atualizar proposta:", error);
-         alert("Erro ao atualizar proposta");
+         console.error("Erro ao eliminar proposta(s):", error.response ? error.response.data : error);
+         alert("Erro ao eliminar proposta(s)");
       }
    };
-   */
 
 	const pesquisarCliente = propostas.filter(proposta =>
       (proposta.cliente && proposta.cliente.toLowerCase().includes(pesquisarProposta.toLowerCase())) ||

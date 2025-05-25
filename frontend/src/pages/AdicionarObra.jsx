@@ -26,17 +26,30 @@ const inserirNovaObra = () => {
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
    useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+         navigate('/');
+         return;
+      }
+
       const fetchClientes = async () => {
          try {
-               const response = await axios.get("http://localhost:4000/clientes/listarClientes");
-               setClientes(response.data);
+            const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
+               headers: {
+                  Authorization: `Bearer ${token}`
+               }
+            });
+            setClientes(response.data);
          } catch (error) {
-               console.error("Erro ao buscar clientes:", error);
+            console.error("Erro ao buscar clientes:", error);
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+               navigate('/');
+            }
          }
       };
 
       fetchClientes();
-   }, []);
+   }, [navigate]);
 
    const handleSearch = (event) => {
       const query = event.target.value.toLowerCase();
@@ -70,6 +83,12 @@ const inserirNovaObra = () => {
          return;
       }
 
+      const token = localStorage.getItem('token');
+      if (!token) {
+         navigate('/');
+         return;
+      }
+
       try {
          const response = await axios.post('http://localhost:4000/obras/inserirNovaObra', {
             cliente,
@@ -79,14 +98,23 @@ const inserirNovaObra = () => {
             valorProposta,
             valorFaturado,
             dataUltimaFatura,
+         }, {
+            headers: {
+               Authorization: `Bearer ${token}`
+            }
          });
 
          if (response.status === 201) {
-               alert('Obra inserida com sucesso!');
+            alert('Obra inserida com sucesso!');
+            navigate('/Obras');
          }
       } catch (error) {
          console.error('Erro:', error);
-         alert('Erro ao tentar inserir obra.');
+         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+            navigate('/');
+         } else {
+            alert('Erro ao tentar inserir obra.');
+         }
       }
    };
 
