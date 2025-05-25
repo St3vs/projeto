@@ -144,50 +144,52 @@ function Obras() {
                   <RiDeleteBin5Line />
                </button>
             </div>
-            <table>
-               <thead>
-                  <tr>
-                     <th>
-                        <input
-                           type="checkbox"
-                           checked={selecionarTodas}
-                           onChange={handleSelecionarTodas}
-                        />
-                     </th>
-                     <th>ID</th>
-                     <th>Cliente</th>
-                     <th>Descrição da Obra</th>
-                     <th>Data</th>
-                     <th>Valor da Proposta</th>
-                     <th>Valor faturado</th>
-                     <th>Data da última fatura</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {pesquisarCliente.map(obra => (
-                     <tr 
-                        key={obra.id} 
-                        onClick={() => navigate(`/obras/EditarObra/${obra.id}`)} // Corrigido aqui
-                        className="clickable-row"
-                     >
-                        <td onClick={(e) => e.stopPropagation()}>
+            <div className="table-wrapper">
+               <table>
+                  <thead>
+                     <tr>
+                        <th>
                            <input
                               type="checkbox"
-                              checked={selecionarObras.includes(obra.id)}
-                              onChange={() => handleSelectObra(obra.id)}
+                              checked={selecionarTodas}
+                              onChange={handleSelecionarTodas}
                            />
-                        </td>
-                        <td>{obra.id}</td>
-                        <td>{obra.cliente}</td>
-                        <td>{obra.descricao}</td>
-                        <td>{obra.data ? new Date(obra.data).toLocaleDateString("pt-PT") : "Sem data"}</td>
-                        <td>{obra.valorProposta} €</td>
-                        <td>{obra.valorFaturado} €</td>
-                        <td>{obra.dataUltimaFatura ? new Date(obra.dataUltimaFatura).toLocaleDateString("pt-PT") : "Sem data"}</td>
+                        </th>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Descrição da Obra</th>
+                        <th>Data</th>
+                        <th>Valor da Proposta</th>
+                        <th>Valor faturado</th>
+                        <th>Data da última fatura</th>
                      </tr>
-                  ))}
-               </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                     {pesquisarCliente.map(obra => (
+                        <tr 
+                           key={obra.id} 
+                           onClick={() => navigate(`/obras/EditarObra/${obra.id}`)} // Corrigido aqui
+                           className="clickable-row"
+                        >
+                           <td onClick={(e) => e.stopPropagation()}>
+                              <input
+                                 type="checkbox"
+                                 checked={selecionarObras.includes(obra.id)}
+                                 onChange={() => handleSelectObra(obra.id)}
+                              />
+                           </td>
+                           <td>{obra.id}</td>
+                           <td>{obra.cliente}</td>
+                           <td>{obra.descricao}</td>
+                           <td>{obra.data ? new Date(obra.data).toLocaleDateString("pt-PT") : "Sem data"}</td>
+                           <td>{obra.valorProposta} €</td>
+                           <td>{obra.valorFaturado} €</td>
+                           <td>{obra.dataUltimaFatura ? new Date(obra.dataUltimaFatura).toLocaleDateString("pt-PT") : "Sem data"}</td>
+                        </tr>
+                     ))}
+                  </tbody>
+               </table>
+            </div>
          </div>
       </div>
    );

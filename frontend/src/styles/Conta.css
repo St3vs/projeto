@@ -118,3 +118,40 @@
    color: var(--hover-text-color);
    margin: 0;
 }
+
+@media (max-width: 768px) {
+   .conta-content {
+      padding: 20px 5%; /* Menor padding lateral */
+   }
+
+   .conta-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+   }
+
+   .conta-dadosPessoais-button,
+   .conta-edit-button {
+      font-size: 18px;
+      padding: 10px 15px;
+      width: 100%;
+      justify-content: center;
+   }
+
+   .conta-conta-content {
+      flex-direction: column;
+      align-items: center;
+   }
+
+   .conta-conta-left,
+   .conta-conta-right {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 0 20px 0;
+   }
+
+   .conta-conta-logo {
+      width: 150px;
+      margin-bottom: 15px;
+   }
+}

@@ -11,7 +11,7 @@
    background-color: var(--sidebar-background, #0C1A26); /* Fallback se a var não existir */
    color: var(--text-color);
    color: white;
-   padding: 20px;
+   padding: 10px;
    display: flex;
    flex-direction: column;
    transition: left 0.3s ease;
@@ -74,4 +74,77 @@
    height: 100vh;
    background-color: rgba(0,0,0,0.4);
    z-index: 999; /* menor que a sidebar (1000), mas acima do conteúdo */
+}
+
+/* Tablets e telas médias */
+@media (max-width: 1400px) {
+   :root {
+      --sidebar-width: 30%; /* Sidebar maior em telas médias */
+   }
+
+   .Sidebar h1 {
+      font-size: 25px;
+   }
+
+   .Sidebar ul li a {
+      font-size: 20px;
+      padding-bottom: 20px;
+   }
+
+   .Sidebar ul li {
+      margin: 10% 0;
+   }
+   
+   .Sidebar {
+      padding: 10px 10px;
+   }
+}
+
+/* Celulares e telas pequenas */
+@media (max-width: 768px) {
+   :root {
+      --sidebar-width: 70%; /* Sidebar ocupa a tela toda */
+   }
+
+   .Sidebar {
+      width: var(--sidebar-width);
+   }
+
+   .Sidebar h1 {
+      margin-bottom: 30px;
+   }
+
+   .Sidebar ul li a {
+      font-size: 25px;
+      padding-bottom: 12px;
+   }
+
+   .Sidebar ul li {
+      margin: 10% 0;
+   }
+
+   /* Aumentar padding lateral para toque mais fácil */
+   .Sidebar {
+      padding: 10px 10px;
+   }
+}
+
+/* Extra pequeno - celulares bem pequenos */
+@media (max-width: 480px) {
+   .Sidebar h1 {
+      font-size: 25px;
+   }
+
+   .Sidebar ul li a {
+      font-size: 20px;
+      padding-bottom: 20px;
+   }
+
+   .Sidebar ul li {
+      margin: 10% 0;
+   }
+
+   .Sidebar {
+      padding: 10px 10px;
+   }
 }

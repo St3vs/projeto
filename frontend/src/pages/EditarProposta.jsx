@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/EditarProposta.css";
 import "../styles/Sidebar.css";
+import '../styles/Header.css';
 import Sidebar from "../components/Sidebar";
 import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { FaCircleXmark, FaHouse } from "react-icons/fa6";
 import { FaCheckCircle, FaPencilAlt } from "react-icons/fa";
 import { MdAccessTimeFilled } from "react-icons/md";
 import Header from "../components/Header";
-import '../styles/Header.css';
 
 function EditarProposta() {
    const { id } = useParams(); 
@@ -35,23 +35,25 @@ function EditarProposta() {
    
 
    useEffect(() => {
-      const fetchProposta = async () => {
-         try {
-            const response = await axios.get(`http://localhost:4000/propostas/listarProposta/${id}`);
-            const dados = response.data;
+   const fetchProposta = async () => {
+      try {
+         const token = localStorage.getItem("token");
+         const response = await axios.get(`http://localhost:4000/propostas/listarProposta/${id}`, {
+         headers: { Authorization: `Bearer ${token}` }
+         });
+         const dados = response.data;
 
-            // Ajustar formato da data para YYYY-MM-DD se necessário
-            if (dados.data) {
-               dados.data = dados.data.split("T")[0];
-            }
-
-            setProposta(dados);
-         } catch (error) {
-            console.error("Erro ao buscar proposta:", error);
+         if (dados.data) {
+         dados.data = dados.data.split("T")[0];
          }
-      };
 
-      fetchProposta();
+         setProposta(dados);
+      } catch (error) {
+         console.error("Erro ao buscar proposta:", error);
+      }
+   };
+
+   fetchProposta();
    }, [id]);
 
    const handleChange = (event) => {
@@ -63,15 +65,18 @@ function EditarProposta() {
    };
 
    const handleSubmit = async (event) => {
-      event.preventDefault();
-      try {
-         await axios.put(`http://localhost:4000/propostas/atualizarProposta/${id}`, proposta);
-         alert("Proposta atualizada com sucesso!");
-         navigate("/Propostas");
-      } catch (error) {
-         console.error("Erro ao atualizar proposta:", error);
-         alert("Erro ao atualizar proposta.");
-      }
+   event.preventDefault();
+   try {
+      const token = localStorage.getItem("token");
+      await axios.put(`http://localhost:4000/propostas/atualizarProposta/${id}`, proposta, {
+         headers: { Authorization: `Bearer ${token}` }
+      });
+      alert("Proposta atualizada com sucesso!");
+      navigate("/Propostas");
+   } catch (error) {
+      console.error("Erro ao atualizar proposta:", error);
+      alert("Erro ao atualizar proposta.");
+   }
    };
 
    const estados = [
@@ -85,15 +90,15 @@ function EditarProposta() {
    };
 
    return (
-      <div className="editar-proposta">
+      <div className="paginas-sidebar">
 
          <Header toggleSidebar={toggleSidebar}/>
          {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
          <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-         <div className="proposta-content">
+         <div className="paginas-sidebar-content">
             <div className='header-section'>
-               <div className='historicoEditarProposta'>
+               <div className='historico'>
                   <button className='voltarHome' onClick={() => navigate('/homepage')}><FaHouse /></button>
                   <MdOutlineKeyboardArrowRight />
                   <button className='voltarHome' onClick={() => navigate('/Propostas')}>PROPOSTAS</button>
@@ -109,13 +114,13 @@ function EditarProposta() {
                   <form className="atualizar-proposta" onSubmit={handleSubmit}>
                      <h1>Detalhes da Proposta</h1>
                      <h4>Dados do cliente:</h4>
-                     <div className="form-row-editarproposta">
-                        <div className="form-group-editarproposta">
+                     <div className="form-row">
+                        <div className="form-group">
                            <label>Cliente:</label>
                            <input type="text" name="cliente" value={proposta.cliente} disabled />
                         </div>
 
-                        <div className="form-group-editarproposta">
+                        <div className="form-group">
                            <label>Contacto:</label>
                            <input type="text" name="contacto" value={proposta.contacto} disabled />
                         </div>
@@ -123,7 +128,7 @@ function EditarProposta() {
 
                      <h4>Dados da proposta:</h4>
 
-                     <div className="form-group-editarproposta">
+                     <div className="form-group">
                         <label>Assunto:</label>
                         <div className="input-container">
                            <input type="text" name="assunto" value={proposta.assunto} onChange={handleChange} disabled={!editavel.assunto} required />
@@ -131,7 +136,7 @@ function EditarProposta() {
                         </div>
                      </div>
 
-                     <div className="form-group-editarproposta">
+                     <div className="form-group">
                         <label>Descrição:</label>
                         <div className="input-container">
                            <textarea name="descricao" value={proposta.descricao} onChange={handleChange} disabled={!editavel.descricao} required />
@@ -139,8 +144,8 @@ function EditarProposta() {
                         </div>
                      </div>
 
-                     <div className="form-row-editarproposta">
-                        <div className="form-group-editarproposta">
+                     <div className="form-row">
+                        <div className="form-group">
                            <label>Data:</label>
                            <div className="input-container">
                               <input type="date" name="data" value={proposta.data || ''} onChange={handleChange} disabled={!editavel.data} required />
@@ -148,18 +153,18 @@ function EditarProposta() {
                            </div>
                         </div>
 
-                        <div className="form-group-editarproposta">
+                        <div className="form-group">
                            <label>Valor(€):</label>
                            <div className="input-container">
                               <input type="number" name="valor" value={proposta.valor} onChange={handleChange} disabled={!editavel.valor} required className="input2"/>
                               <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("valor")} />
                            </div>
                         </div>
-                        <div className="form-group-editarproposta">
+                        <div className="form-group">
                            
                            <label>Estado:</label>
 
-                           <div className="select-container-editarProposta">
+                           <div className="select-container">
                               <select
                                  id="estado"
                                  name="estado"
