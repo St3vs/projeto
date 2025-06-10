@@ -1,17 +1,21 @@
 📦 FlowBiz - Instruções para usar com Docker
+
 Este projeto usa Docker para correr tanto o frontend como o backend. As imagens já estão publicadas no Docker Hub, portanto não precisas do código-fonte, apenas do ficheiro docker-compose.yml.
 
 ✅ Requisitos
+
 - Docker instalado
 - Ligação à internet
 
 🚀 Passos para iniciar o sistema
+
 1. Cria uma nova pasta no teu computador:
       mkdir flowbiz
       cd flowbiz
 
 2. Criar um ficheiro chamado docker-compose.yml com o seguinte conteúdo:
 
+      ```yaml
       version: "3.8"
 
       services:
@@ -44,8 +48,8 @@ Isso vai:
 
 🌐 Como aceder:
 
-Frontend (app web): http://localhost:3000
-Backend (API): http://localhost:4000
+- Frontend (app web): http://localhost:3000
+- Backend (API): http://localhost:4000
 
 🛑 Para parar os containers
 
