@@ -1,57 +1,16 @@
-/* controllers/clientesController.js
-const Proposta = require('../models/propostas');
-
-exports.inserirNovaProposta = async (req, res) => {
-    try {
-        const { cliente, contacto, assunto, descricao, data, valor, estado } = req.body;
-
-        // Criar nova proposta
-        const proposta = new Proposta({ cliente, contacto, assunto, descricao, data, valor, estado });
-        await proposta.save();
-
-        res.status(201).json({ message: 'Proposta inserida com sucesso!' });
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao inserir nova proposta' });
-    }
-};
-
-exports.getPropostas = async (req, res) => {
-    try {
-        const propostas = await Proposta.find();
-        res.status(200).json(propostas);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao obter lista de propostas' });
-    }
-};
-
-exports.eliminarPropostas = async (req, res) => {
-    try {
-        const { ids } = req.body;
-
-        // Verifica se IDs foram fornecidos
-        if (!ids || ids.length === 0) {
-            return res.status(400).json({ error: "Nenhuma proposta selecionada para exclusão" });
-        }
-
-        await Proposta.deleteMany({ _id: { $in: ids } });
-
-        res.status(200).json({ message: "Propostas eliminadas com sucesso!" });
-    } catch (error) {
-        res.status(500).json({ error: "Erro ao eliminar propostas" });
-    }
-};
-*/
-
 //controllers/propostasController
+const { Propostas, Projeto, Clientes, sequelize } = require('../models');
 
-const sequelize = require('../config/config');
-const Proposta = require('../models/propostas');
-const Projeto = require('../models/projetos');
 
 exports.getPropostas = async (req, res) => {
    try {
-      const propostas = await Proposta.findAll();
+      const propostas = await Propostas.findAll({
+      include: [
+            { model: Clientes, as: 'cliente' },
+         ]
+      });
       res.status(200).json(propostas);
+      
    } catch (error) {
       res.status(500).json({ error: 'Erro ao obter lista de propostas' });
    }
@@ -60,43 +19,42 @@ exports.getPropostas = async (req, res) => {
 exports.getPropostaId = async (req, res) => {
    try {
       const { id } = req.params;
-      const proposta = await Proposta.findByPk(id);
+      const proposta = await Propostas.findByPk(id, {
+          include: [{
+              model: Clientes,
+              as: 'cliente',
+              attributes: ['username', 'contacto']
+          }]
+      });
 
       if (!proposta) {
          return res.status(404).json({ error: "Proposta não encontrada" });
       }
-
       res.status(200).json(proposta);
+
    } catch (error) {
+      console.error("Erro ao buscar proposta por ID:", error);
       res.status(500).json({ error: "Erro ao buscar proposta" });
    }
 };
 
 exports.inserirNovaProposta = async (req, res) => {
-   const { cliente, contacto, assunto, descricao, data, valor, estado } = req.body;
+   const { clienteId, assunto, descricao, data, valor, estado } = req.body;
 
    try {
       await sequelize.transaction(async (t) => {
-         // Inserir a proposta
-         const proposta = await Proposta.create(
-            { cliente, contacto, assunto, descricao, data, valor, estado },
+      const proposta = await Propostas.create(
+         { clienteId, assunto, descricao, data, valor, estado },
+         { transaction: t }
+      );
+
+      if (estado === "Aceite") {
+         const projeto = await Projeto.create(
+            { clienteId, assunto, descricao, dataInicio: data, valor },
             { transaction: t }
          );
-
-         // Se for aceita, criar um projeto e atualizar a proposta com o idProjeto
-         if (estado === "Aceite") {
-            const projeto = await Projeto.create(
-               { cliente, assunto, descricao, dataInicio: data, valor },
-               { transaction: t }
-            );
-
-            // Atualizar a proposta com o ID do projeto recém-criado
-            await Proposta.update(
-               { idProjeto: projeto.id }, // Associar proposta ao projeto
-               { where: { id: proposta.id }, transaction: t }
-            );
-         }
-
+         await proposta.update({ idProjeto: projeto.id }, { transaction: t });
+      }
          res.status(201).json({ message: "Proposta inserida com sucesso!", proposta });
       });
 
@@ -107,23 +65,20 @@ exports.inserirNovaProposta = async (req, res) => {
 };
 
 exports.atualizarProposta = async (req, res) => {
-   const { id } = req.params;
-   const { cliente, contacto, assunto, descricao, data, valor, estado } = req.body;
-
-   try {
-      const proposta = await Proposta.findByPk(id);
-
-      if (!proposta) {
-         return res.status(404).json({ error: "Proposta não encontrada" });
-      }
-
-      await proposta.update({ cliente, contacto, assunto, descricao, data, valor, estado });
-
-      res.status(200).json({ message: "Proposta atualizada com sucesso!", proposta });
-   } catch (error) {
-      console.error("Erro ao atualizar proposta:", error);
-      res.status(500).json({ error: "Erro ao atualizar proposta" });
-   }
+    const { id } = req.params;
+    const { clienteId, assunto, descricao, data, valor, estado } = req.body;
+    try {
+        const proposta = await Propostas.findByPk(id);
+        if (!proposta) {
+            return res.status(404).json({ error: "Proposta não encontrada" });
+        }
+        // Atualiza usando clienteId
+        await proposta.update({ clienteId, assunto, descricao, data, valor, estado });
+        res.status(200).json({ message: "Proposta atualizada com sucesso!", proposta });
+    } catch (error) {
+        console.error("Erro ao atualizar proposta:", error);
+        res.status(500).json({ error: "Erro ao atualizar proposta" });
+    }
 };
 
 exports.eliminarPropostas = async (req, res) => {

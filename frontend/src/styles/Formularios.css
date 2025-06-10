@@ -26,7 +26,7 @@
   color: var(--text-color);
   font-size: 30px;
   font-weight: bold;
-  border-left: 5px solid var(--highlight-color);
+  border-left: 5px solid #E86032;
   padding-left: 10px;
 }
 
@@ -79,17 +79,23 @@
 }
 
 .form-group textarea {
-  height: 100px;
-  resize: none;
-  overflow-y: auto;
-  font-size: 16px;
-  line-height: 1.4;
-  vertical-align: top;
+   height: 100px;
+   resize: none;
+   overflow-y: auto;
+   font-size: 16px;
+   line-height: 1.4;
+   vertical-align: top;
 }
 
 .form-row {
-  display: flex;
-  gap: 15px;
+   display: flex;
+   gap: 15px;
+}
+
+.form-row h4 {
+   flex: 1;
+   margin: 0;
+   margin-bottom: 15px;
 }
 
 .form-row .form-group {
@@ -98,7 +104,7 @@
 
 .search-container {
   position: relative;
-  width: 50%;
+  width: 100%;
 }
 
 .search-container input {

@@ -7,6 +7,7 @@ import "../styles/Home.css";
 import ErrorBoundary from './ErrorBoundary';
 import axios from "../api/axiosConfig";
 
+
 const COLORS = ["#4caf50", "#ff9800", "#f44336"];
 
 const ChartComponent = ({ data }) => (

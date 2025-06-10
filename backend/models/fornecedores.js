@@ -13,18 +13,21 @@ const Fornecedores = mongoose.model('Fornecedores', fornecedoresSchema);
 module.exports = Fornecedores;
 */
 
+// models/fornecedores.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/config');
 
-const Fornecedor = sequelize.define("Fornecedor", {
+const Fornecedores = sequelize.define("Fornecedores", {
    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
    username: { type: DataTypes.STRING, allowNull: false, unique: true },
    email: { type: DataTypes.STRING, allowNull: false, unique: true },
    contacto: { type: DataTypes.STRING, allowNull: false, unique: true },
    nif: { type: DataTypes.STRING, allowNull: false, unique: true },
- }, { 
-   timestamps: false, 
-   tableName: "Fornecedores"
- });
+}, { timestamps: false });
 
-module.exports = Fornecedor;
+Fornecedores.associate = (models) => {
+   Fornecedores.hasMany(models.Encomendas, { foreignKey: 'fornecedorId', as: 'encomendas' });
+};
+
+module.exports = Fornecedores;
+

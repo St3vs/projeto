@@ -183,8 +183,14 @@ html, body {
    color: var(--text-color);
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
+  cursor: pointer;
+}
+
+/* No modo claro, sem filtro */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: none;
   cursor: pointer;
 }
 

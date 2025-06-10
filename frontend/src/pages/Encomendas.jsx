@@ -80,9 +80,9 @@ function Encomendas() {
   
           // Recarregar as propostas do backend para refletir os novos IDs, com token no header
           const updatedEncomendas = await axios.get("http://localhost:4000/encomendas/listarEncomendas", {
-             headers: {
-                Authorization: `Bearer ${token}`
-             }
+            headers: {
+               Authorization: `Bearer ${token}`
+            }
           });
           setEncomendas(updatedEncomendas.data);
   
@@ -96,8 +96,8 @@ function Encomendas() {
       }
    };
 
-	const pesquisarFornecedor = encomendas.filter(encomenda =>
-      (encomenda.fornecedor && encomenda.fornecedor.toLowerCase().includes(pesquisarEncomenda.toLowerCase())) ||
+   const pesquisarFornecedor = encomendas.filter(encomenda =>
+      (encomenda.fornecedor && typeof encomenda.fornecedor === 'object' && encomenda.fornecedor.username.toLowerCase().includes(pesquisarEncomenda.toLowerCase())) ||
       (encomenda.contacto && encomenda.contacto.includes(pesquisarEncomenda))
    );
 
@@ -154,34 +154,34 @@ function Encomendas() {
 							</th>
 							<th>ID</th>
 							<th>Fornecedor</th>
+                     <th>ID da Obra</th>
 							<th>Descrição do Material</th>
                      <th>Data</th>
                      <th>Data de Entrega</th>
 							<th>Valor</th>
-                     <th>Observações</th>
 						</tr>
 					</thead>
 					<tbody>
                   {pesquisarFornecedor.map(encomenda => (
                      <tr 
                         key={encomenda.id} 
-                        onClick={() => navigate(`/encomendas/EditarEncomenda/${encomenda.id}`)}
+                        onClick={() => navigate(`/encomendas/atualizarEncomenda/${encomenda.id}`)}
                         className="clickable-row"
                      >
                         <td onClick={(e) => e.stopPropagation()}>
-                           <input
-                              type="checkbox"
-                              checked={selecionarEncomendas.includes(encomenda.id)}
-                              onChange={() => handleSelectEncomenda(encomenda.id)}
-                           />
+                        <input
+                           type="checkbox"
+                           checked={selecionarEncomendas.includes(encomenda.id)}
+                           onChange={() => handleSelectEncomenda(encomenda.id)}
+                        />
                         </td>
                         <td>{encomenda.id}</td>
-                        <td>{encomenda.fornecedor}</td>
+                        <td>{encomenda.fornecedor?.username || "Sem fornecedor"}</td>
+                        <td>{encomenda.obraId || "Sem obra"}</td>
                         <td>{encomenda.descricaoMaterial}</td>
                         <td>{encomenda.data ? new Date(encomenda.data).toLocaleDateString("pt-PT") : "Sem data"}</td>
-                        <td>{encomenda.dataEnrega ? new Date(encomenda.dataEntrega).toLocaleDateString("pt-PT") : "Sem data"}</td>
+                        <td>{encomenda.previsaoEntrega ? new Date(encomenda.previsaoEntrega).toLocaleDateString("pt-PT") : "Sem data"}</td>
                         <td>{encomenda.valor} €</td>
-                        <td>{encomenda.observacoes}</td>
                      </tr>
                   ))}
                </tbody>

@@ -1,9 +1,12 @@
-const Projeto = require('../models/projetos');
-const sequelize = require('../config/config');
+const { Projeto, Propostas, Clientes, sequelize } = require('../models');
 
 exports.getProjetos = async (req, res) => {
    try {
-      const projetos = await Projeto.findAll();
+      const projetos = await Projeto.findAll({
+      include: [
+            { model: Clientes, as: 'cliente' },
+         ]
+      });
       res.status(200).json(projetos);
    } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de projetos" });
@@ -31,7 +34,7 @@ exports.eliminarProjetos = async (req, res) => {
          await sequelize.query(`
             CREATE TABLE IF NOT EXISTS ProjetosEliminados (
                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-               cliente VARCHAR(255) NOT NULL,
+               clienteId INTEGER NOT NULL,
                assunto VARCHAR(255) NOT NULL,
                descricao TEXT NOT NULL,
                dataInicio DATETIME NOT NULL,
@@ -42,8 +45,8 @@ exports.eliminarProjetos = async (req, res) => {
 
          // Copia os projetos eliminados para a tabela de histórico
          await sequelize.query(`
-            INSERT INTO ProjetosEliminados (cliente, assunto, descricao, dataInicio, valor)
-            SELECT cliente, assunto, descricao, dataInicio, valor
+            INSERT INTO ProjetosEliminados (clienteId, assunto, descricao, dataInicio, valor)
+            SELECT clienteId, assunto, descricao, dataInicio, valor
             FROM Projetos WHERE id IN (${ids.join(",")});
          `, { transaction: t });
 
@@ -58,7 +61,7 @@ exports.eliminarProjetos = async (req, res) => {
          await sequelize.query(`
             CREATE TABLE Projetos_temp (
                id INTEGER PRIMARY KEY, 
-               cliente VARCHAR(255) NOT NULL,
+               clienteId INTEGER NOT NULL,
                assunto VARCHAR(255) NOT NULL,
                descricao TEXT NOT NULL,
                dataInicio DATETIME NOT NULL,
@@ -68,8 +71,8 @@ exports.eliminarProjetos = async (req, res) => {
 
          // Copia os dados para a tabela temporária e reordenar os IDs
          await sequelize.query(`
-            INSERT INTO Projetos_temp (id, cliente, assunto, descricao, dataInicio, valor)
-            SELECT ROW_NUMBER() OVER () AS id, cliente, assunto, descricao, dataInicio, valor FROM Projetos;
+            INSERT INTO Projetos_temp (id, clienteId, assunto, descricao, dataInicio, valor)
+            SELECT ROW_NUMBER() OVER () AS id, clienteId, assunto, descricao, dataInicio, valor FROM Projetos;
          `, { transaction: t });
 
          // Exclui a tabela original

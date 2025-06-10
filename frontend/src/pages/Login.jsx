@@ -36,7 +36,6 @@ function Login() {
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(user));
 
-            // <-- ADICIONAR ESTE BLOCO -->
             if (lembrarMe) {
                localStorage.setItem("rememberMe", JSON.stringify({ email, password }));
             } else {
@@ -103,7 +102,7 @@ function Login() {
                </div>
             </form>
             <p className="create-account">
-               Ainda não tem conta? <a href="/register">Criar Conta</a>
+               Ainda não tem conta? <a href="#/Register">Criar Conta</a>
             </p>
          </div>
          </div>

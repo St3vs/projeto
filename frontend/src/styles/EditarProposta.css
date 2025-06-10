@@ -83,6 +83,22 @@ body {
    font-size: 16px;
 }
 
+/* Novo 'wrapper' para o input e o ícone */
+.input-wrapper {
+    position: relative; /* Essencial para o posicionamento absoluto do ícone */
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input,
+.input-wrapper textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
 .edit-icon {
    position: absolute;
    right: 10px;

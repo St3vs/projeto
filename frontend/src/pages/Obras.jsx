@@ -25,10 +25,9 @@ function Obras() {
       const fetchObras = async () => {
          try {
             const response = await axios.get("http://localhost:4000/obras/listarObras", {
-               headers: {
-                  Authorization: `Bearer ${token}`,
-               }
+               headers: { Authorization: `Bearer ${token}` }
             });
+            console.log('Obras recebidas:', response.data);
             setObras(response.data);
          } catch (error) {
             console.error("Erro ao encontrar obras:", error);
@@ -99,9 +98,10 @@ function Obras() {
    };
 
    const pesquisarCliente = obras.filter(obra =>
-      (obra.cliente && obra.cliente.toLowerCase().includes(pesquisarObra.toLowerCase())) ||
-      (obra.contacto && obra.contacto.includes(pesquisarObra))
+      (obra.cliente && obra.cliente.username.toLowerCase().includes(pesquisarObra.toLowerCase())) ||
+      (obra.clienteId.toString().includes(pesquisarObra))
    );
+
 
    const inserirNovaObra = () => {
       navigate('/Obras/InserirNovaObra');
@@ -179,7 +179,7 @@ function Obras() {
                               />
                            </td>
                            <td>{obra.id}</td>
-                           <td>{obra.cliente}</td>
+                           <td>{obra.cliente ? obra.cliente.username : obra.clienteId}</td> 
                            <td>{obra.descricao}</td>
                            <td>{obra.data ? new Date(obra.data).toLocaleDateString("pt-PT") : "Sem data"}</td>
                            <td>{obra.valorProposta} €</td>

@@ -1,6 +1,8 @@
 //app.jsx
 import { React, useEffect, useState } from "react";
+//import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Homepage from "./pages/Home";
@@ -9,7 +11,6 @@ import Clientes from "./pages/Clientes";
 import Propostas from "./pages/Propostas";
 import InserirNovaProposta from "./pages/InserirNovaProposta";
 import Conta from "./pages/Conta";
-import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import Fornecedores from "./pages/Fornecedores";
 import CriarFichaFornecedor from "./pages/CriarFichaFornecedor";
@@ -18,9 +19,10 @@ import Projetos from "./pages/Projetos";
 import EditarProposta from "./pages/EditarProposta";
 import Encomendas from "./pages/Encomendas";
 import AdicionarEncomenda from "./pages/AdicionarEncomenda";
+import AtualizarEncomenda from "./pages/EditarEncomenda";
 import Obras from "./pages/Obras";
 import AdicionarObra from "./pages/AdicionarObra";
-import "./styles/Index.css";
+import EditarObra from "./pages/EditarObra";
 
 function App() {
 
@@ -51,8 +53,10 @@ function App() {
             <Route path="/Fornecedores/CriarFichaFornecedor" element={<PrivateRoute><CriarFichaFornecedor/></PrivateRoute>} />
             <Route path="/Encomendas" element={<PrivateRoute><Encomendas /></PrivateRoute>} />
             <Route path="/Encomendas/InserirNovaEncomenda" element={<PrivateRoute><AdicionarEncomenda/></PrivateRoute>} />
+            <Route path="/Encomendas/AtualizarEncomenda/:id" element={<PrivateRoute><AtualizarEncomenda /></PrivateRoute>} />
             <Route path="/Obras" element={<PrivateRoute><Obras/></PrivateRoute>} />
             <Route path="/Obras/InserirNovaObra" element={<PrivateRoute><AdicionarObra/></PrivateRoute>} />
+            <Route path="/obras/EditarObra/:id" element={<PrivateRoute><EditarObra/></PrivateRoute>} />
          </Routes>
          </Router>
       </AuthProvider>

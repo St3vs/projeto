@@ -1,19 +1,48 @@
 const sequelize = require('../config/config');
-const Encomenda = require('../models/encomendas');
+const { Encomendas, Obras, Fornecedores, Clientes } = require('../models');
 
+
+// GET: Todas as encomendas com associação
 exports.getEncomendas = async (req, res) => {
    try {
-      const encomendas = await Encomenda.findAll();
+      const encomendas = await Encomendas.findAll({
+         include: [
+            { model: Obras, as: 'obra' },
+            { model: Fornecedores, as: 'fornecedor' }
+         ]
+      });
       res.status(200).json(encomendas);
    } catch (error) {
+      console.error("Erro ao obter encomendas:", error);
       res.status(500).json({ error: 'Erro ao obter lista de encomendas' });
    }
 };
 
+// GET: Encomenda por ID
 exports.getEncomendaId = async (req, res) => {
    try {
       const { id } = req.params;
-      const encomenda = await Encomenda.findByPk(id);
+      const encomenda = await Encomendas.findByPk(id, {
+         include: [
+            {
+               model: Obras,
+               as: 'obra',
+               attributes: ['descricao'],
+               include: [
+                  {
+                     model: Clientes,
+                     as: 'cliente',
+                     attributes: ['username']
+                  }
+               ]
+            },
+            {
+               model: Fornecedores,
+               as: 'fornecedor',
+               attributes: ['username', 'contacto']
+            }
+         ]
+      });
 
       if (!encomenda) {
          return res.status(404).json({ error: "Encomenda não encontrada" });
@@ -21,42 +50,59 @@ exports.getEncomendaId = async (req, res) => {
 
       res.status(200).json(encomenda);
    } catch (error) {
+      console.error("Erro ao obter encomenda por ID:", error);
       res.status(500).json({ error: "Erro ao pesquisar encomenda" });
    }
 };
 
+// POST: Inserir nova encomenda
 exports.inserirNovaEncomenda = async (req, res) => {
-   const { fornecedor, contacto, descricaoMaterial, data, previsaoEntrega, valor, observacoes } = req.body;
+   const { fornecedorId, obraId, descricaoMaterial, data, previsaoEntrega, valor, observacoes } = req.body;
 
    try {
       await sequelize.transaction(async (t) => {
-         // Inserir a proposta
-         const encomenda = await Encomenda.create(
-            { fornecedor, contacto, descricaoMaterial, data, previsaoEntrega, valor, observacoes },
+         const encomenda = await Encomendas.create(
+            {
+               fornecedorId,
+               obraId,
+               descricaoMaterial,
+               data,
+               previsaoEntrega,
+               valor,
+               observacoes
+            },
             { transaction: t }
          );
 
          res.status(201).json({ message: "Encomenda inserida com sucesso!", encomenda });
       });
-
    } catch (error) {
       console.error("Erro ao inserir nova encomenda:", error);
       res.status(500).json({ error: "Erro ao inserir nova encomenda" });
    }
 };
 
+// PUT: Atualizar encomenda existente
 exports.atualizarEncomenda = async (req, res) => {
    const { id } = req.params;
-   const { fornecedor, contacto, descricaoMaterial, data, previsaoEntrega, valor, observacoes } = req.body;
+   const { fornecedorId, obraId, descricaoMaterial, data, previsaoEntrega, valor, observacoes } = req.body;
 
    try {
-      const encomenda = await Encomenda.findByPk(id);
+      const encomenda = await Encomendas.findByPk(id);
 
       if (!encomenda) {
          return res.status(404).json({ error: "Encomenda não encontrada" });
       }
 
-      await encomenda.update({ fornecedor, contacto, descricaoMaterial, data, previsaoEntrega, valor, observacoes });
+      await encomenda.update({
+         fornecedorId,
+         obraId,
+         descricaoMaterial,
+         data,
+         previsaoEntrega,
+         valor,
+         observacoes
+      });
 
       res.status(200).json({ message: "Encomenda atualizada com sucesso!", encomenda });
    } catch (error) {
@@ -65,16 +111,16 @@ exports.atualizarEncomenda = async (req, res) => {
    }
 };
 
+// DELETE: Eliminar uma ou mais encomendas
 exports.eliminarEncomendas = async (req, res) => {
    try {
       let { ids, id } = req.body;
 
-      // Se apenas um ID for enviado, convertemos para array
+      // Normalizar para array
       if (!ids && id) {
          ids = [id];
       }
 
-      // Garantir que `ids` é um array de inteiros e remover valores inválidos
       ids = Array.isArray(ids) ? ids.map(Number).filter(Boolean) : [];
 
       if (ids.length === 0) {
@@ -82,40 +128,13 @@ exports.eliminarEncomendas = async (req, res) => {
       }
 
       await sequelize.transaction(async (t) => {
-         // Eliminar propostas pelos IDs fornecidos
-         await sequelize.query(`DELETE FROM Encomenda WHERE id IN (${ids.join(",")});`, { transaction: t });
-
-         // Criar uma nova tabela temporária sem AUTOINCREMENT
-         await sequelize.query(`
-            CREATE TABLE Encomenda_temp (
-               id INTEGER PRIMARY KEY, 
-               fornecedor VARCHAR(255) NOT NULL,
-               contacto VARCHAR(255) NOT NULL UNIQUE,
-               descricaoMaterial VARCHAR(255) NOT NULL,
-               data DATETIME NOT NULL,
-               previsaoEntrega DATETIME NOT NULL,
-               valor VARCHAR(255) NOT NULL,
-               observacoes VARCHAR(255),
-            );
-         `, { transaction: t });
-
-         // Copia os dados para a tabela temporária e reordenar os IDs
-         await sequelize.query(`
-            INSERT INTO Encomenda_temp (id, fornecedor, contacto, descricaoMaterial, data, previsaoEntrega, valor, observacoes)
-            SELECT ROW_NUMBER() OVER (ORDER BY id) AS id, fornecedor, contacto, descricaoMaterial, data, previsaoEntrega, valor, observacoes FROM Encomenda;
-         `, { transaction: t });
-
-         // Excluir a tabela original
-         await sequelize.query("DROP TABLE Encomenda;", { transaction: t });
-
-         // Renomear a tabela temporária para o nome original
-         await sequelize.query("ALTER TABLE Encomenda_temp RENAME TO Encomenda;", { transaction: t });
-
-         // Reseta o AUTOINCREMENT
-         await sequelize.query("DELETE FROM sqlite_sequence WHERE name='Encomendas';", { transaction: t });
+         await Encomendas.destroy({
+            where: { id: ids },
+            transaction: t
+         });
       });
 
-      res.status(200).json({ message: "Encomendas eliminadas e IDs resetados com sucesso!" });
+      res.status(200).json({ message: "Encomenda(s) eliminada(s) com sucesso!" });
    } catch (error) {
       console.error("Erro ao eliminar encomendas:", error);
       res.status(500).json({ error: "Erro ao eliminar encomendas" });

@@ -13,9 +13,11 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const authenticateToken = require('./middleware/authMiddleware');
 require('dotenv').config();
 
+const db = require('./models');
+
 const sequelize = require('./config/config');
 
-sequelize.sync({alter:true}) 
+sequelize.sync(force="true") 
   .then(() => console.log('✅ Base de dadoss sincronizada'))
   .catch((err) => console.error('❌ Erro ao sincronizar DB:', err));
 
@@ -25,6 +27,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Olá do Backend!' });
+});
 
 // Rotas
 app.use('/auth', authRoutes);
