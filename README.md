@@ -49,7 +49,7 @@ Este projeto usa Docker para correr tanto o frontend como o backend. As imagens 
 
 🌐 Como aceder:
 
-- Frontend (app web): http://localhost:3000
+- Frontend (Web App): http://localhost:3000
 - Backend (API): http://localhost:4000
 
 🛑 Para parar os containers:
