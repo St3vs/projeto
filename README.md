@@ -10,8 +10,9 @@ Este projeto usa Docker para correr tanto o frontend como o backend. As imagens 
 🚀 Passos para iniciar o sistema
 
 1. Cria uma nova pasta no teu computador:
-      mkdir flowbiz
-      cd flowbiz
+   
+   - mkdir flowbiz
+   - cd flowbiz
 
 2. Criar um ficheiro chamado docker-compose.yml com o seguinte conteúdo:
 
@@ -41,17 +42,17 @@ Este projeto usa Docker para correr tanto o frontend como o backend. As imagens 
       
       docker compose up
 
-Isso vai:
+   Isso vai:
 
-- Fazer pull automático das imagens do Docker Hub
-- Criar e iniciar os containers
+   - Fazer pull automático das imagens do Docker Hub
+   - Criar e iniciar os containers
 
 🌐 Como aceder:
 
 - Frontend (app web): http://localhost:3000
 - Backend (API): http://localhost:4000
 
-🛑 Para parar os containers
+🛑 Para parar os containers:
 
 - docker compose down
 
