@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import axios from 'axios';
+import { apiUrl } from "../api";
 
 function Obras() {
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -24,7 +25,8 @@ function Obras() {
    useEffect(() => {
       const fetchObras = async () => {
          try {
-            const response = await axios.get("http://localhost:4000/obras/listarObras", {
+            //const response = await axios.get("http://localhost:4000/obras/listarObras", {
+            const response = await axios.get(`${apiUrl}/obras/listarObras`, {
                headers: { Authorization: `Bearer ${token}` }
             });
             console.log('Obras recebidas:', response.data);
@@ -48,7 +50,7 @@ function Obras() {
 
    const handleSelectObra = (obraId) => {
       if (selecionarObras.includes(obraId)) {
-         setSelecionarObras(selecionarObra.filter(id => id !== obraId));
+         setSelecionarObras(selecionarObras.filter(id => id !== obraId));
       } else {
          setSelecionarObras([...selecionarObras, obraId]);
       }
@@ -72,7 +74,8 @@ function Obras() {
       }
 
       try {
-         const response = await axios.delete("http://localhost:4000/obras/eliminarObras", {
+         //const response = await axios.delete("http://localhost:4000/obras/eliminarObras", {
+         const response = await axios.delete(`${apiUrl}/obras/eliminarObras`, {
             headers: {
                Authorization: `Bearer ${token}`,
             },
@@ -81,7 +84,8 @@ function Obras() {
 
          console.log("Resposta do servidor:", response.data);
 
-         const updatedObras = await axios.get("http://localhost:4000/obras/listarObras", {
+         //const updatedObras = await axios.get("http://localhost:4000/obras/listarObras", {
+         const updatedObras = await axios.get(`${apiUrl}/obras/listarObras`, {
             headers: {
                Authorization: `Bearer ${token}`,
             }

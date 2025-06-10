@@ -9,6 +9,7 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/Header";
 import '../styles/Header.css';
+import { apiUrl } from "../api";
 
 const InserirNovaEncomenda = () => {
    const [fornecedorSelecionado, setFornecedorSelecionado] = useState(null);
@@ -37,7 +38,8 @@ const InserirNovaEncomenda = () => {
    useEffect(() => {
       const fetchFornecedores = async () => {
          try {
-            const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+            //const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+            const response = await axios.get(`${apiUrl}/fornecedores/listarFornecedores`, {
                headers: { Authorization: `Bearer ${token}` }
             });
             setFornecedores(response.data);
@@ -50,7 +52,8 @@ const InserirNovaEncomenda = () => {
 
       const fetchObras = async () => {
          try {
-            const response = await axios.get("http://localhost:4000/obras/listarObras", {
+            //const response = await axios.get("http://localhost:4000/obras/listarObras", {
+            const response = await axios.get(`${apiUrl}/obras/listarObras`, {
                headers: { Authorization: `Bearer ${token}` }
             });
             setObras(response.data);
@@ -126,7 +129,8 @@ const InserirNovaEncomenda = () => {
       }
 
       try {
-         const response = await axios.post('http://localhost:4000/encomendas/inserirNovaEncomenda', {
+         //const response = await axios.post('http://localhost:4000/encomendas/inserirNovaEncomenda', {
+         const response = await axios.post(`${apiUrl}/encomendas/inserirNovaEncomenda`, {
             fornecedorId: fornecedorSelecionado.id,
             obraId: obraSelecionada.id,
             descricaoMaterial,

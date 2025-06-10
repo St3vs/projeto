@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import axios from 'axios';
+import { apiUrl } from "../api";
 
 function FornecedoresPage() {
    const [fornecedores, setFornecedores] = useState([]);
@@ -22,7 +23,8 @@ function FornecedoresPage() {
       const fetchFornecedores = async () => {
          try {
             const token = localStorage.getItem('token');
-            const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+            //const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+            const response = await axios.get(`${apiUrl}/fornecedores/listarFornecedores`, { 
                headers: {
                   Authorization: `Bearer ${token}`
                }
@@ -67,7 +69,8 @@ function FornecedoresPage() {
       try {
          const token = localStorage.getItem('token');
 
-         const response = await axios.delete("http://localhost:4000/fornecedores/eliminarFornecedores", {
+         //const response = await axios.delete("http://localhost:4000/fornecedores/eliminarFornecedores", {
+         const response = await axios.delete(`${apiUrl}/fornecedores/eliminarFornecedores`, {
             headers: {
                Authorization: `Bearer ${token}`
             },
@@ -76,8 +79,8 @@ function FornecedoresPage() {
 
          console.log("Resposta do servidor:", response.data);
 
-         // Recarregar os fornecedores atualizados com token
-         const updatedFornecedores = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+         //const updatedFornecedores = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
+         const updatedFornecedores = await axios.get(`${apiUrl}/fornecedores/listarFornecedores`, {
             headers: {
                Authorization: `Bearer ${token}`
             }

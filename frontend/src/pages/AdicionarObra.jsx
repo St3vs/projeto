@@ -9,6 +9,7 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/Header";
 import '../styles/Header.css';
+import { apiUrl } from "../api";
 
 const InserirNovaObra = () => {
    const [clienteId, setClienteId] = useState(null);
@@ -36,7 +37,8 @@ const InserirNovaObra = () => {
 
       const fetchClientes = async () => {
          try {
-            const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
+            //const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
+            const response = await axios.get(`${apiUrl}/clientes/listarClientes`, {
                headers: { Authorization: `Bearer ${token}` }
             });
             setClientes(response.data);
@@ -96,7 +98,8 @@ const InserirNovaObra = () => {
       }
 
       try {
-         const response = await axios.post('http://localhost:4000/obras/inserirNovaObra', {
+         //const response = await axios.post('http://localhost:4000/obras/inserirNovaObra', {
+         const response = await axios.post(`${apiUrl}/obras/inserirNovaObra`, {
             clienteId,
             contacto,
             descricao,

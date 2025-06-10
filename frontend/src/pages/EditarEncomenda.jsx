@@ -9,6 +9,7 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import "../styles/Sidebar.css";
 import "../styles/Header.css";
 import "../styles/EditarProposta.css";
+import { apiUrl } from "../api";
 
 function EditarEncomenda() {
    const { id } = useParams();
@@ -39,7 +40,8 @@ function EditarEncomenda() {
          try {
          const token = localStorage.getItem("token");
          const response = await axios.get(
-            `http://localhost:4000/encomendas/listarEncomenda/${id}`,
+            //`http://localhost:4000/encomendas/listarEncomenda/${id}`,
+            `${apiUrl}/encomendas/listarEncomenda/${id}`,
             {
                headers: { Authorization: `Bearer ${token}` },
             }
@@ -99,7 +101,8 @@ function EditarEncomenda() {
          };
 
          await axios.put(
-         `http://localhost:4000/encomendas/atualizarEncomenda/${id}`,
+         //`http://localhost:4000/encomendas/atualizarEncomenda/${id}`,
+         `${apiUrl}/encomendas/atualizarEncomenda/${id}`,
          dadosAtualizados,
          {
             headers: { Authorization: `Bearer ${token}` },

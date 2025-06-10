@@ -9,6 +9,7 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import "../styles/Sidebar.css";
 import "../styles/Header.css";
 import "../styles/EditarProposta.css";
+import { apiUrl } from "../api";
 
 function EditarObra() {
    const { id } = useParams();
@@ -36,7 +37,8 @@ function EditarObra() {
       const fetchObra = async () => {
          try {
             const token = localStorage.getItem("token");
-            const response = await axios.get(`http://localhost:4000/obras/listarObra/${id}`, {
+            //const response = await axios.get(`http://localhost:4000/obras/listarObra/${id}`,
+            const response = await axios.get(`${apiUrl}/obras/listarObra/${id}`, { 
                headers: { Authorization: `Bearer ${token}` }
             });
             const dados = response.data;
@@ -78,7 +80,8 @@ function EditarObra() {
       event.preventDefault();
       try {
          const token = localStorage.getItem("token");
-         await axios.put(`http://localhost:4000/obras/atualizarObra/${id}`, obra, {
+         //await axios.put(`http://localhost:4000/obras/atualizarObra/${id}`, obra, {
+         await axios.put(`${apiUrl}/obras/atualizarObra/${id}`, obra, {
             headers: { Authorization: `Bearer ${token}` }
          });
          alert("Obra atualizada com sucesso!");

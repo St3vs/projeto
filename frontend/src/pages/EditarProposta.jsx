@@ -10,6 +10,7 @@ import { FaCircleXmark, FaHouse } from "react-icons/fa6";
 import { FaCheckCircle, FaPencilAlt } from "react-icons/fa";
 import { MdAccessTimeFilled } from "react-icons/md";
 import Header from "../components/Header";
+import { apiUrl } from "../api";
 
 const EditarProposta = () => {
    // useParams para obter o 'id' da URL (ex: /EditarProposta/3)
@@ -40,7 +41,8 @@ const EditarProposta = () => {
    useEffect(() => {
       const fetchProposta = async () => {
          try {
-               const response = await axios.get(`http://localhost:4000/propostas/listarProposta/${id}`, {
+               //const response = await axios.get(`http://localhost:4000/propostas/listarProposta/${id}`, { 
+               const response = await axios.get(`${apiUrl}/propostas/listarProposta/${id}`, {   
                   headers: { Authorization: `Bearer ${token}` }
                });
                
@@ -76,7 +78,8 @@ const EditarProposta = () => {
 
       try {
          const response = await axios.put(
-               `http://localhost:4000/propostas/atualizarProposta/${id}`,
+               //`http://localhost:4000/propostas/atualizarProposta/${id}`,
+               `${apiUrl}/propostas/atualizarProposta/${id}`,
                {
                   clienteId, // Envia o clienteId para manter a associação
                   assunto,

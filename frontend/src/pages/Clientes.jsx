@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import axios from 'axios';
+import { apiUrl } from "../api";
 
 function ClientPage() {
    const [clientes, setClientes] = useState([]);
@@ -27,7 +28,8 @@ function ClientPage() {
 
       const fetchClientes = async () => {
          try {
-            const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
+            //const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
+            const response = await axios.get(`${apiUrl}/clientes/listarClientes`, {
                headers: {
                   Authorization: `Bearer ${token}`
                }

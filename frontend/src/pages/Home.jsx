@@ -6,7 +6,7 @@ import "../styles/Sidebar.css";
 import "../styles/Home.css";
 import ErrorBoundary from './ErrorBoundary';
 import axios from "../api/axiosConfig";
-
+import { apiUrl } from "../api";
 
 const COLORS = ["#4caf50", "#ff9800", "#f44336"];
 
@@ -51,7 +51,8 @@ const Home = () => {
          const token = localStorage.getItem('token');
 
          // Faz a requisição incluindo o token no header Authorization
-         const response = await axios.get('http://localhost:4000/dashboard', {
+         //const response = await axios.get('http://localhost:4000/dashboard', {
+         const response = await axios.get(`${apiUrl}/dashboard`, {
             headers: {
                Authorization: `Bearer ${token}`
             }

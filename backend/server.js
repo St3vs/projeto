@@ -11,10 +11,9 @@ const encomendasRoutes = require('./routes/encomendasRoutes');
 const obrasRoutes = require('./routes/obrasRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const authenticateToken = require('./middleware/authMiddleware');
+const path = require('path');
 require('dotenv').config();
-
 const db = require('./models');
-
 const sequelize = require('./config/config');
 
 sequelize.sync(force="true") 

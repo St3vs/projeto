@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import axios from 'axios';
+import { apiUrl } from "../api";
 
 function Propostas() {
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,7 +23,8 @@ function Propostas() {
 
    const fetchPropostas = async () => {
       try {
-         const response = await axios.get("http://localhost:4000/propostas/listarPropostas", {
+         //const response = await axios.get("http://localhost:4000/propostas/listarPropostas", {
+         const response = await axios.get(`${apiUrl}/propostas/listarPropostas`, {
             headers: {
                   Authorization: `Bearer ${token}`,
             },
@@ -76,7 +78,8 @@ function Propostas() {
                return;
          }
 
-         await axios.delete("http://localhost:4000/propostas/eliminarPropostas", {
+         //await axios.delete("http://localhost:4000/propostas/eliminarPropostas", {
+         await axios.delete(`${apiUrl}/propostas/eliminarPropostas`, {
             headers: {
                   Authorization: `Bearer ${token}`,
             },   

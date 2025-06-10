@@ -9,6 +9,7 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { FaHouse } from "react-icons/fa6";
 import Header from "../components/Header";
+import { apiUrl } from "../api";
 
 const CriarFichaCliente = () => {
 	const [username, setUser] = useState('');
@@ -47,7 +48,8 @@ const CriarFichaCliente = () => {
 			const token = localStorage.getItem('token'); // Pega o token JWT
 
 			const response = await axios.post(
-				'http://localhost:4000/clientes/criarFichaCliente',
+				//'http://localhost:4000/clientes/criarFichaCliente',
+            `${apiUrl}/clientes/criarFichaCliente`,
 				{
 					username,
 					email,

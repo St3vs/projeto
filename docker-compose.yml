@@ -1,18 +1,25 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
     build: ./backend
+    image: rodrigoesteves45/flowbiz-backend:latest
+    container_name: FlowBiz-backend
     ports:
       - "4000:4000"
-    volumes:
-      - ./backend/config/projeto.db:/app/config/projeto.db
     environment:
       - NODE_ENV=production
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://backend:4000
+    image: rodrigoesteves45/flowbiz-frontend:latest
+    container_name: FlowBiz-frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - backend
+    environment:
+      - VITE_API_URL=http://backend:4000

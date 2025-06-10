@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/Formularios.css';
 import "../styles/Sidebar.css";
 import Header from "../components/Header";
+import { apiUrl } from "../api";
 
 const CriarFichaFornecedor = () => {
    const [username, setUser] = useState('');
@@ -41,7 +42,8 @@ const CriarFichaFornecedor = () => {
       try {
          const token = localStorage.getItem('token'); 
 
-         const response = await axios.post('http://localhost:4000/fornecedores/criarFichaFornecedor', {
+         //const response = await axios.post('http://localhost:4000/fornecedores/criarFichaFornecedor', {
+         const response = await axios.post(`${apiUrl}/fornecedores/criarFichaFornecedor`, {
             username,
             email,
             contacto,

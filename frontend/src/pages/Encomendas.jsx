@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import axios from 'axios';
+import { apiUrl } from "../api";
 
 function Encomendas() {
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,7 +24,8 @@ function Encomendas() {
 		const fetchEncomendas = async () => {
 			try {
             const token = localStorage.getItem('token'); 
-				const response = await axios.get("http://localhost:4000/encomendas/listarEncomendas", {
+				//const response = await axios.get("http://localhost:4000/encomendas/listarEncomendas", {
+            const response = await axios.get(`${apiUrl}/encomendas/listarEncomendas`, {
                headers: {
                   Authorization: `Bearer ${token}`
                }
@@ -69,30 +71,31 @@ function Encomendas() {
   
       try {
          const token = localStorage.getItem('token'); // pegar token
-          const response = await axios.delete("http://localhost:4000/encomendas/eliminarEncomendas", {
-              headers: {
-                 Authorization: `Bearer ${token}`
-              },
-              data: { ids: selecionarEncomendas }
-          });
-  
-          console.log("Resposta do servidor:", response.data);
-  
-          // Recarregar as propostas do backend para refletir os novos IDs, com token no header
-          const updatedEncomendas = await axios.get("http://localhost:4000/encomendas/listarEncomendas", {
+         //const response = await axios.delete("http://localhost:4000/encomendas/eliminarEncomendas", {
+         const response = await axios.delete(`${apiUrl}/encomendas/eliminarEncomendas`, {
+            headers: {
+               Authorization: `Bearer ${token}`
+            },
+            data: { ids: selecionarEncomendas }
+         });
+
+         console.log("Resposta do servidor:", response.data);
+
+         //const updatedEncomendas = await axios.get("http://localhost:4000/encomendas/listarEncomendas", {
+         const updatedEncomendas = await axios.get(`${apiUrl}/encomendas/listarEncomendas`, {
             headers: {
                Authorization: `Bearer ${token}`
             }
-          });
-          setEncomendas(updatedEncomendas.data);
-  
-          // Limpar as seleções
-          setSelecionarEncomendas([]);
-          setSelecionarTodas(false);
-  
-         } catch (error) {
-          console.error("Erro ao eliminar encomenda(s):", error.response ? error.response.data : error);
-          alert("Erro ao eliminar encomenda(s)");
+         });
+         setEncomendas(updatedEncomendas.data);
+
+         // Limpar as seleções
+         setSelecionarEncomendas([]);
+         setSelecionarTodas(false);
+
+      } catch (error) {
+         console.error("Erro ao eliminar encomenda(s):", error.response ? error.response.data : error);
+         alert("Erro ao eliminar encomenda(s)");
       }
    };
 

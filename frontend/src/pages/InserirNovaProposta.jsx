@@ -31,15 +31,16 @@ const InserirNovaProposta = () => {
     useEffect(() => {
         const fetchClientes = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setClientes(response.data);
+               const token = localStorage.getItem('token');
+               //const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
+               const response = await axios.get(`${apiUrl}/clientes/listarClientes`, {
+                  headers: {
+                     Authorization: `Bearer ${token}`
+                  }
+               });
+               setClientes(response.data);
             } catch (error) {
-                console.error("Erro ao buscar clientes:", error);
+               console.error("Erro ao buscar clientes:", error);
             }
         };
 
@@ -87,7 +88,8 @@ const InserirNovaProposta = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.post(
-                'http://localhost:4000/propostas/inserirNovaProposta',
+                //'http://localhost:4000/propostas/inserirNovaProposta',
+                `${apiUrl}/propostas/inserirNovaProposta`,
                 {
                     clienteId,
                     assunto,

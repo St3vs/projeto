@@ -6,6 +6,7 @@ import { FaCircleXmark } from "react-icons/fa6";
 import { FiLogIn } from "react-icons/fi";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../api";
 
 function Login() {
    const [email, setEmail] = useState("");
@@ -23,6 +24,7 @@ function Login() {
       }
    }, []);
 
+   /*
    const handleLogin = async (e) => {
       e.preventDefault();
       try {
@@ -46,6 +48,33 @@ function Login() {
          }
       } catch (error) {
          alert(error.response?.data?.error || 'Erro ao fazer login');
+      }
+   };
+   */
+
+   const handleLogin = async (e) => {
+      e.preventDefault();
+      try {
+         const response = await axios.post(`${apiUrl}/auth/login`, {  
+            email,
+            password,
+         });
+
+         if (response.status === 200) {
+            const { token, user } = response.data;
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+
+            if (lembrarMe) {
+            localStorage.setItem("rememberMe", JSON.stringify({ email, password }));
+            } else {
+            localStorage.removeItem("rememberMe");
+            }
+
+            navigate("/homepage");
+         }
+      } catch (error) {
+         alert(error.response?.data?.error || "Erro ao fazer login");
       }
    };
 
@@ -102,7 +131,7 @@ function Login() {
                </div>
             </form>
             <p className="create-account">
-               Ainda não tem conta? <a href="#/Register">Criar Conta</a>
+               Ainda não tem conta? <a href="/Register">Criar Conta</a>
             </p>
          </div>
          </div>

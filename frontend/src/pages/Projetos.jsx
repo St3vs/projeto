@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import axios from 'axios';
+import { apiUrl } from "../api";
 
 function Projetos() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,8 +23,9 @@ function Projetos() {
     
     const fetchProjetos = async () => {
         try {
-            const response = await axios.get("http://localhost:4000/projetos/listarProjetos", {
-                headers: {
+            //const response = await axios.get("http://localhost:4000/projetos/listarProjetos", {
+            const response = await axios.get(`${apiUrl}/projetos/listarProjetos`, {
+               headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
@@ -74,7 +76,8 @@ function Projetos() {
                 return;
             }
 
-            await axios.delete("http://localhost:4000/projetos/eliminarProjetos", {
+            //await axios.delete("http://localhost:4000/projetos/eliminarProjetos", {
+            await axios.delete(`${apiUrl}/projetos/eliminarProjetos`, {
                 headers: { Authorization: `Bearer ${token}` },
                 data: { ids: selecionarProjetos }
             });
