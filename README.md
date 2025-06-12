@@ -20,23 +20,21 @@ Este projeto usa Docker para correr tanto o frontend como o backend. As imagens 
       version: "3.8"
 
       services:
-      backend:
-         image: rodrigoesteves45/flowbiz-backend:latest
-         container_name: FlowBiz-backend
-         ports:
-            - "4000:4000"
-         environment:
-            - NODE_ENV=production
+         backend:
+            image: rodrigoesteves45/flowbiz-backend:latest
+            container_name: FlowBiz-backend
+            ports:
+               - "4000:4000"
+            environment:
+               - NODE_ENV=production
 
-      frontend:
-         image: rodrigoesteves45/flowbiz-frontend:latest
-         container_name: FlowBiz-frontend
-         ports:
-            - "3000:80"
-         depends_on:
-            - backend
-         environment:
-            - VITE_API_URL=http://backend:4000
+         frontend:
+            image: rodrigoesteves45/flowbiz-frontend:latest
+            container_name: FlowBiz-frontend
+            ports:
+               - "3000:80"
+            depends_on:
+             - backend
 
 3. Abrir o terminal dentro dessa pasta e executa:
       

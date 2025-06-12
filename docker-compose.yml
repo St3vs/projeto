@@ -14,12 +14,10 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_URL: http://backend:4000
+        VITE_API_URL: http://localhost:4000 
     image: rodrigoesteves45/flowbiz-frontend:latest
     container_name: FlowBiz-frontend
     ports:
       - "3000:80"
     depends_on:
       - backend
-    environment:
-      - VITE_API_URL=http://backend:4000
