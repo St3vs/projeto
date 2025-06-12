@@ -38,7 +38,7 @@ Este projeto usa Docker para correr tanto o frontend como o backend. As imagens 
 
 3. Abrir o terminal dentro dessa pasta e executa:
       
-      docker compose up
+   - docker compose up
 
    Isso vai:
 
