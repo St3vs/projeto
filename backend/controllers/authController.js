@@ -1,6 +1,59 @@
 const {User, sequelize} = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+   cloudinary,
+   params: {
+      folder: 'profile_pictures',
+      allowed_formats: ['jpg', 'jpeg', 'png'],
+   },
+});
+
+const upload = multer({ storage });
+
+exports.fotoPerfil = async (req, res) => {
+   try {
+      if (!req.file) return res.status(400).json({ error: 'Ficheiro não fornecido' });
+
+      const userId = req.user.id;
+      const imageUrl = req.file.path;
+
+      const user = await User.findByPk(userId);
+      if (!user) return res.status(404).json({ error: 'Utilizador não encontrado' });
+
+      user.fotoPerfil = imageUrl;
+      await user.save();
+
+      res.status(200).json({ message: 'Imagem de perfil atualizada', url: imageUrl });
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Erro ao guardar imagem de perfil' });
+   }
+};
+
+exports.getUser = async (req, res) => {
+   try {
+      const userId = req.user.id;
+      const user = await User.findByPk(userId);
+      if (!user) return res.status(404).json({ error: 'Utilizador não encontrado' });
+
+      res.status(200).json({ user });
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Erro ao buscar dados do utilizador' });
+   }
+};
 
 exports.register = async (req, res) => {
    try {
@@ -147,3 +200,4 @@ exports.deleteAccount = async (req, res) => {
    }
 };
 
+exports.upload = upload;

@@ -7,33 +7,44 @@ import iconUser from '../images/iconUser.png';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Header from "../components/Header";
+import axios from 'axios';
 import '../styles/Header.css';
-
+import { apiUrl } from '../api';
 
 const Conta = () => {
    const [user, setUser] = useState(null);
    const navigate = useNavigate();
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const token = localStorage.getItem('token');
 
    useEffect(() => {
-      const token = localStorage.getItem('token');
-      const userData = JSON.parse(localStorage.getItem('user'));
-   
-      if (!token || !userData) {
-         navigate('/');
+      const fetchUser = async () => {
+         try {
+            const res = await axios.get(`${apiUrl}/auth/user`, {
+               headers: { Authorization: `Bearer ${token}` },
+            });
+            setUser(res.data.user);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+         } catch (err) {
+            console.error(err);
+            navigate('/');
+         }
+      };
+      if (token) {
+         fetchUser();
       } else {
-         setUser(userData);
+         navigate('/');
       }
    }, [navigate]);
 
    const handleEditProfile = () => {
-      navigate('/Conta/EditarPerfil');
+      navigate('/Perfil/EditarPerfil');
    };
 
    const voltarHome = () => {
-		navigate('/homepage');
-	};
-   
+      navigate('/homepage');
+   };
+
    const toggleSidebar = () => {
       setIsSidebarOpen(prev => !prev);
    };
@@ -50,7 +61,7 @@ const Conta = () => {
                <div className='historico'>
                   <button className='voltarHome' onClick={voltarHome}><FaHouse /></button>
                   <MdOutlineKeyboardArrowRight />
-                  <h2>CONTA</h2>
+                  <h2>PERFIL</h2>
                </div>
             </div>
             {user ? (
@@ -66,7 +77,11 @@ const Conta = () => {
                   </div>
                   <div className="conta-conta-content">
                         <div className="conta-conta-left">
-                           <img src={iconUser} alt="iconUser" className="conta-conta-logo" />
+                           <img 
+                             src={user.fotoPerfil ? user.fotoPerfil : iconUser} 
+                             alt="Foto de perfil" 
+                             className="conta-conta-logo" 
+                           />
                         </div>
                         <div className="conta-conta-right">
                            <div className="conta-dados-pessoais">

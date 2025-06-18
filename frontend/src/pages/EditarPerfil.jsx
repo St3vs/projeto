@@ -8,30 +8,45 @@ import iconUser from '../images/iconUser.png';
 import { FaHouse } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Header from "../components/Header";
-import { FaCheckCircle} from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 import '../styles/Header.css';
 import axios from 'axios';
 import { apiUrl } from '../api';
+import ImageCropModal from './ImageCropModal';
 
 const EditarPerfil = () => {
    const [user, setUser] = useState(null);
-   const [form, setForm] = useState({ username: '', contacto: '', nif: '' });
+   const [form, setForm] = useState({ username: '', contacto: '', nif: '', fotoPerfil: '' });
    const navigate = useNavigate();
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const token = localStorage.getItem('token');
-   
-   useEffect(() => {
-      const userData = JSON.parse(localStorage.getItem('user'));
+   const [selectedImage, setSelectedImage] = useState(null);
+   const [showCropModal, setShowCropModal] = useState(false);
 
-      if (!token || !userData) {
-         navigate('/');
+   useEffect(() => {
+      const fetchUser = async () => {
+         try {
+            const res = await axios.get(`${apiUrl}/auth/user`, {
+               headers: { Authorization: `Bearer ${token}` },
+            });
+            setUser(res.data.user);
+            setForm({
+               username: res.data.user.username,
+               contacto: res.data.user.contacto || '',
+               nif: res.data.user.nif || '',
+               fotoPerfil: res.data.user.fotoPerfil || ''
+            });
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+         } catch (err) {
+            console.error(err);
+            navigate('/');
+         }
+      };
+
+      if (token) {
+         fetchUser();
       } else {
-         setUser(userData);
-         setForm({
-            username: userData.username,
-            contacto: userData.contacto || '',
-            nif: userData.nif || ''
-         });
+         navigate('/');
       }
    }, [navigate]);
 
@@ -49,7 +64,7 @@ const EditarPerfil = () => {
          localStorage.setItem("user", JSON.stringify(response.data.user));
          setUser(response.data.user);
          alert("Perfil atualizado com sucesso!");
-         navigate("/Conta");
+         navigate("/Perfil");
       } catch (error) {
          console.error(error);
          alert("Erro ao atualizar o perfil.");
@@ -63,8 +78,6 @@ const EditarPerfil = () => {
          });
 
          alert(response.data.message || 'Conta eliminada com sucesso.');
-
-         // Limpar localStorage e redirecionar para login ou página inicial
          localStorage.removeItem('token');
          localStorage.removeItem('user');
          navigate('/');
@@ -74,14 +87,66 @@ const EditarPerfil = () => {
       }
    };
 
-   const handleEditProfile = () => {
-      navigate('/Conta/EditarPerfil');
-   };
-
+   const handleEditProfile = () => navigate('/Perfil/EditarPerfil');
    const voltarHome = () => navigate('/homepage');
-   const voltarConta = () => navigate('/Conta');
+   const voltarConta = () => navigate('/Perfil');
    const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
 
+   const handleImageUpload = async (file) => {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+         const res = await axios.post(`${apiUrl}/auth/fotoPerfil`, formData, {
+            headers: {
+               'Content-Type': 'multipart/form-data',
+               Authorization: `Bearer ${token}`,
+            }
+         });
+
+         const imageUrl = res.data.url;
+         setUser(prev => ({ ...prev, fotoPerfil: imageUrl }));
+         setForm(prev => ({ ...prev, fotoPerfil: imageUrl }));
+         localStorage.setItem('user', JSON.stringify({ ...user, fotoPerfil: imageUrl }));
+      } catch (err) {
+         console.error(err);
+         alert('Erro ao carregar imagem');
+      }
+   };
+
+   const handleImageSelect = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+         const reader = new FileReader();
+         reader.onloadend = () => {
+            setSelectedImage(reader.result);
+            setShowCropModal(true);
+         };
+         reader.readAsDataURL(file);
+      }
+   };
+
+   const handleCroppedImage = async (croppedBlob) => {
+      const formData = new FormData();
+      formData.append('image', croppedBlob);
+
+      try {
+         const res = await axios.post(`${apiUrl}/auth/fotoPerfil`, formData, {
+            headers: {
+               'Content-Type': 'multipart/form-data',
+               Authorization: `Bearer ${token}`,
+            }
+         });
+
+         const imageUrl = res.data.url;
+         setUser(prev => ({ ...prev, fotoPerfil: imageUrl }));
+         setForm(prev => ({ ...prev, fotoPerfil: imageUrl }));
+         localStorage.setItem('user', JSON.stringify({ ...user, fotoPerfil: imageUrl }));
+      } catch (err) {
+         console.error(err);
+         alert('Erro ao carregar imagem');
+      }
+   };
    return (
       <div className="editarperfil-container">
          <Header toggleSidebar={toggleSidebar} />
@@ -93,7 +158,7 @@ const EditarPerfil = () => {
                <div className='historico'>
                   <button className='voltarHome' onClick={voltarHome}><FaHouse /></button>
                   <MdOutlineKeyboardArrowRight />
-                  <button className='voltarHome' onClick={voltarConta}>CONTA</button>
+                  <button className='voltarHome' onClick={voltarConta}>PERFIL</button>
                   <MdOutlineKeyboardArrowRight />
                   <h2>Editar perfil</h2>
                </div>
@@ -102,9 +167,8 @@ const EditarPerfil = () => {
             {user ? (
                <div>
                   <div className="editarperfil-header">
-                     <button onClick={voltarConta} className='editarperfil-conta-button' >
-                        <IoPerson />
-                        Dados Pessoais
+                     <button onClick={voltarConta} className='editarperfil-conta-button'>
+                        <IoPerson /> Dados Pessoais
                      </button>
                      <button onClick={handleEditProfile} className="editarperfil-editperfil-button">
                         Editar Dados do Perfil
@@ -112,9 +176,32 @@ const EditarPerfil = () => {
                   </div>
 
                   <form onSubmit={handleSubmit} className="editarperfil-conta-content">
-                     <div className="editarperfil-conta-left">
-                        <img src={iconUser} alt="iconUser" className="editarperfil-conta-logo" />
-                     </div>
+                  <div className="editarperfil-conta-left">
+                     {form.fotoPerfil ? (
+                     <img
+                        src={form.fotoPerfil}
+                        alt="Foto de Perfil"
+                        className="editarperfil-conta-logo"
+                     />
+                     ) : (
+                        <img
+                           src={iconUser}
+                           alt="Sem foto"
+                           className="editarperfil-conta-logo"
+                        />
+                     )}
+                     <input type="file" accept="image/*" onChange={handleImageSelect} />
+                     {showCropModal && selectedImage && (
+                        <ImageCropModal
+                           image={selectedImage}
+                           onClose={() => {
+                              setShowCropModal(false);
+                              setSelectedImage(null); 
+                           }}
+                           onCropComplete={handleCroppedImage}
+                        />
+                     )}
+                  </div>
                      <div className="editarperfil-conta-right">
                         <div className="editarperfil-dados-pessoais">
                            <div className="editarperfil-dados">
@@ -160,9 +247,9 @@ const EditarPerfil = () => {
                                     deleteAccount();
                                  }
                               }}
-                              >
-                           Eliminar Conta
-                        </button>
+                           >
+                              Eliminar Conta
+                           </button>
                         </div>
                      </div>
                   </form>

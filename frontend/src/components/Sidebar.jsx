@@ -18,7 +18,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                      <Link to="/Homepage" onClick={onClose} className={location.pathname === "/Homepage" ? "active" : ""}><FaHouse size={25}/> <span>Home</span></Link>
                   </li>
                   <li>
-                     <Link to="/Conta" onClick={onClose} className={location.pathname === "/Conta" ? "active" : ""}><IoPerson size={25} /> <span>Conta</span></Link>
+                     <Link to="/Perfil" onClick={onClose} className={location.pathname === "/Perfil" ? "active" : ""}><IoPerson size={25} /> <span>Perfil</span></Link>
                   </li>
                   <li>
                      <Link to="/Clientes" onClick={onClose} className={location.pathname === "/Clientes" ? "active" : ""}><BsFillPeopleFill size={25}/> <span>Clientes</span></Link>

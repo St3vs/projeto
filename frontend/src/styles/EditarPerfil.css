@@ -151,3 +151,11 @@
    color: var(--text-color);
    background-color: var(--input-background-color);
 }
+
+.editarperfil-conta-logo {
+   width: 250px;       /* tamanho da imagem, pode ajustar */
+   height: 250px;      /* manter igual ao width para ser círculo */
+   border-radius: 50%; /* deixa a imagem redonda */
+   object-fit: cover;  /* cobre toda área sem distorcer */
+   display: block;     /* opcional para melhor alinhamento */
+}

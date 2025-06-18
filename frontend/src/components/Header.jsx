@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FaBars, FaSun, FaMoon } from 'react-icons/fa';
 import logo from '../images/logoBranco.png';
 import "../styles/Header.css";
+import { Link } from 'react-router-dom';
+
 
 const Header = ({ toggleSidebar }) => {
   const [theme, setTheme] = useState(() => {
@@ -25,7 +27,12 @@ const Header = ({ toggleSidebar }) => {
         <FaBars className="menu-icon" onClick={toggleSidebar} />
       </div>
       <div className="center">
-        <h1 className="header">FlowBiz</h1>
+        {/* Envolva FlowBiz no Link para a rota raiz */}
+        <h1 className="header">
+          <Link to="/Homepage" style={{ textDecoration: 'none', color: 'inherit' }}>
+            FlowBiz
+          </Link>
+        </h1>
       </div>
       <div className="right">
         <button className="theme-toggle" onClick={toggleTheme}>

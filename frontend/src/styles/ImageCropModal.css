@@ -1,0 +1,84 @@
+.crop-container {
+  width: 300px;
+  height: auto; /* altura automática para se adaptar ao conteúdo */
+  background: none;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.crop-area {
+  width: 100%;
+  height: 300px; 
+  position: relative;
+}
+
+.crop-controls {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.crop-controls input[type="range"] {
+  width: 100%;
+}
+
+.crop-controls button {
+  cursor: pointer;
+  padding: 8px 10px;
+  border: none;
+  background-color: var(--button-background-color);
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.crop-controls button:last-child {
+  background-color: #dc3545;
+}
+
+
+.crop-controls-buttons {
+   display: flex;
+   justify-content:flex-start;
+   gap: 30px;
+}
+
+.crop-controls-buttons button {
+   padding: 10px 24px; 
+   border: none;
+   border-radius: 25px; 
+   cursor: pointer;
+   font-size: 16px;
+   font-weight: 600; 
+   transition: all 0.3s ease; 
+   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+   display: flex; 
+   align-items: center; 
+   gap: 10px; 
+}
+
+.crop-controls-buttons .save {
+   background-color: var(--button-background-guardar);
+   color: white;
+}
+
+.crop-controls-buttons .save:hover {
+   background-color: var(--button-background-color);
+   transform: translateY(-2px); 
+   box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
+}
+
+.crop-controls-buttons .cancel {
+   background-color: var(--button-background-cancel);
+   color: white;
+}
+
+.crop-controls-buttons .cancel:hover {
+   background-color: var(--button-background-cancel);
+   transform: translateY(-2px); 
+   box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
+}

@@ -9,7 +9,7 @@ import CriarFichaCliente from "./pages/CriarFichaCliente";
 import Clientes from "./pages/Clientes";
 import Propostas from "./pages/Propostas";
 import InserirNovaProposta from "./pages/InserirNovaProposta";
-import Conta from "./pages/Conta";
+import Perfil from "./pages/Perfil";
 import PrivateRoute from "./components/PrivateRoute";
 import Fornecedores from "./pages/Fornecedores";
 import CriarFichaFornecedor from "./pages/CriarFichaFornecedor";
@@ -42,8 +42,8 @@ function App() {
             <Route path="/Homepage" element={<PrivateRoute><Homepage /></PrivateRoute>} />
             <Route path="/Clientes/CriarFichaCliente" element={<PrivateRoute><CriarFichaCliente /></PrivateRoute>} />
             <Route path="/Clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
-            <Route path="/Conta" element={<PrivateRoute><Conta /></PrivateRoute>} />
-            <Route path="/Conta/EditarPerfil" element={<PrivateRoute><EditarPerfil /></PrivateRoute>} />
+            <Route path="/Perfil" element={<PrivateRoute><Perfil /></PrivateRoute>} />
+            <Route path="/Perfil/EditarPerfil" element={<PrivateRoute><EditarPerfil /></PrivateRoute>} />
             <Route path="/Propostas" element={<PrivateRoute><Propostas /></PrivateRoute>} />
             <Route path="/Propostas/InserirNovaProposta" element={<PrivateRoute><InserirNovaProposta /></PrivateRoute>} />
             <Route path="/Propostas/EditarProposta/:id" element={<PrivateRoute><EditarProposta /></PrivateRoute>} />
