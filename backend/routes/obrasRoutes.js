@@ -2,11 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const { inserirNovaObra, getObras, eliminarObras, atualizarObra, getObraId } = require('../controllers/obrasController');
+const verifyToken = require('../middleware/authMiddleware');
 
-router.get('/listarObras', getObras);
-router.get('/listarObra/:id', getObraId);
-router.post('/inserirNovaObra', inserirNovaObra); 
-router.put('/atualizarObra/:id', atualizarObra);
-router.delete('/eliminarObras', eliminarObras);
+router.get('/listarObras', verifyToken, getObras);
+router.get('/listarObra/:id', verifyToken, getObraId);
+router.post('/inserirNovaObra', verifyToken, inserirNovaObra); 
+router.put('/atualizarObra/:id', verifyToken, atualizarObra);
+router.delete('/eliminarObras', verifyToken, eliminarObras);
 
 module.exports = router;

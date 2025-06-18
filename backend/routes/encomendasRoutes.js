@@ -2,11 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const { inserirNovaEncomenda, getEncomendas, eliminarEncomendas, atualizarEncomenda, getEncomendaId } = require('../controllers/encomendasController');
+const verifyToken = require('../middleware/authMiddleware');
 
-router.get('/listarEncomendas', getEncomendas);
-router.get('/listarEncomenda/:id', getEncomendaId);
-router.post('/inserirNovaEncomenda', inserirNovaEncomenda); 
-router.put('/atualizarEncomenda/:id', atualizarEncomenda);
-router.delete('/eliminarEncomendas', eliminarEncomendas);
+router.get('/listarEncomendas', verifyToken, getEncomendas);
+router.get('/listarEncomenda/:id', verifyToken, getEncomendaId);
+router.post('/inserirNovaEncomenda', verifyToken, inserirNovaEncomenda); 
+router.put('/atualizarEncomenda/:id', verifyToken, atualizarEncomenda);
+router.delete('/eliminarEncomendas', verifyToken, eliminarEncomendas);
 
 module.exports = router;

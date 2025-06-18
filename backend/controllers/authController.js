@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const {User, sequelize} = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -41,7 +41,11 @@ exports.login = async (req, res) => {
       }
 
       // Criar o token
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+      const token = jwt.sign(
+         { id: user.id, email: user.email }, 
+         process.env.JWT_SECRET,
+         { expiresIn: '1d' }
+      );
 
 
       res.status(200).json({
@@ -57,3 +61,89 @@ exports.login = async (req, res) => {
       res.status(500).json({ error: 'Erro ao fazer login' });
    }
 };
+
+exports.updateProfile = async (req, res) => {
+   try {
+      const userId = req.user.id;
+      const { username, contacto, nif } = req.body;
+
+      const user = await User.findByPk(userId);
+      if (!user) return res.status(404).json({ error: 'Utilizador não encontrado' });
+
+      user.username = username || user.username;
+      user.contacto = contacto || user.contacto;
+      user.nif = nif || user.nif;
+
+      await user.save();
+
+      res.json({ message: 'Perfil atualizado com sucesso', user });
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Erro ao atualizar o perfil' });
+   }
+};
+
+exports.deleteAccount = async (req, res) => {
+   try {
+      const userId = req.user.id;
+
+      await sequelize.transaction(async (t) => {
+         // Verifica se o utilizador existe
+         const user = await User.findByPk(userId, { transaction: t });
+         if (!user) return res.status(404).json({ error: 'Utilizador não encontrado' });
+
+         // Cria tabela de histórico se não existir
+         await sequelize.query(`
+         CREATE TABLE IF NOT EXISTS UsersEliminados (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username VARCHAR(255) NOT NULL UNIQUE,
+            email VARCHAR(255) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            contacto VARCHAR(255) UNIQUE,
+            nif VARCHAR(255) UNIQUE,
+            dataExclusao DATETIME DEFAULT CURRENT_TIMESTAMP
+         );
+         `, { transaction: t });
+
+         // Copia o utilizador para a tabela de histórico
+         await sequelize.query(`
+         INSERT INTO UsersEliminados (username, email, password, contacto, nif)
+         SELECT username, email, password, contacto, nif FROM Users WHERE id = ${userId};
+         `, { transaction: t });
+
+         // Apaga o utilizador original
+         await User.destroy({ where: { id: userId }, transaction: t });
+
+         // Recria tabela temporária para resetar os IDs
+         await sequelize.query(`
+         CREATE TABLE Users_temp (
+            id INTEGER PRIMARY KEY,
+            username VARCHAR(255) NOT NULL UNIQUE,
+            email VARCHAR(255) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            contacto VARCHAR(255) UNIQUE,
+            nif VARCHAR(255) UNIQUE
+         );
+         `, { transaction: t });
+
+         // Copia os dados restantes renumerando IDs
+         await sequelize.query(`
+         INSERT INTO Users_temp (id, username, email, password, contacto, nif)
+         SELECT ROW_NUMBER() OVER () AS id, username, email, password, contacto, nif FROM Users;
+         `, { transaction: t });
+
+         // Remove tabela antiga e renomeia a nova
+         await sequelize.query(`DROP TABLE Users;`, { transaction: t });
+         await sequelize.query(`ALTER TABLE Users_temp RENAME TO Users;`, { transaction: t });
+
+         // Reseta o AUTOINCREMENT
+         await sequelize.query(`DELETE FROM sqlite_sequence WHERE name='Users';`, { transaction: t });
+      });
+
+      res.json({ message: 'Conta eliminada com sucesso!' });
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Erro ao eliminar a conta' });
+   }
+};
+

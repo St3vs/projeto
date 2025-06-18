@@ -69,6 +69,7 @@ const CriarFichaCliente = () => {
 			if (response.status === 201) {
 				alert('Ficha de cliente criada com sucesso!');
 			}
+         navigate('/Clientes');
 		} catch (error) {
 			if (error.response) {
 				console.error('Erro do backend:', error.response.data);

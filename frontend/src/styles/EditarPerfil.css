@@ -140,3 +140,14 @@
    color: var(--text-color);
    margin: 0;
 }
+
+
+.editarperfil-dados input {
+   width: 100%;
+   padding: 10px;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   font-size: 16px;
+   color: var(--text-color);
+   background-color: var(--input-background-color);
+}

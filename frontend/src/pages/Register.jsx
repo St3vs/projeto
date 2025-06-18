@@ -43,7 +43,7 @@ function Register() {
          });
 
          if (response.status === 201) {
-         alert('Registo realizado com sucesso! Verifique seu email.');
+         alert('Registo realizado com sucesso!');
          navigate('/');
          }
       } catch (error) {

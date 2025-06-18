@@ -33,10 +33,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                      <Link to="/Fornecedores" onClick={onClose} className={location.pathname === "/Fornecedores" ? "active" : ""}><FaTruck size={25}/> <span>Fornecedores</span></Link>
                   </li>
                   <li>
-                     <Link to="/Encomendas" onClick={onClose} className={location.pathname === "/Encomendas" ? "active" : ""}><FiPackage  size={25}/> <span>Encomendas</span></Link>
+                     <Link to="/Obras" onClick={onClose} className={location.pathname === "/Obras" ? "active" : ""}><MdConstruction  size={25}/> <span>Obras</span></Link>
                   </li>
                   <li>
-                     <Link to="/Obras" onClick={onClose} className={location.pathname === "/Obras" ? "active" : ""}><MdConstruction  size={25}/> <span>Obras</span></Link>
+                     <Link to="/Encomendas" onClick={onClose} className={location.pathname === "/Encomendas" ? "active" : ""}><FiPackage  size={25}/> <span>Encomendas</span></Link>
                   </li>
                </ul>
             </nav>

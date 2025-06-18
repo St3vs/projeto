@@ -72,7 +72,6 @@ exports.atualizarProposta = async (req, res) => {
         if (!proposta) {
             return res.status(404).json({ error: "Proposta não encontrada" });
         }
-        // Atualiza usando clienteId
         await proposta.update({ clienteId, assunto, descricao, data, valor, estado });
         res.status(200).json({ message: "Proposta atualizada com sucesso!", proposta });
     } catch (error) {
@@ -85,12 +84,7 @@ exports.eliminarPropostas = async (req, res) => {
    try {
       let { ids, id } = req.body;
 
-      // Se apenas um ID for enviado, convertemos para array
-      if (!ids && id) {
-         ids = [id];
-      }
-
-      // Garantir que `ids` é um array de inteiros e remover valores inválidos
+      if (!ids && id) ids = [id];
       ids = Array.isArray(ids) ? ids.map(Number).filter(Boolean) : [];
 
       if (ids.length === 0) {
@@ -98,42 +92,68 @@ exports.eliminarPropostas = async (req, res) => {
       }
 
       await sequelize.transaction(async (t) => {
-         // Eliminar propostas pelos IDs fornecidos
-         await sequelize.query(`DELETE FROM Proposta WHERE id IN (${ids.join(",")});`, { transaction: t });
-
-         // Criar uma nova tabela temporária sem AUTOINCREMENT
+         // Cria a tabela de histórico se não existir (ajuste os campos)
          await sequelize.query(`
-            CREATE TABLE Proposta_temp (
-               id INTEGER PRIMARY KEY, 
-               cliente VARCHAR(255) NOT NULL,
-               contacto VARCHAR(255) NOT NULL,
-               assunto VARCHAR(255) NOT NULL,
-               descricao VARCHAR(255) NOT NULL,
-               data DATETIME NOT NULL,
-               valor VARCHAR(255) NOT NULL,
-               estado VARCHAR(255) NOT NULL
-            );
+         CREATE TABLE IF NOT EXISTS PropostasEliminadas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            clienteId VARCHAR(255) NOT NULL,
+            assunto VARCHAR(255) NOT NULL,
+            descricao VARCHAR(255) NOT NULL,
+            data DATETIME NOT NULL,
+            valor VARCHAR(255) NOT NULL,
+            estado VARCHAR(255) NOT NULL,
+            idProjeto INTEGER,
+            dataExclusao DATETIME DEFAULT CURRENT_TIMESTAMP
+         );
          `, { transaction: t });
 
-         // Copia os dados para a tabela temporária e reordenar os IDs
+         // Copia as propostas que serão eliminadas para histórico
          await sequelize.query(`
-            INSERT INTO Proposta_temp (id, cliente, contacto, assunto, descricao, data, valor, estado)
-            SELECT ROW_NUMBER() OVER (ORDER BY id) AS id, cliente, contacto, assunto, descricao, data, valor, estado FROM Proposta;
+         INSERT INTO PropostasEliminadas (clienteId, assunto, descricao, data, valor, estado, idProjeto)
+         SELECT clienteId, assunto, descricao, data, valor, estado, idProjeto
+         FROM Propostas WHERE id IN (${ids.join(",")});
          `, { transaction: t });
 
-         // Excluir a tabela original
-         await sequelize.query("DROP TABLE Proposta;", { transaction: t });
+         // Deleta as propostas da tabela original
+         await sequelize.query(`
+         DELETE FROM Propostas WHERE id IN (${ids.join(",")});
+         `, { transaction: t });
 
-         // Renomear a tabela temporária para o nome original
-         await sequelize.query("ALTER TABLE Proposta_temp RENAME TO Proposta;", { transaction: t });
+         // Cria tabela temporária para reordenar os IDs
+         await sequelize.query(`
+         CREATE TABLE Propostas_temp (
+            id INTEGER PRIMARY KEY,
+            clienteId VARCHAR(255) NOT NULL,
+            assunto VARCHAR(255) NOT NULL,
+            descricao VARCHAR(255) NOT NULL,
+            data DATETIME NOT NULL,
+            valor VARCHAR(255) NOT NULL,
+            estado VARCHAR(255) NOT NULL,
+            idProjeto INTEGER
+         );
+         `, { transaction: t });
 
-         // Reseta o AUTOINCREMENT
-         await sequelize.query("DELETE FROM sqlite_sequence WHERE name='Proposta';", { transaction: t });
+         // Insere os dados restantes renumerando os ids com ROW_NUMBER()
+         await sequelize.query(`
+         INSERT INTO Propostas_temp (id, clienteId, assunto, descricao, data, valor, estado, idProjeto)
+         SELECT ROW_NUMBER() OVER () AS id, clienteId, assunto, descricao, data, valor, estado, idProjeto
+         FROM Propostas;
+         `, { transaction: t });
+
+         // Remove tabela antiga
+         await sequelize.query("DROP TABLE Propostas;", { transaction: t });
+
+         // Renomeia a tabela temporária para o nome original
+         await sequelize.query("ALTER TABLE Propostas_temp RENAME TO Propostas;", { transaction: t });
+
+         // Reseta o AUTOINCREMENT do SQLite
+         await sequelize.query("DELETE FROM sqlite_sequence WHERE name='Propostas';", { transaction: t });
       });
 
-      res.status(200).json({ message: "Propostas eliminadas e IDs resetados com sucesso!" });
+      res.status(200).json({ message: "Propostas eliminadas com sucesso! IDs resetados." });
    } catch (error) {
       console.error("Erro ao eliminar propostas:", error);
       res.status(500).json({ error: "Erro ao eliminar propostas" });
    }
 };
+

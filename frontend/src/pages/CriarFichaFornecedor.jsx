@@ -57,6 +57,7 @@ const CriarFichaFornecedor = () => {
          if (response.status === 201) {
             alert('Ficha de fornecedor criada com sucesso!');
          }
+         navigate('/Fornecedores');
       } catch (error) {
          if (error.response) {
             console.error('Erro do backend:', error.response.data);

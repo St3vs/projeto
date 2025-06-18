@@ -10,6 +10,7 @@ import Sidebar from "../components/Sidebar";
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { MdAccessTimeFilled } from "react-icons/md";
+import { apiUrl } from "../api";
 
 const InserirNovaProposta = () => {
     const [cliente, setCliente] = useState('');

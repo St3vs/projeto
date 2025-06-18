@@ -124,10 +124,6 @@ function Login() {
                   <FiLogIn />
                   ENTRAR
                </button>
-               <button type="button" className="cancel">
-                  <FaCircleXmark />
-                  CANCELAR
-               </button>
                </div>
             </form>
             <p className="create-account">

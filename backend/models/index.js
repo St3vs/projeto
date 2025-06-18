@@ -7,6 +7,7 @@ const Fornecedores = require('./fornecedores');
 const Clientes = require('./clientes');
 const Propostas = require('./propostas');
 const Projeto = require('./projetos');
+const User = require('./user');
 
 const models = {
   Sequelize,
@@ -17,6 +18,7 @@ const models = {
   Clientes,
   Propostas,
   Projeto,
+  User,
 };
 
 // Executa as associações
