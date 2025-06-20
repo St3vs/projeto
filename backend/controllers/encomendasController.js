@@ -111,16 +111,11 @@ exports.atualizarEncomenda = async (req, res) => {
    }
 };
 
-// DELETE: Eliminar uma ou mais encomendas
 exports.eliminarEncomendas = async (req, res) => {
    try {
       let { ids, id } = req.body;
 
-      // Normalizar para array
-      if (!ids && id) {
-         ids = [id];
-      }
-
+      if (!ids && id) ids = [id];
       ids = Array.isArray(ids) ? ids.map(Number).filter(Boolean) : [];
 
       if (ids.length === 0) {
@@ -128,15 +123,68 @@ exports.eliminarEncomendas = async (req, res) => {
       }
 
       await sequelize.transaction(async (t) => {
-         await Encomendas.destroy({
-            where: { id: ids },
-            transaction: t
-         });
+         // Criação da tabela de histórico se não existir
+         await sequelize.query(`
+            CREATE TABLE IF NOT EXISTS EncomendasEliminadas (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               fornecedorId INTEGER NOT NULL,
+               obraId INTEGER NOT NULL,
+               descricaoMaterial TEXT NOT NULL,
+               data DATE NOT NULL,
+               previsaoEntrega DATE NOT NULL,
+               valor TEXT NOT NULL,
+               observacoes TEXT,
+               dataExclusao DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+         `, { transaction: t });
+
+         // Copiar os dados eliminados para o histórico
+         await sequelize.query(`
+            INSERT INTO EncomendasEliminadas (fornecedorId, obraId, descricaoMaterial, data, previsaoEntrega, valor, observacoes)
+            SELECT fornecedorId, obraId, descricaoMaterial, data, previsaoEntrega, valor, observacoes
+            FROM Encomendas
+            WHERE id IN (${ids.join(',')});
+         `, { transaction: t });
+
+         // Eliminar as encomendas originais
+         await sequelize.query(`
+            DELETE FROM Encomendas WHERE id IN (${ids.join(',')});
+         `, { transaction: t });
+
+         // Criar tabela temporária com a mesma estrutura
+         await sequelize.query(`
+            CREATE TABLE Encomendas_temp (
+               id INTEGER PRIMARY KEY,
+               fornecedorId INTEGER NOT NULL,
+               obraId INTEGER NOT NULL,
+               descricaoMaterial TEXT NOT NULL,
+               data DATE NOT NULL,
+               previsaoEntrega DATE NOT NULL,
+               valor TEXT NOT NULL,
+               observacoes TEXT
+            );
+         `, { transaction: t });
+
+         // Reordenar os dados com novos IDs sequenciais
+         await sequelize.query(`
+            INSERT INTO Encomendas_temp (id, fornecedorId, obraId, descricaoMaterial, data, previsaoEntrega, valor, observacoes)
+            SELECT ROW_NUMBER() OVER () AS id, fornecedorId, obraId, descricaoMaterial, data, previsaoEntrega, valor, observacoes
+            FROM Encomendas;
+         `, { transaction: t });
+
+         // Substituir a tabela antiga pela nova
+         await sequelize.query(`DROP TABLE Encomendas;`, { transaction: t });
+         await sequelize.query(`ALTER TABLE Encomendas_temp RENAME TO Encomendas;`, { transaction: t });
+
+         // Resetar o AUTOINCREMENT
+         await sequelize.query(`DELETE FROM sqlite_sequence WHERE name='Encomendas';`, { transaction: t });
       });
 
-      res.status(200).json({ message: "Encomenda(s) eliminada(s) com sucesso!" });
+      res.status(200).json({ message: "Encomendas eliminadas com sucesso! IDs resetados." });
+
    } catch (error) {
       console.error("Erro ao eliminar encomendas:", error);
       res.status(500).json({ error: "Erro ao eliminar encomendas" });
    }
 };
+

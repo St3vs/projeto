@@ -83,10 +83,7 @@ exports.eliminarObras = async (req, res) => {
    try {
       let { ids, id } = req.body;
 
-      if (!ids && id) {
-         ids = [id];
-      }
-
+      if (!ids && id) ids = [id];
       ids = Array.isArray(ids) ? ids.map(Number).filter(Boolean) : [];
 
       if (ids.length === 0) {
@@ -94,16 +91,66 @@ exports.eliminarObras = async (req, res) => {
       }
 
       await sequelize.transaction(async (t) => {
-         await Obra.destroy({
-            where: { id: ids },
-            transaction: t
-         });
+         // Elimina primeiro as encomendas relacionadas
+         await sequelize.query(`
+            DELETE FROM Encomendas WHERE obraId IN (${ids.join(',')});
+         `, { transaction: t });
 
-         // Reset opcional do AUTOINCREMENT
-         await sequelize.query("DELETE FROM sqlite_sequence WHERE name='obras';", { transaction: t });
+         // Criação da tabela de histórico se não existir
+         await sequelize.query(`
+            CREATE TABLE IF NOT EXISTS ObrasEliminadas (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               clienteId INTEGER NOT NULL,
+               descricao TEXT NOT NULL,
+               data DATE NOT NULL,
+               valorProposta DECIMAL(10,2) NOT NULL,
+               valorFaturado DECIMAL(10,2) NOT NULL,
+               dataUltimaFatura DATE NOT NULL,
+               dataExclusao DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+         `, { transaction: t });
+
+         // Copiar os dados para a tabela de histórico
+         await sequelize.query(`
+            INSERT INTO ObrasEliminadas (clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura)
+            SELECT clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura
+            FROM Obras
+            WHERE id IN (${ids.join(',')});
+         `, { transaction: t });
+
+         // Eliminar as obras
+         await sequelize.query(`
+            DELETE FROM Obras WHERE id IN (${ids.join(',')});
+         `, { transaction: t });
+
+         // Recriar a tabela Obras com IDs sequenciais
+         await sequelize.query(`
+            CREATE TABLE Obras_temp (
+               id INTEGER PRIMARY KEY,
+               clienteId INTEGER NOT NULL,
+               descricao TEXT NOT NULL,
+               data DATE NOT NULL,
+               valorProposta DECIMAL(10,2) NOT NULL,
+               valorFaturado DECIMAL(10,2) NOT NULL,
+               dataUltimaFatura DATE NOT NULL
+            );
+         `, { transaction: t });
+
+         await sequelize.query(`
+            INSERT INTO Obras_temp (id, clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura)
+            SELECT ROW_NUMBER() OVER () AS id, clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura
+            FROM Obras;
+         `, { transaction: t });
+
+         // Substituir tabela antiga
+         await sequelize.query(`DROP TABLE Obras;`, { transaction: t });
+         await sequelize.query(`ALTER TABLE Obras_temp RENAME TO Obras;`, { transaction: t });
+
+         await sequelize.query(`DELETE FROM sqlite_sequence WHERE name='Obras';`, { transaction: t });
       });
 
-      res.status(200).json({ message: "Obras eliminadas com sucesso!" });
+      res.status(200).json({ message: "Obras eliminadas com sucesso! IDs resetados." });
+
    } catch (error) {
       console.error("Erro ao eliminar obras:", error);
       res.status(500).json({ error: "Erro ao eliminar obras" });

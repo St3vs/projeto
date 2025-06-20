@@ -30,6 +30,16 @@ exports.eliminarProjetos = async (req, res) => {
       }
 
       await sequelize.transaction(async (t) => {
+         // Depois elimina as obras
+         await Projeto.destroy({
+         where: { id: ids },
+         transaction: t
+         });
+
+         await sequelize.query("DELETE FROM sqlite_sequence WHERE name='Projetos';", { transaction: t });
+      });
+
+      await sequelize.transaction(async (t) => {
          // Cria a tabela ProjetosEliminados caso não exista
          await sequelize.query(`
             CREATE TABLE IF NOT EXISTS ProjetosEliminados (
