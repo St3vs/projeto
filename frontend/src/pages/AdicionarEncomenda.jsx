@@ -268,12 +268,16 @@ const InserirNovaEncomenda = () => {
                      />
                   </div>
                   <div className="form-group">
-                     <label htmlFor="cliente">Cliente da Obra:</label>
+                     <label htmlFor="dadosObra">ID da Obra:</label>
                      <input
                         type="text"
-                        id="cliente"
-                        name="cliente"
-                        value={cliente}
+                        id="dadosObra"
+                        name="dadosObra"
+                        value={
+                           obraSelecionada
+                              ? `${obraSelecionada.id}`
+                              : ''
+                        }
                         disabled
                      />
                   </div>

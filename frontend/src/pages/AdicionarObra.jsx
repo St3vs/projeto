@@ -12,20 +12,21 @@ import '../styles/Header.css';
 import { apiUrl } from "../api";
 
 const InserirNovaObra = () => {
-   const [clienteId, setClienteId] = useState(null);
-   const [clienteNome, setClienteNome] = useState('');
-   const [contacto, setContacto] = useState('');
-   const [clientes, setClientes] = useState([]);
+   const [projetoId, setProjetoId] = useState(null);
+   const [projetoIdProjeto, setProjetoIdProjeto] = useState('');
+   const [projetoIdCliente, setProjetoIdCliente] = useState('');
+   const [assunto, setAssunto] = useState('');
+   const [projetos, setProjetos] = useState([]);
    const [descricao, setDescricao] = useState('');
    const [data, setData] = useState('');
    const [dataUltimaFatura, setDataUltimaFatura] = useState('');
    const [valorProposta, setValorProposta] = useState('');
    const [valorFaturado, setValorFaturado] = useState('');
-   const [pesquisarCliente, setPesquisarCliente] = useState('');
-   const [filteredClientes, setFilteredClientes] = useState([]);
+   const [pesquisarProjeto, setPesquisarProjeto] = useState('');
+   const [filteredProjetos, setFilteredProjetos] = useState([]);
    const [highlightIndex, setHighlightIndex] = useState(-1);
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+   const [clienteNome, setClienteNome] = useState('');
    const navigate = useNavigate();
 
    useEffect(() => {
@@ -35,59 +36,57 @@ const InserirNovaObra = () => {
          return;
       }
 
-      const fetchClientes = async () => {
+      const fetchProjetos = async () => {
          try {
             //const response = await axios.get("http://localhost:4000/clientes/listarClientes", {
-            const response = await axios.get(`${apiUrl}/clientes/listarClientes`, {
+            const response = await axios.get(`${apiUrl}/projetos/listarProjetos`, {
                headers: { Authorization: `Bearer ${token}` }
             });
-            setClientes(response.data);
+            setProjetos(response.data);
          } catch (error) {
-            console.error("Erro ao buscar clientes:", error);
+            console.error("Erro ao pesquisar projetos:", error);
             if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                navigate('/');
             }
          }
       };
 
-      fetchClientes();
+      fetchProjetos();
    }, [navigate]);
 
    const handleSearch = (event) => {
-      const query = event.target.value.toLowerCase();
-      setPesquisarCliente(query);
+   const query = event.target.value.toLowerCase();
+   setPesquisarProjeto(query);
 
-      if (query) {
-         const filtered = clientes.filter(
-            (c) =>
-               c.username.toLowerCase().includes(query) ||
-               c.contacto.includes(query)
+   if (query) {
+      const filtered = projetos.filter(
+         (p) =>
+            String(p.id).toLowerCase().includes(query) ||
+            String(p.clienteId).toLowerCase().includes(query) ||
+            (p.assunto && p.assunto.toLowerCase().includes(query))
          );
-         setFilteredClientes(filtered);
-         setHighlightIndex(-1);
-      } else {
-         setFilteredClientes([]);
-      }
+      setFilteredProjetos(filtered);
+      setHighlightIndex(-1);
+   } else {
+      setFilteredProjetos([]);
+   }
    };
 
-   const selecionarCliente = (cliente) => {
-      setClienteId(cliente.id);
-      setClienteNome(cliente.username);
-      setContacto(cliente.contacto);
-      setPesquisarCliente('');
-      setFilteredClientes([]);
+   const selecionarProjeto = (projeto) => {
+      setProjetoId(projeto.id);
+      setProjetoIdProjeto(projeto.clienteId);
+      setProjetoIdCliente(projeto.clienteId);
+      setClienteNome(projeto.clienteNome);
+      setAssunto(projeto.assunto);
+      setPesquisarProjeto('');
+      setFilteredProjetos([]);
    };
 
    const handleInserirNovaObra = async (e) => {
       e.preventDefault();
 
-      if (!clienteId) {
-         alert("Por favor, selecione um cliente válido.");
-         return;
-      }
-
-      if (contacto.replace(/\D/g, '').length !== 9) {
-         alert("O contacto deve conter exatamente 9 dígitos.");
+      if (!projetoId) {
+         alert("Por favor, selecione um projeto válido.");
          return;
       }
 
@@ -100,8 +99,8 @@ const InserirNovaObra = () => {
       try {
          //const response = await axios.post('http://localhost:4000/obras/inserirNovaObra', {
          const response = await axios.post(`${apiUrl}/obras/inserirNovaObra`, {
-            clienteId,
-            contacto,
+            projetoId,
+            assunto,
             descricao,
             data,
             valorProposta,
@@ -126,14 +125,14 @@ const InserirNovaObra = () => {
    };
 
    const handleKeyDown = (e) => {
-      if (filteredClientes.length === 0) return;
+      if (filteredProjetos.length === 0) return;
 
       if (e.key === "ArrowDown") {
-         setHighlightIndex((prev) => Math.min(prev + 1, filteredClientes.length - 1));
+         setHighlightIndex((prev) => Math.min(prev + 1, filteredProjetos.length - 1));
       } else if (e.key === "ArrowUp") {
          setHighlightIndex((prev) => Math.max(prev - 1, 0));
       } else if (e.key === "Enter" && highlightIndex >= 0) {
-         selecionarCliente(filteredClientes[highlightIndex]);
+         selecionarProjeto(filteredProjetos[highlightIndex]);
       }
    };
 
@@ -174,27 +173,27 @@ const InserirNovaObra = () => {
             <div>
                <form className='inserir-novo' onSubmit={handleInserirNovaObra}>
                   <h1>Adicionar Nova Obra</h1>
-                  <h4>Dados do cliente:</h4>
+                  <h4>Dados do projeto:</h4>
                   <div className="form-group">
                      <div className="search-container">
                         <input
                            type="text"
-                           placeholder="Pesquisar por Nome ou Contacto"
-                           value={pesquisarCliente}
+                           placeholder="Pesquisar por ID do cliente ou Assunto do Projeto"
+                           value={pesquisarProjeto}
                            onChange={handleSearch}
                            onKeyDown={handleKeyDown}
-                           onBlur={() => setTimeout(() => setFilteredClientes([]), 100)}
+                           onBlur={() => setTimeout(() => setFilteredProjetos([]), 100)}
                         />
-                        {filteredClientes.length > 0 && (
+                        {filteredProjetos.length > 0 && (
                            <ul className="dropdown">
-                              {filteredClientes.map((f, index) => (
+                              {filteredProjetos.map((f, index) => (
                                  <li
                                     key={f.id}
                                     className={index === highlightIndex ? "highlight" : ""}
-                                    onClick={() => selecionarCliente(f)}
+                                    onClick={() => selecionarProjeto(f)}
                                     onMouseEnter={() => setHighlightIndex(index)}
                                  >
-                                    {f.username} - {f.contacto}
+                                    {`Id do projeto: ${f.id} - Id do cliente: ${f.clienteId} - Assunto do projeto: "${f.assunto}"`}
                                  </li>
                               ))}
                            </ul>
@@ -203,22 +202,32 @@ const InserirNovaObra = () => {
                   </div>
                   <div className="form-row">
                      <div className="form-group">
-                        <label htmlFor="cliente">Nome do Cliente:</label>
+                        <label htmlFor="projetoId">ID do Projeto:</label>
                         <input
                            type="text"
-                           id="cliente"
-                           name="cliente"
-                           value={clienteNome}
+                           id="projetoId"
+                           name="projetoId"
+                           value={projetoIdProjeto}
                            disabled
                         />
                      </div>
                      <div className="form-group">
-                        <label htmlFor="contacto">Contacto:</label>
+                        <label htmlFor="clienteId">ID do Cliente:</label>
                         <input
                            type="text"
-                           id="contacto"
-                           name="contacto"
-                           value={contacto}
+                           id="clienteId"
+                           name="clienteId"
+                           value={projetoIdCliente}
+                           disabled
+                        />
+                     </div>
+                     <div className="form-group">
+                        <label htmlFor="assunto">Assunto:</label>
+                        <input
+                           type="text"
+                           id="assunto"
+                           name="assunto"
+                           value={assunto}
                            disabled
                         />
                      </div>

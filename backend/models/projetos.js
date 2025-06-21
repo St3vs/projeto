@@ -4,7 +4,7 @@ const sequelize = require('../config/config');
 
 const Projeto = sequelize.define('Projeto', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  clienteId: { type: DataTypes.STRING, allowNull: false },
+  clienteId: { type: DataTypes.INTEGER, allowNull: false },
   assunto: { type: DataTypes.STRING, allowNull: false },
   descricao: { type: DataTypes.STRING, allowNull: false },
   dataInicio: { type: DataTypes.DATE, allowNull: false },
@@ -14,6 +14,7 @@ const Projeto = sequelize.define('Projeto', {
 Projeto.associate = function(models) {
   Projeto.belongsTo(models.Clientes, { foreignKey: 'clienteId', as: 'cliente' });
   Projeto.hasOne(models.Propostas, { foreignKey: 'idProjeto', as: 'proposta' });
+  Projeto.hasMany(models.Obras, { foreignKey: 'projetoId', as: 'obras' });
 };
 
 module.exports = Projeto;

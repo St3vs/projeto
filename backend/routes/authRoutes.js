@@ -1,6 +1,6 @@
 //routes/authroutes.js
 const express = require('express');
-const { register, login, updateProfile, deleteAccount, fotoPerfil, upload, getUser  } = require('../controllers/authController');
+const { register, login, updateProfile, deleteAccount, fotoPerfil, getUser, upload  } = require('../controllers/authController');
 const verifyToken = require('../middleware/authMiddleware');
 
 const router = express.Router();

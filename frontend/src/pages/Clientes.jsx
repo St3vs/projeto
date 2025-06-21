@@ -37,7 +37,7 @@ function ClientPage() {
             setClientes(response.data);
          } catch (error) {
             console.error("Erro ao encontrar fichas de clientes:", error);
-            // Se token inválido ou outro erro crítico, redireciona para login
+
             if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                navigate('/');
             }
@@ -175,21 +175,25 @@ function ClientPage() {
 						</tr>
 					</thead>
 					<tbody>
-						{filteredClientes.map(client => (
-							<tr key={client.id}>
-								<td>
-									<input
-                              type="checkbox"
-                              checked={selecionarClientes.includes(client.id)}
-                              onChange={() => handleSelectClient(client.id)}
-									/>
-								</td>
-								<td>{client.id}</td>
-								<td>{client.username}</td>
-								<td>{client.email}</td>
-								<td>{client.contacto}</td>
-							</tr>
-						))}
+                  {filteredClientes.map(cliente => (
+                     <tr 
+                        key={cliente.id}
+                        onClick={() => navigate(`/Clientes/AtualizarFichaCliente/${cliente.id}`)}
+                        className="clickable-row"
+                     >
+                        <td onClick={(e) => e.stopPropagation()}>
+                        <input
+                           type="checkbox"
+                           checked={selecionarClientes.includes(cliente.id)}
+                           onChange={() => handleSelectClient(cliente.id)}
+                        />
+                        </td>
+                        <td>{cliente.id}</td>
+                        <td>{cliente.username}</td>
+                        <td>{cliente.email}</td>
+                        <td>{cliente.contacto}</td>
+                     </tr>
+                  ))}
 					</tbody>
 				</table>
 			</div>

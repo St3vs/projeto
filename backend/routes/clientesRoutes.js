@@ -1,12 +1,14 @@
 //routes/clientesroutes.js
 const express = require('express');
-const { criarFichaCliente, getClientes, eliminarClientes } = require('../controllers/clientesController');
+const { getClienteById, criarFichaCliente, getClientes, eliminarClientes, atualizarCliente } = require('../controllers/clientesController');
 const verifyToken = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/criarFichaCliente', verifyToken, criarFichaCliente);
+router.get('/getCliente/:id', verifyToken, getClienteById);
 router.get('/listarClientes', verifyToken, getClientes); 
+router.post('/criarFichaCliente', verifyToken, criarFichaCliente);
+router.put('/atualizarCliente/:id', verifyToken, atualizarCliente);
 router.delete('/eliminarClientes', verifyToken, eliminarClientes);
 
 module.exports = router;

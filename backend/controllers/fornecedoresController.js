@@ -28,6 +28,49 @@ exports.getFornecedores = async (req, res) => {
    }
 };
 
+exports.getFornecedorById = async (req, res) => {
+   try {
+      const { id } = req.params;
+
+      const fornecedor = await Fornecedor.findByPk(id);
+
+      if (!fornecedor) {
+         return res.status(404).json({ error: 'Fornecedor não encontrado' });
+      }
+
+      res.status(200).json(fornecedor);
+   } catch (error) {
+      console.error("Erro ao buscar fornecedor:", error);
+      res.status(500).json({ error: 'Erro ao buscar fornecedor' });
+   }
+};
+
+exports.atualizarFornecedor = async (req, res) => {
+   try {
+      const { id } = req.params;
+      const { username, email, contacto, nif } = req.body;
+
+      const fornecedor = await Fornecedor.findByPk(id);
+      if (!fornecedor) {
+         return res.status(404).json({ error: 'Fornecedor não encontrado.' });
+      }
+
+      if (email && email !== fornecedor.email) {
+         const emailExists = await Fornecedor.findOne({ where: { email } });
+         if (emailExists) {
+         return res.status(400).json({ error: 'Já existe um fornecedor com esse email.' });
+         }
+      }
+
+      await fornecedor.update({ username, email, contacto, nif });
+
+      res.status(200).json({ message: 'Fornecedor atualizado com sucesso!', fornecedor });
+   } catch (error) {
+      console.error('Erro ao atualizar fornecedor:', error);
+      res.status(500).json({ error: 'Erro ao atualizar fornecedor.' });
+   }
+};
+
 exports.eliminarFornecedores = async (req, res) => {
    try {
       let { ids, id } = req.body;

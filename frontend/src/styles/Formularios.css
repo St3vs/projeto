@@ -102,6 +102,21 @@
   flex: 1;
 }
 
+.form-row-encomendas {
+  display: flex;
+  gap: 40px; /* Espaço entre as colunas */
+}
+
+.form-row-encomendas > div {
+  flex: 1;  /* divide o espaço igualmente */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-column h4 {
+  margin-bottom: 10px;
+}
+
 .search-container {
   position: relative;
   width: 100%;

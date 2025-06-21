@@ -22,6 +22,8 @@ import AtualizarEncomenda from "./pages/EditarEncomenda";
 import Obras from "./pages/Obras";
 import AdicionarObra from "./pages/AdicionarObra";
 import EditarObra from "./pages/EditarObra";
+import AtualizarFichaFornecedor from "./pages/AtualizarFichaFornecedor";
+import AtualizarFichaCliente from "./pages/AtualizarFichaCliente";
 
 function App() {
 
@@ -42,6 +44,7 @@ function App() {
             <Route path="/Homepage" element={<PrivateRoute><Homepage /></PrivateRoute>} />
             <Route path="/Clientes/CriarFichaCliente" element={<PrivateRoute><CriarFichaCliente /></PrivateRoute>} />
             <Route path="/Clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
+            <Route path="/Clientes/AtualizarFichaCliente/:id" element={<PrivateRoute><AtualizarFichaCliente /></PrivateRoute>} />
             <Route path="/Perfil" element={<PrivateRoute><Perfil /></PrivateRoute>} />
             <Route path="/Perfil/EditarPerfil" element={<PrivateRoute><EditarPerfil /></PrivateRoute>} />
             <Route path="/Propostas" element={<PrivateRoute><Propostas /></PrivateRoute>} />
@@ -50,6 +53,7 @@ function App() {
             <Route path="/Projetos" element={<PrivateRoute><Projetos /></PrivateRoute>} />
             <Route path="/Fornecedores" element={<PrivateRoute><Fornecedores /></PrivateRoute>} />
             <Route path="/Fornecedores/CriarFichaFornecedor" element={<PrivateRoute><CriarFichaFornecedor/></PrivateRoute>} />
+            <Route path="/Fornecedores/AtualizarFichaFornecedor/:id" element={<PrivateRoute><AtualizarFichaFornecedor /></PrivateRoute>} />
             <Route path="/Encomendas" element={<PrivateRoute><Encomendas /></PrivateRoute>} />
             <Route path="/Encomendas/InserirNovaEncomenda" element={<PrivateRoute><AdicionarEncomenda/></PrivateRoute>} />
             <Route path="/Encomendas/AtualizarEncomenda/:id" element={<PrivateRoute><AtualizarEncomenda /></PrivateRoute>} />

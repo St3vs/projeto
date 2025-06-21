@@ -101,11 +101,19 @@ function Obras() {
       }
    };
 
-   const pesquisarCliente = obras.filter(obra =>
-      (obra.cliente && obra.cliente.username.toLowerCase().includes(pesquisarObra.toLowerCase())) ||
-      (obra.clienteId.toString().includes(pesquisarObra))
-   );
+   const pesquisarProjeto = obras.filter(obra => {
+      const pesquisa = pesquisarObra.toLowerCase();
 
+      const idObra = obra.id.toString();
+      const idProjeto = obra.projeto?.id ? obra.projeto.id.toString() : obra.projetoId?.toString() || '';
+      const descricao = obra.descricao ? obra.descricao.toLowerCase() : '';
+
+      return (
+         idObra.includes(pesquisa) ||
+         idProjeto.includes(pesquisa) ||
+         descricao.includes(pesquisa)
+      );
+   });
 
    const inserirNovaObra = () => {
       navigate('/Obras/InserirNovaObra');
@@ -140,7 +148,7 @@ function Obras() {
             <div className="search-bar">
                <input
                   type="text"
-                  placeholder="Pesquisar por Nome ou Contacto do cliente"
+                  placeholder="Pesquisar por ID do projeto ou assunto do projeto"
                   value={pesquisarObra}
                   onChange={handlePesquisar}
                />
@@ -159,8 +167,8 @@ function Obras() {
                               onChange={handleSelecionarTodas}
                            />
                         </th>
-                        <th>ID</th>
-                        <th>Cliente</th>
+                        <th>ID da Obra</th>
+                        <th>ID do Projeto</th>
                         <th>Descrição da Obra</th>
                         <th>Data</th>
                         <th>Valor da Proposta</th>
@@ -169,21 +177,20 @@ function Obras() {
                      </tr>
                   </thead>
                   <tbody>
-                     {pesquisarCliente.map(obra => (
-                        <tr 
-                           key={obra.id} 
-                           onClick={() => navigate(`/obras/EditarObra/${obra.id}`)} // Corrigido aqui
-                           className="clickable-row"
-                        >
+                     {pesquisarProjeto.map(obra => (
+                        <tr key={obra.id} onClick={() => navigate(`/obras/EditarObra/${obra.id}`)} className="clickable-row">
                            <td onClick={(e) => e.stopPropagation()}>
                               <input
                                  type="checkbox"
                                  checked={selecionarObras.includes(obra.id)}
-                                 onChange={() => handleSelectObra(obra.id)}
+                                 onChange={(e) => {
+                                    e.stopPropagation(); // Isso é essencial
+                                    handleSelectObra(obra.id);
+                                 }}
                               />
                            </td>
                            <td>{obra.id}</td>
-                           <td>{obra.cliente ? obra.cliente.username : obra.clienteId}</td> 
+                           <td>{obra.projeto ? obra.projeto.id : obra.projetoId}</td> 
                            <td>{obra.descricao}</td>
                            <td>{obra.data ? new Date(obra.data).toLocaleDateString("pt-PT") : "Sem data"}</td>
                            <td>{obra.valorProposta} €</td>

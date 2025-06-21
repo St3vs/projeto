@@ -1,5 +1,5 @@
 const sequelize = require('../config/config');
-const { Encomendas, Obras, Fornecedores, Clientes } = require('../models');
+const { Encomendas, Obras, Fornecedores, Projeto } = require('../models');
 
 
 // GET: Todas as encomendas com associação
@@ -7,8 +7,12 @@ exports.getEncomendas = async (req, res) => {
    try {
       const encomendas = await Encomendas.findAll({
          include: [
-            { model: Obras, as: 'obra' },
-            { model: Fornecedores, as: 'fornecedor' }
+            { model: Obras, as: 'obra',
+               attributes: ['id', 'projetoId', 'descricao', 'data', 'valorProposta', 'valorFaturado', 'dataUltimaFatura']
+            },
+            { model: Fornecedores, as: 'fornecedor',
+               attributes: ['id', 'username', 'contacto']
+            }
          ]
       });
       res.status(200).json(encomendas);
@@ -27,12 +31,12 @@ exports.getEncomendaId = async (req, res) => {
             {
                model: Obras,
                as: 'obra',
-               attributes: ['descricao'],
+               attributes: ['id', 'descricao'],
                include: [
                   {
-                     model: Clientes,
-                     as: 'cliente',
-                     attributes: ['username']
+                  model: Projeto,
+                  as: 'projeto',
+                  attributes: ['id', 'clienteId']
                   }
                ]
             },
@@ -95,13 +99,11 @@ exports.atualizarEncomenda = async (req, res) => {
       }
 
       await encomenda.update({
-         fornecedorId,
-         obraId,
          descricaoMaterial,
          data,
          previsaoEntrega,
          valor,
-         observacoes
+         observacoes,
       });
 
       res.status(200).json({ message: "Encomenda atualizada com sucesso!", encomenda });

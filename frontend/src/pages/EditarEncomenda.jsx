@@ -18,13 +18,14 @@ function EditarEncomenda() {
    const [encomenda, setEncomenda] = useState({
       fornecedor: "",
       contacto: "",
-      cliente: "",
+      clienteId: "",
       descricao: "",
       descricaoMaterial: "",
       data: "",
       previsaoEntrega: "",
       valor: "",
       observacoes: "",
+      idObra: "",
    });
 
    const [editavel, setEditavel] = useState({
@@ -48,23 +49,30 @@ function EditarEncomenda() {
          );
          const dados = response.data;
 
-         // Ajustar datas para o formato yyyy-mm-dd (input date)
-         const dataFormatada = dados.data ? dados.data.split("T")[0] : "";
-         const previsaoFormatada = dados.previsaoEntrega
-            ? dados.previsaoEntrega.split("T")[0]
-            : "";
+         const formatarData = (dataISO) => {
+            if (!dataISO) return "";
+            const data = new Date(dataISO);
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, "0");
+            const dia = String(data.getDate()).padStart(2, "0");
+            return `${ano}-${mes}-${dia}`;
+         };
+
+         const dataFormatada = formatarData(dados.data);
+         const previsaoFormatada = formatarData(dados.previsaoEntrega);
 
          // Extrair campos aninhados do fornecedor, obra e cliente
          setEncomenda({
             fornecedor: dados.fornecedor?.username || "",
             contacto: dados.fornecedor?.contacto || "",
-            cliente: dados.obra?.cliente?.username || "",
+            clienteId: dados.obra?.projeto?.clienteId || "",
             descricao: dados.obra?.descricao || "",
             descricaoMaterial: dados.descricaoMaterial || "",
             data: dataFormatada,
             previsaoEntrega: previsaoFormatada,
             valor: dados.valor || "",
             observacoes: dados.observacoes || "",
+            idObra: dados.obra?.id || "",
          });
          } catch (error) {
          console.error("Erro ao pesquisar encomenda:", error);
@@ -142,44 +150,52 @@ function EditarEncomenda() {
             <form className="inserir-novo" onSubmit={handleSubmit}>
                <h1>Editar Encomenda</h1>
 
-               <div className="form-row">
-                  <h4>Dados do Fornecedor associado:</h4>
-                  <h4>Dados da Obra associada:</h4>
-               </div>
+               <div className="form-row-encomendas">
+                  <div>
+                     <h4>Dados do Fornecedor associado:</h4>
+                     <div className="form-row"> 
+                        <div className="form-group">
+                           <label>Fornecedor:</label>
+                           <input type="text" name="fornecedor" value={encomenda.fornecedor} disabled />
+                        </div>
+                        <div className="form-group">
+                           <label>Contacto:</label>
+                           <input type="text" name="contacto" value={encomenda.contacto} disabled />
+                        </div>
+                     </div>
+                  </div>
 
-               <div className="form-row">
-               <div className="form-group">
-                  <label>Fornecedor:</label>
-                  <input type="text" name="fornecedor" value={encomenda.fornecedor} disabled />
-               </div>
-
-               <div className="form-group">
-                  <label>Contacto:</label>
-                  <input type="text" name="contacto" value={encomenda.contacto} disabled />
-               </div>
-
-               <div className="form-group">
-                  <label>Cliente:</label>
-                  <input type="text" name="cliente" value={encomenda.cliente} disabled />
-               </div>
-
-               <div className="form-group">
-                  <label>Descrição:</label>
-                  <input type="text" name="descricao" value={encomenda.descricao} disabled />
-               </div>
+                  <div>
+                     <h4>Dados da Obra associada:</h4>
+                     <div className="form-row"> 
+                        <div className="form-group">
+                           <label>Id da obra:</label>
+                           <input type="text" name="idObra" value={encomenda.idObra} disabled />
+                        </div>
+                        <div className="form-group">
+                           <label>Id do Cliente:</label>
+                           <input type="text" name="cliente" value={encomenda.clienteId} disabled />
+                        </div>
+                        <div className="form-group">
+                           <label>Descrição da Obra:</label>
+                           <input type="text" name="descricao" value={encomenda.descricao} disabled />
+                        </div>
+                     </div>
+                  </div>
                </div>
 
                <div className="form-group">
                <label>Descrição do Material:</label>
-               <div className="input-container">
+               <div className="input-wrapper">
                   <textarea
                      name="descricaoMaterial"
                      value={encomenda.descricaoMaterial}
                      onChange={handleChange}
                      disabled={!editavel.descricaoMaterial}
+                     className={editavel.descricaoMaterial ? "input-editing" : ""}
                   />
                   <FaPencilAlt
-                     className="edit-icon"
+                     className={`edit-icon ${editavel.descricaoMaterial ? "edit-icon-active" : ""}`}
                      onClick={() => toggleEdit("descricaoMaterial")}
                   />
                </div>
@@ -188,46 +204,55 @@ function EditarEncomenda() {
                <div className="form-row">
                <div className="form-group">
                   <label>Data:</label>
-                  <div className="input-container">
+                  <div className="input-wrapper">
                      <input
                      type="date"
                      name="data"
                      value={encomenda.data || ""}
                      onChange={handleChange}
                      disabled={!editavel.data}
+                     className={editavel.data ? "input-editing" : ""}
                      />
-                     <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("data")} />
+                     <FaPencilAlt 
+                        className={`edit-icon ${editavel.data ? "edit-icon-active" : ""}`} 
+                        onClick={() => toggleEdit("data")} 
+                     />
                   </div>
                </div>
 
                <div className="form-group">
                   <label>Previsão de entrega:</label>
-                  <div className="input-container">
+                  <div className="input-wrapper">
                      <input
                      type="date"
                      name="previsaoEntrega"
                      value={encomenda.previsaoEntrega || ""}
                      onChange={handleChange}
                      disabled={!editavel.previsaoEntrega}
+                     className={editavel.previsaoEntrega ? "input-editing" : ""}
                      />
                      <FaPencilAlt
-                     className="edit-icon"
-                     onClick={() => toggleEdit("previsaoEntrega")}
+                        className={`edit-icon ${editavel.previsaoEntrega ? "edit-icon-active" : ""}`}
+                        onClick={() => toggleEdit("previsaoEntrega")}
                      />
                   </div>
                </div>
 
                <div className="form-group">
                   <label>Valor (€):</label>
-                  <div className="input-container">
+                  <div className="input-wrapper">
                      <input
                      type="number"
                      name="valor"
                      value={encomenda.valor}
                      onChange={handleChange}
                      disabled={!editavel.valor}
+                     className={editavel.valor ? "input-editing" : ""}
                      />
-                     <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("valor")} />
+                     <FaPencilAlt 
+                        className={`edit-icon ${editavel.data ? "edit-icon-active" : ""}`} 
+                        onClick={() => toggleEdit("valor")} 
+                     />
                   </div>
                </div>
                </div>
@@ -235,15 +260,19 @@ function EditarEncomenda() {
                <div className="form-row">
                <div className="form-group">
                   <label>Observações:</label>
-                  <div className="input-container">
+                  <div className="input-wrapper">
                      <input
                      type="text"
                      name="observacoes"
                      value={encomenda.observacoes}
                      onChange={handleChange}
                      disabled={!editavel.observacoes}
+                     className={editavel.valor ? "input-editing" : ""}
                      />
-                     <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("observacoes")} />
+                     <FaPencilAlt 
+                        className={`edit-icon ${editavel.observacoes ? "edit-icon-active" : ""}`}
+                        onClick={() => toggleEdit("observacoes")} 
+                     />
                   </div>
                </div>
                </div>

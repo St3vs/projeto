@@ -9,7 +9,7 @@ const Encomendas = sequelize.define('Encomendas', {
   descricaoMaterial: { type: DataTypes.STRING, allowNull: false },
   data: { type: DataTypes.DATE, allowNull: false },
   previsaoEntrega: { type: DataTypes.DATE, allowNull: false },
-  valor: { type: DataTypes.STRING, allowNull: false },
+  valor: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
   observacoes: { type: DataTypes.STRING, allowNull: true },
 }, { timestamps: false });
 

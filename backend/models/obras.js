@@ -4,7 +4,7 @@ const sequelize = require('../config/config');
 
 const Obras = sequelize.define('Obras', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  clienteId: { type: DataTypes.INTEGER, allowNull: false },
+  projetoId: { type: DataTypes.INTEGER, allowNull: false },
   descricao: { type: DataTypes.STRING, allowNull: false },
   data: { type: DataTypes.DATE, allowNull: false },
   valorProposta: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
@@ -13,7 +13,7 @@ const Obras = sequelize.define('Obras', {
 }, { timestamps: false });
 
 Obras.associate = (models) => {
-   Obras.belongsTo(models.Clientes, { foreignKey: 'clienteId', as: 'cliente' });
+   Obras.belongsTo(models.Projeto, { foreignKey: 'projetoId', as: 'projeto' });
    Obras.hasMany(models.Encomendas, { foreignKey: 'obraId', as: 'encomendas' });
 };
 

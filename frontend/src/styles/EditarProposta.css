@@ -83,34 +83,46 @@ body {
    font-size: 16px;
 }
 
-/* Novo 'wrapper' para o input e o ícone */
 .input-wrapper {
-    position: relative; /* Essencial para o posicionamento absoluto do ícone */
-    display: flex;
-    align-items: center;
+   position: relative; /* Essencial para o posicionamento absoluto do ícone */
+   display: flex;
+   align-items: center;
 }
 
 .input-wrapper input,
 .input-wrapper textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding-right: 35px;
+  font-size: 16px;
+  background-color: var(--table-row-hover); 
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.input-wrapper input.input-editing,
+.input-wrapper textarea.input-editing {
+  background-color: var(--background-color);
+  border-color: #E86032;
 }
 
 .edit-icon {
-   position: absolute;
-   right: 10px;
-   top: 50%;
-   transform: translateY(-50%);
-   cursor: pointer;
-   color: var(--text-color);
-   transition: color 0.3s;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--text-color);
+  transition: color 0.3s;
 }
 
 .edit-icon:hover {
-   color: #E86032;
+  color: #E86032;
+}
+
+.edit-icon-active {
+  color: #E86032; 
 }
 
 .select-container-editarProposta {

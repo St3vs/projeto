@@ -1,6 +1,23 @@
 const sequelize = require("../config/config");
 const Cliente = require('../models/clientes');
 
+exports.getClienteById = async (req, res) => {
+   try {
+      const { id } = req.params;
+
+      const cliente = await Cliente.findByPk(id);
+
+      if (!cliente) {
+         return res.status(404).json({ error: 'Cliente não encontrado' });
+      }
+
+      res.status(200).json(cliente);
+   } catch (error) {
+      console.error('Erro ao buscar cliente por ID:', error);
+      res.status(500).json({ error: 'Erro ao buscar cliente por ID' });
+   }
+};
+
 exports.criarFichaCliente = async (req, res) => {
    try {
       const { username, email, contacto, nif, morada, cp, localidade } = req.body;
@@ -24,6 +41,26 @@ exports.getClientes = async (req, res) => {
       res.status(200).json(clientes);
    } catch (error) {
       res.status(500).json({ error: 'Erro ao obter lista de clientes' });
+   }
+};
+
+exports.atualizarCliente = async (req, res) => {
+   try {
+      const { id } = req.params;
+      const { username, email, contacto, nif, morada, cp, localidade } = req.body;
+
+      const cliente = await Cliente.findByPk(id);
+
+      if (!cliente) {
+         return res.status(404).json({ error: 'Cliente não encontrado' });
+      }
+
+      await cliente.update({ username, email, contacto, nif, morada, cp, localidade });
+
+      res.status(200).json({ message: 'Ficha atualizada com sucesso!', cliente });
+   } catch (error) {
+      console.error('Erro ao atualizar cliente:', error);
+      res.status(500).json({ error: 'Erro ao atualizar cliente' });
    }
 };
 

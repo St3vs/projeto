@@ -8,7 +8,7 @@ const Propostas = sequelize.define('Propostas', {
   assunto: { type: DataTypes.STRING, allowNull: false },
   descricao: { type: DataTypes.STRING, allowNull: false },
   data: { type: DataTypes.DATE, allowNull: false },
-  valor: { type: DataTypes.STRING, allowNull: false },
+  valor: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
   estado: { type: DataTypes.STRING, allowNull: false },
   idProjeto: { type: DataTypes.INTEGER, allowNull: true }
 }, { timestamps: false });

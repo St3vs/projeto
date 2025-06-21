@@ -155,7 +155,7 @@ function Encomendas() {
 									onChange={handleSelecionarTodas}
 								/>
 							</th>
-							<th>ID</th>
+							<th>ID da Encomenda</th>
 							<th>Fornecedor</th>
                      <th>ID da Obra</th>
 							<th>Descrição do Material</th>

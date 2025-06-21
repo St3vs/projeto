@@ -102,7 +102,7 @@ const CriarFichaCliente = () => {
 							<h2>Criar Ficha de Cliente</h2>
 						</div>
 					</div>
-					<div>
+					<div className='inserir-novo'>
 						<form className='inserir-novo' onSubmit={handleCriarFicha}>
 							<h1>Criar Ficha de Cliente</h1>
 							<div className="form-group">
@@ -178,11 +178,11 @@ const CriarFichaCliente = () => {
 										placeholder="Insira o código-postal" 
 										value={cp}
 										onChange={(e) => {
-												let value = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-												if (value.length > 4) {
-													value = value.slice(0, 4) + "-" + value.slice(4, 7); // Formata como XXXX-XXX
-												}
-												setCP(value);
+                                 let value = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+                                 if (value.length > 4) {
+                                    value = value.slice(0, 4) + "-" + value.slice(4, 7); // Formata como XXXX-XXX
+                                 }
+                                 setCP(value);
 										}} 
 										maxLength={8} // Impede que o utilizador digitar mais caracteres
 									/>

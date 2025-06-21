@@ -1,15 +1,16 @@
 const sequelize = require('../config/config');
 const Obra = require('../models/obras');
-const { Clientes } = require('../models');
+const { Projeto } = require('../models');
 
 exports.getObras = async (req, res) => {
    try {
       const obras = await Obra.findAll({
-         include: {
-            model: Clientes,
-            as: 'cliente',
-            attributes: ['id', 'username']
-         }
+      include: [{
+         model: Projeto,
+         as: 'projeto',
+         attributes: ['id', 'clienteId', 'assunto']
+      }],
+      attributes: ['id', 'projetoId', 'descricao', 'data', 'valorProposta', 'valorFaturado', 'dataUltimaFatura']
       });
       res.status(200).json(obras);
    } catch (error) {
@@ -21,12 +22,14 @@ exports.getObras = async (req, res) => {
 exports.getObraId = async (req, res) => {
    try {
       const { id } = req.params;
+
       const obra = await Obra.findByPk(id, {
-         include: {
-            model: Clientes,
-            as: 'cliente',
-            attributes: ['id', 'username', 'contacto']
-         }
+         include: [{
+            model: Projeto,
+            as: 'projeto',
+            attributes: ['id', 'clienteId', 'assunto']
+         }],
+         attributes: ['id', 'projetoId', 'descricao', 'data', 'valorProposta', 'valorFaturado', 'dataUltimaFatura']
       });
 
       if (!obra) {
@@ -35,18 +38,18 @@ exports.getObraId = async (req, res) => {
 
       res.status(200).json(obra);
    } catch (error) {
+      console.error("Erro ao pesquisar obra:", error);
       res.status(500).json({ error: "Erro ao pesquisar obra" });
    }
 };
 
 exports.inserirNovaObra = async (req, res) => {
-   // Agora recebemos clienteId (inteiro), que é a FK correta
-   const { clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura } = req.body;
+   const { projetoId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura } = req.body;
 
    try {
       await sequelize.transaction(async (t) => {
          const obra = await Obra.create(
-            { clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura },
+            { projetoId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura },
             { transaction: t }
          );
 
@@ -61,7 +64,7 @@ exports.inserirNovaObra = async (req, res) => {
 
 exports.atualizarObra = async (req, res) => {
    const { id } = req.params;
-   const { clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura } = req.body;
+   const { projetoId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura } = req.body;
 
    try {
       const obra = await Obra.findByPk(id);
@@ -70,7 +73,7 @@ exports.atualizarObra = async (req, res) => {
          return res.status(404).json({ error: "Obra não encontrada" });
       }
 
-      await obra.update({ clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura });
+      await obra.update({ projetoId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura });
 
       res.status(200).json({ message: "Obra atualizada com sucesso!", obra });
    } catch (error) {
@@ -100,7 +103,7 @@ exports.eliminarObras = async (req, res) => {
          await sequelize.query(`
             CREATE TABLE IF NOT EXISTS ObrasEliminadas (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
-               clienteId INTEGER NOT NULL,
+               projetoId INTEGER NOT NULL,
                descricao TEXT NOT NULL,
                data DATE NOT NULL,
                valorProposta DECIMAL(10,2) NOT NULL,
@@ -112,8 +115,8 @@ exports.eliminarObras = async (req, res) => {
 
          // Copiar os dados para a tabela de histórico
          await sequelize.query(`
-            INSERT INTO ObrasEliminadas (clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura)
-            SELECT clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura
+            INSERT INTO ObrasEliminadas (projetoId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura)
+            SELECT projetoId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura
             FROM Obras
             WHERE id IN (${ids.join(',')});
          `, { transaction: t });
@@ -127,7 +130,7 @@ exports.eliminarObras = async (req, res) => {
          await sequelize.query(`
             CREATE TABLE Obras_temp (
                id INTEGER PRIMARY KEY,
-               clienteId INTEGER NOT NULL,
+               projetoId INTEGER NOT NULL,
                descricao TEXT NOT NULL,
                data DATE NOT NULL,
                valorProposta DECIMAL(10,2) NOT NULL,
@@ -137,8 +140,8 @@ exports.eliminarObras = async (req, res) => {
          `, { transaction: t });
 
          await sequelize.query(`
-            INSERT INTO Obras_temp (id, clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura)
-            SELECT ROW_NUMBER() OVER () AS id, clienteId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura
+            INSERT INTO Obras_temp (id, projetoId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura)
+            SELECT ROW_NUMBER() OVER () AS id, projetoId, descricao, data, valorProposta, valorFaturado, dataUltimaFatura
             FROM Obras;
          `, { transaction: t });
 

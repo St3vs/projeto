@@ -23,11 +23,8 @@ function FornecedoresPage() {
       const fetchFornecedores = async () => {
          try {
             const token = localStorage.getItem('token');
-            //const response = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
             const response = await axios.get(`${apiUrl}/fornecedores/listarFornecedores`, { 
-               headers: {
-                  Authorization: `Bearer ${token}`
-               }
+               headers: { Authorization: `Bearer ${token}` }
             });
             setFornecedores(response.data);
          } catch (error) {
@@ -54,7 +51,7 @@ function FornecedoresPage() {
 		if (selecionarTodos) {
 			setSelecionarFornecedores([]);
 		} else {
-			const allFornecedorIds = fornecedores.map(fornecedor => fornecedor.id);
+			const allFornecedorIds = fornecedores.map(f => f.id);
 			setSelecionarFornecedores(allFornecedorIds);
 		}
 		setSelecionarTodos(!selecionarTodos);
@@ -68,26 +65,15 @@ function FornecedoresPage() {
 
       try {
          const token = localStorage.getItem('token');
-
-         //const response = await axios.delete("http://localhost:4000/fornecedores/eliminarFornecedores", {
-         const response = await axios.delete(`${apiUrl}/fornecedores/eliminarFornecedores`, {
-            headers: {
-               Authorization: `Bearer ${token}`
-            },
+         await axios.delete(`${apiUrl}/fornecedores/eliminarFornecedores`, {
+            headers: { Authorization: `Bearer ${token}` },
             data: { ids: selecionarFornecedores }
          });
 
-         console.log("Resposta do servidor:", response.data);
-
-         //const updatedFornecedores = await axios.get("http://localhost:4000/fornecedores/listarFornecedores", {
-         const updatedFornecedores = await axios.get(`${apiUrl}/fornecedores/listarFornecedores`, {
-            headers: {
-               Authorization: `Bearer ${token}`
-            }
+         const updated = await axios.get(`${apiUrl}/fornecedores/listarFornecedores`, {
+            headers: { Authorization: `Bearer ${token}` }
          });
-         setFornecedores(updatedFornecedores.data);
-
-         // Limpar as seleções
+         setFornecedores(updated.data);
          setSelecionarFornecedores([]);
          setSelecionarTodos(false);
 
@@ -97,9 +83,9 @@ function FornecedoresPage() {
       }
    };
 
-	const filteredFornecedores = fornecedores.filter(fornecedor =>
-		fornecedor.username.toLowerCase().includes(pesquisarFornecedor.toLowerCase()) ||
-		fornecedor.contacto.includes(pesquisarFornecedor)
+	const filteredFornecedores = fornecedores.filter(f =>
+		f.username.toLowerCase().includes(pesquisarFornecedor.toLowerCase()) ||
+		f.contacto.includes(pesquisarFornecedor)
 	);
 
 	const criarFicha = () => {
@@ -116,7 +102,6 @@ function FornecedoresPage() {
 
 	return (
 		<div className="paginas-sidebar">
-			
          <Header toggleSidebar={toggleSidebar}/>
          {isSidebarOpen && <div className="overlay" onClick={() => setIsSidebarOpen(false)}></div>}
          <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
@@ -161,12 +146,16 @@ function FornecedoresPage() {
 					</thead>
 					<tbody>
 						{filteredFornecedores.map(fornecedor => (
-							<tr key={fornecedor.id}>
-								<td>
+							<tr 
+								key={fornecedor.id}
+								onClick={() => navigate(`/Fornecedores/AtualizarFichaFornecedor/${fornecedor.id}`)}
+								className="clickable-row"
+							>
+								<td onClick={(e) => e.stopPropagation()}>
 									<input
-                              type="checkbox"
-                              checked={selecionarFornecedores.includes(fornecedor.id)}
-                              onChange={() => handleSelectFornecedor(fornecedor.id)}
+										type="checkbox"
+										checked={selecionarFornecedores.includes(fornecedor.id)}
+										onChange={() => handleSelectFornecedor(fornecedor.id)}
 									/>
 								</td>
 								<td>{fornecedor.id}</td>

@@ -16,8 +16,8 @@ function EditarObra() {
    const navigate = useNavigate();
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const [obra, setObra] = useState({
-      cliente: "",
-      contacto: "",
+      projetoAssunto: "",
+      projetoClienteId: "",
       descricao: "",
       data: "",
       valorProposta: "",
@@ -37,19 +37,21 @@ function EditarObra() {
       const fetchObra = async () => {
          try {
             const token = localStorage.getItem("token");
-            //const response = await axios.get(`http://localhost:4000/obras/listarObra/${id}`,
             const response = await axios.get(`${apiUrl}/obras/listarObra/${id}`, { 
                headers: { Authorization: `Bearer ${token}` }
             });
             const dados = response.data;
 
-            // Transformações
-            if (dados.data) dados.data = dados.data.split("T")[0];
-            if (dados.dataUltimaFatura) dados.dataUltimaFatura = dados.dataUltimaFatura.split("T")[0];
+            if (dados.data) {
+               dados.data = dados.data.split(/[T\s]/)[0]; 
+            }
+            if (dados.dataUltimaFatura) {
+               dados.dataUltimaFatura = dados.dataUltimaFatura.split(/[T\s]/)[0];
+            }
 
             setObra({
-               cliente: dados.cliente?.username || '',
-               contacto: dados.cliente?.contacto || '',
+               projetoAssunto: dados.projeto?.assunto || '',
+               projetoClienteId: dados.projeto?.clienteId || '',
                descricao: dados.descricao || '',
                data: dados.data || '',
                valorProposta: dados.valorProposta || '',
@@ -80,10 +82,19 @@ function EditarObra() {
       event.preventDefault();
       try {
          const token = localStorage.getItem("token");
-         //await axios.put(`http://localhost:4000/obras/atualizarObra/${id}`, obra, {
-         await axios.put(`${apiUrl}/obras/atualizarObra/${id}`, obra, {
+
+         const dataToSend = {
+            descricao: obra.descricao,
+            data: obra.data,
+            valorProposta: obra.valorProposta,
+            valorFaturado: obra.valorFaturado,
+            dataUltimaFatura: obra.dataUltimaFatura,
+         };
+
+         await axios.put(`${apiUrl}/obras/atualizarObra/${id}`, dataToSend, {
             headers: { Authorization: `Bearer ${token}` }
          });
+
          alert("Obra atualizada com sucesso!");
          navigate("/Obras");
       } catch (error) {
@@ -112,41 +123,41 @@ function EditarObra() {
             <form className="atualizar-proposta" onSubmit={handleSubmit}>
                <h1>Editar Obra</h1>
                
-               <h4>Dados do Cliente Associado a Esta obra:</h4>
+               <h4>Dados do Projeto Associado a Esta obra:</h4>
                <div className="form-row">
                   <div className="form-group">
-                     <label>Cliente:</label>
-                     <input type="text" name="cliente" value={obra.cliente} disabled />
+                     <label>Projeto:</label>
+                     <input type="text" name="projetoAssunto" value={obra.projetoAssunto} disabled />
                   </div>
 
                   <div className="form-group">
-                     <label>Contacto:</label>
-                     <input type="text" name="contacto" value={obra.contacto} disabled />
+                     <label>ID Cliente do Projeto:</label>
+                     <input type="text" name="projetoClienteId" value={obra.projetoClienteId} disabled />
                   </div>
                </div>
 
                <div className="form-group">
                   <label>Descrição da Obra:</label>
-                  <div className="input-container">
-                     <textarea name="descricao" value={obra.descricao} onChange={handleChange} disabled={!editavel.descricao} />
-                     <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("descricao")} />
+                  <div className="input-wrapper">
+                     <textarea name="descricao" value={obra.descricao} onChange={handleChange} disabled={!editavel.descricao} className={editavel.descricao ? "input-editing" : ""}/>
+                     <FaPencilAlt className={`edit-icon ${editavel.descricao ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("descricao")} />
                   </div>
                </div>
 
                <div className="form-row">
                   <div className="form-group">
                      <label>Data:</label>
-                     <div className="input-container">
-                        <input type="date" name="data" value={obra.data || ""} onChange={handleChange} disabled={!editavel.data} />
-                        <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("data")} />
+                     <div className="input-wrapper">
+                        <input type="date" name="data" value={obra.data || ""} onChange={handleChange} disabled={!editavel.data} className={editavel.data ? "input-editing" : ""}/>
+                        <FaPencilAlt className={`edit-icon ${editavel.data ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("data")} />
                      </div>
                   </div>
 
                   <div className="form-group">
                      <label>Valor Proposta (€):</label>
-                     <div className="input-container">
-                        <input type="number" name="valorProposta" value={obra.valorProposta} onChange={handleChange} disabled={!editavel.valorProposta} />
-                        <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("valorProposta")} />
+                     <div className="input-wrapper">
+                        <input type="number" name="valorProposta" value={obra.valorProposta} onChange={handleChange} disabled={!editavel.valorProposta} className={editavel.valorProposta ? "input-editing" : ""}/>
+                        <FaPencilAlt className={`edit-icon ${editavel.valorProposta ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("valorProposta")} />
                      </div>
                   </div>
                </div>
@@ -154,17 +165,17 @@ function EditarObra() {
                <div className="form-row">
                   <div className="form-group">
                      <label>Valor Faturado (€):</label>
-                     <div className="input-container">
-                        <input type="number" name="valorFaturado" value={obra.valorFaturado} onChange={handleChange} disabled={!editavel.valorFaturado} />
-                        <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("valorFaturado")} />
+                     <div className="input-wrapper">
+                        <input type="number" name="valorFaturado" value={obra.valorFaturado} onChange={handleChange} disabled={!editavel.valorFaturado} className={editavel.valorFaturado ? "input-editing" : ""}/>
+                        <FaPencilAlt className={`edit-icon ${editavel.valorFaturado ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("valorFaturado")} />
                      </div>
                   </div>
 
                   <div className="form-group">
                      <label>Data Última Fatura:</label>
-                     <div className="input-container">
-                        <input type="date" name="dataUltimaFatura" value={obra.dataUltimaFatura || ""} onChange={handleChange} disabled={!editavel.dataUltimaFatura} />
-                        <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("dataUltimaFatura")} />
+                     <div className="input-wrapper">
+                        <input type="date" name="dataUltimaFatura" value={obra.dataUltimaFatura || ""} onChange={handleChange} disabled={!editavel.dataUltimaFatura} className={editavel.dataUltimaFatura ? "input-editing" : ""}/>
+                        <FaPencilAlt className={`edit-icon ${editavel.dataUltimaFatura ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("dataUltimaFatura")} />
                      </div>
                   </div>
                </div>

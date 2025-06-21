@@ -155,8 +155,8 @@ const EditarProposta = () => {
                      <div className="input-container">
                         <label htmlFor="assunto">Assunto:</label>
                         <div className="input-wrapper">
-                           <input type="text" id="assunto" value={assunto} onChange={(e) => setAssunto(e.target.value)} disabled={!editavel.assunto} required />
-                           <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("assunto")} />
+                           <input type="text" id="assunto" value={assunto} onChange={(e) => setAssunto(e.target.value)} disabled={!editavel.assunto} className={editavel.assunto ? "input-editing" : ""} required />
+                           <FaPencilAlt className={`edit-icon ${editavel.assunto ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("assunto")} />
                         </div>
                      </div>
                   </div>
@@ -164,8 +164,8 @@ const EditarProposta = () => {
                      <div className="input-container">
                         <label htmlFor="descricao">Descrição:</label>
                         <div className="input-wrapper">
-                           <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} disabled={!editavel.descricao} required />
-                           <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("descricao")} />
+                           <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} disabled={!editavel.descricao} className={editavel.descricao ? "input-editing" : ""} required />
+                           <FaPencilAlt className={`edit-icon ${editavel.descricao ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("descricao")} />
                         </div>
                      </div>
                   </div>
@@ -174,8 +174,8 @@ const EditarProposta = () => {
                         <div className="input-container">
                            <label htmlFor="data">Data:</label>
                            <div className="input-wrapper">
-                              <input type="date" name="data" value={data} onChange={(e) => setData(e.target.value)} disabled={!editavel.data} required />
-                              <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("data")} />
+                              <input type="date" name="data" value={data} onChange={(e) => setData(e.target.value)} disabled={!editavel.data} className={editavel.data ? "input-editing" : ""} required />
+                              <FaPencilAlt className={`edit-icon ${editavel.data ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("data")} />
                            </div>
                         </div>
                      </div>
@@ -183,8 +183,8 @@ const EditarProposta = () => {
                         <div className="input-container">
                            <label htmlFor="valor">Valor:</label>
                            <div className="input-wrapper">
-                              <input type="text" id="valor" value={valor} onChange={(e) => setValor(e.target.value)} disabled={!editavel.valor} required />
-                              <FaPencilAlt className="edit-icon" onClick={() => toggleEdit("valor")} />
+                              <input type="text" id="valor" value={valor ? `€ ${valor}` : ""} onChange={(e) => setValor(e.target.value)} disabled={!editavel.valor} className={editavel.valor ? "input-editing" : ""} required />
+                              <FaPencilAlt className={`edit-icon ${editavel.valor ? "edit-icon-active" : ""}`} onClick={() => toggleEdit("valor")} />
                            </div>
                         </div>
                      </div>
@@ -197,7 +197,7 @@ const EditarProposta = () => {
                                  <option key={est.value} value={est.value}>{est.label}</option>
                               ))}
                            </select>
-                           <span className="select-icon">
+                           <span className={`edit-icon ${editavel.valor ? "edit-icon-active" : ""}`}>
                               {estados.find(item => item.value === estado)?.icon || <MdOutlineKeyboardArrowDown />}
                            </span>
                         </div>
