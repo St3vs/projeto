@@ -24,34 +24,6 @@ function Login() {
       }
    }, []);
 
-   /*
-   const handleLogin = async (e) => {
-      e.preventDefault();
-      try {
-         const response = await axios.post('http://localhost:4000/auth/login', {
-            email,
-            password,
-         });
-
-         if (response.status === 200) {
-            const { token, user } = response.data;     
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify(user));
-
-            if (lembrarMe) {
-               localStorage.setItem("rememberMe", JSON.stringify({ email, password }));
-            } else {
-               localStorage.removeItem("rememberMe");
-            }
-
-            navigate('/homepage');
-         }
-      } catch (error) {
-         alert(error.response?.data?.error || 'Erro ao fazer login');
-      }
-   };
-   */
-
    const handleLogin = async (e) => {
       e.preventDefault();
       try {

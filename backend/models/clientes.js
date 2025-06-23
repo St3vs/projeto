@@ -30,9 +30,9 @@ const Clientes = sequelize.define('Clientes', {
 }, { timestamps: false });
 
 Clientes.associate = (models) => {
-   Clientes.hasMany(models.Obras, { foreignKey: 'clienteId', as: 'obras' });
-   Clientes.hasMany(models.Propostas, { foreignKey: 'clienteId', as: 'propostas' });
-   Clientes.hasMany(models.Projeto, { foreignKey: 'clienteId', as: 'projetos' });
+   Clientes.hasMany(models.Obras, { foreignKey:'clienteId', as:'obras'});
+   Clientes.hasMany(models.Propostas, { foreignKey:'clienteId', as:'propostas'});
+   Clientes.hasMany(models.Projeto, { foreignKey:'clienteId', as:'projetos'});
 };
 
 module.exports = Clientes;

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:4000', // ajuste conforme backend
+  baseURL: 'http://localhost:4000', 
 });
 
 // Adiciona o token automaticamente em todas as requisições
